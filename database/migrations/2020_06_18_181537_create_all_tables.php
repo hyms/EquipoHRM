@@ -76,7 +76,7 @@ class CreateAllTables extends Migration
             $table->id()->autoIncrement();
             $table->string("nombre",200);
             $table->date("fecha");
-            $table->decimal("dias");
+            //$table->decimal("dias");
 
             //control de historial
             $table->smallInteger("estado");
@@ -111,7 +111,7 @@ class CreateAllTables extends Migration
             $table->foreignId('usuario_adm')->constrained('USUARIOS');
         });
 
-        Schema::create('AGENCIAS', function (Blueprint $table) {
+        Schema::create('UNIDADES_NEGOCIO', function (Blueprint $table) {
             $table->id()->autoIncrement();
             $table->string("nombre",100);
             $table->string("direccion",200);
@@ -153,7 +153,7 @@ class CreateAllTables extends Migration
             $table->id()->autoIncrement();
             $table->string("nombre",100);
             $table->text("detalle");
-            $table->text("cargp_padre")->nullable();
+            $table->text("cargo_padre")->nullable();
 
             //control de historial
             $table->smallInteger("estado");
@@ -186,7 +186,7 @@ class CreateAllTables extends Migration
             $table->foreignId('usuario_adm')->constrained('USUARIOS');
             $table->foreignId('unidad')->constrained('UNIDADES');
             $table->foreignId('cargo')->constrained('CARGOS');
-            $table->foreignId('agencia')->constrained('AGENCIAS');
+            $table->foreignId('agencia')->constrained('UNIDADES_NEGOCIO');
         });
 
         Schema::create('TIPOS_PERMISO_VACACION', function (Blueprint $table) {
@@ -223,6 +223,7 @@ class CreateAllTables extends Migration
             $table->foreignId('tipo_permiso')->constrained('TIPOS_PERMISO_VACACION');
         });
 
+        //modulo de asignacion de material
         Schema::create('EQUIPO', function (Blueprint $table) {
             $table->id()->autoIncrement();
             $table->string("nombre",100);
@@ -251,6 +252,7 @@ class CreateAllTables extends Migration
             $table->foreignId('id_material')->constrained('EQUIPO');
             $table->foreignId('usuario_adm')->constrained('USUARIOS');
         });
+        //modulo
     }
 
     /**
