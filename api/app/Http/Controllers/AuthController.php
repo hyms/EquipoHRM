@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Usuarios;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 
@@ -23,8 +24,8 @@ class AuthController extends Controller
                 throw new \Exception($validator->errors()->toJson());
             }
 
-            $user = Usuarios::all()->where('email','=', $request->email)->first();
-            if (!$user || !Hash::check($request->password, $user->password, [])) {
+            $user = Usuarios::VerificarUsuario($request->email,$request->password);
+            if (!$user) {
                 return response()->json([
                     'status_code' => 404,
                     'message' => 'Datos invalidos'
