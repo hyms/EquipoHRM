@@ -1,6 +1,6 @@
 <template>
     <div id="app">
-        <div id="nav">
+        <div id="nav" v-if="isLogged">
             <router-link to="/">Home</router-link> |
             <router-link to="/about" v-if="isLogged">About</router-link>
             <router-link to="/login" v-else>Login</router-link>

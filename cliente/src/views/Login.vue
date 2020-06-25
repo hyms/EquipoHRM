@@ -1,7 +1,19 @@
 <template>
-    <div class="col-sm-8 col-md-6 col align-self-center">
-        <b-card title="Login">
-        <b-form @submit.prevent="login" @reset="onReset">
+    <div >
+    <div class="all-wrapper menu-side with-pattern">
+        <div class="auth-box-w">
+            <div class="logo-w">
+                <a href="index.html"><img alt="" :src="images.logo"></a>
+            </div>
+            <h4 class="auth-header">
+               Ingresar
+            </h4>
+            <div v-if="m_error" class="col">
+                <b-alert show dismissible variant="danger" v-for="(value, key) in m_error" :key="key">
+                    {{ key }}: {{ value }}
+                </b-alert>
+            </div>
+        <b-form @submit.prevent="login">
             <b-form-group
                     id="input-group-1"
                     label="Usuario:"
@@ -11,9 +23,9 @@
                         id="input-1"
                         v-model="email"
                         type="text"
-                        required
                         placeholder="Usuario"
                 ></b-form-input>
+                <div class="pre-icon os-icon os-icon-user-male-circle"></div>
             </b-form-group>
             <b-form-group
                     id="input-group-2"
@@ -24,19 +36,18 @@
                         id="input-2"
                         v-model="password"
                         type="password"
-                        required
                         placeholder="Contraseña"
                 ></b-form-input>
+                <div class="pre-icon os-icon os-icon-fingerprint"></div>
             </b-form-group>
-            <b-button type="submit" variant="primary">Submit</b-button>
-            <b-button type="reset" variant="danger">Reset</b-button>
-            <div v-if="m_error">
-            <b-alert show dismissible variant="danger" v-for="(value, key) in m_error" :key="key">
-                {{ key }}: {{ value }}
-            </b-alert>
+
+            <div class="buttons-w">
+                <b-button type="submit" variant="primary">Submit</b-button>
             </div>
+
         </b-form>
-        </b-card>
+        </div>
+    </div>
     </div>
 </template>
 
@@ -47,6 +58,9 @@
                 email: '',
                 password: '',
                 m_error: false,
+                images:{
+                    logo: require('../assets/img/logo-big.png')
+                }
             }
         },
 
@@ -64,7 +78,11 @@
                         console.log(err);
                     });
 
-                this.m_error = JSON.parse(JSON.stringify(this.$store.state.message))
+                try {
+                    this.m_error = JSON.parse(this.$store.state.message);
+                } catch (e) {
+                    this.m_error = {"mensaje":[this.$store.state.message]};
+                }
             }
         }
     }
