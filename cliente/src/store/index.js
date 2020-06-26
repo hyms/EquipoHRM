@@ -30,7 +30,7 @@ export default new Vuex.Store({
 
     actions: {
         async login ({ commit }, credentials) {
-            await axios.get('/sanctum/csrf-cookie')
+            await axios.get('/sanctum/csrf-cookie');
             return axios
                 .post('api/login', credentials)
                 .then(({ data }) => {

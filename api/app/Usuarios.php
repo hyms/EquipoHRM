@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -20,7 +19,7 @@ class Usuarios extends Authenticatable
 
     public static function VerificarUsuario($email,$password)
     {
-        $user = DB::table('usuarios')->where('email', $email)->first();
+        $user = Usuarios::where('email', $email)->first();
         if (!$user) {
             return false;
         }

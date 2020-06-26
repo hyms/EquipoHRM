@@ -1,18 +1,16 @@
 <template>
-    <div >
-    <div class="all-wrapper menu-side with-pattern">
-        <div class="auth-box-w">
-            <div class="logo-w">
-                <a href="index.html"><img alt="" :src="images.logo"></a>
-            </div>
-            <h4 class="auth-header">
-               Ingresar
-            </h4>
-            <div v-if="m_error" class="col">
-                <b-alert show dismissible variant="danger" v-for="(value, key) in m_error" :key="key">
-                    {{ key }}: {{ value }}
-                </b-alert>
-            </div>
+    <div>
+        <div class="logo-w">
+            <a href="#"><img alt="" :src="images.logo"></a>
+        </div>
+        <h4 class="auth-header">
+            Ingresar
+        </h4>
+        <div v-if="m_error" class="col">
+            <b-alert show dismissible variant="danger" v-for="(value, key) in m_error" :key="key">
+                {{ key }}: {{ value }}
+            </b-alert>
+        </div>
         <b-form @submit.prevent="login">
             <b-form-group
                     id="input-group-1"
@@ -46,33 +44,31 @@
             </div>
 
         </b-form>
-        </div>
-    </div>
     </div>
 </template>
 
 <script>
     export default {
-        data () {
+        data() {
             return {
                 email: '',
                 password: '',
                 m_error: false,
-                images:{
+                images: {
                     logo: require('../assets/img/logo-big.png')
                 }
             }
         },
 
         methods: {
-            async login () {
-                 await this.$store
+            async login() {
+                await this.$store
                     .dispatch('login', {
                         email: this.email,
                         password: this.password
                     })
                     .then(() => {
-                        this.$router.push({ name: 'About' })
+                        this.$router.push({name: 'Home'})
                     })
                     .catch(err => {
                         console.log(err);
@@ -81,7 +77,7 @@
                 try {
                     this.m_error = JSON.parse(this.$store.state.message);
                 } catch (e) {
-                    this.m_error = {"mensaje":[this.$store.state.message]};
+                    this.m_error = {"mensaje": [this.$store.state.message]};
                 }
             }
         }

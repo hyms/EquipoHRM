@@ -7,9 +7,13 @@ import About from "../views/About";
 Vue.use(VueRouter);
 
 const routes = [
+    //auth
     {
         path: "/",
         name: "Home",
+        meta: {
+            auth: true
+        },
         component: Home
     },
     {
@@ -20,6 +24,7 @@ const routes = [
         },
         component: About
     },
+    //no auth
     {
         path: '/login',
         name: 'Login',
