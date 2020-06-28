@@ -28187,7 +28187,8 @@ Contents:
 }
 
 /* #8.  Tablets and phones  (< 1024px) */
-@media (max-width: 1024px) {
+/*@media (max-width: 1024px) {*/
+@media (max-width: 768px) {
   .invoice-w {
     padding: 50px;
   }
@@ -28210,8 +28211,8 @@ Contents:
     display: none !important;
   }
 }
-
-/* #9.  Tablets (768px - 1024px) */
+/* */
+/* #9.  Tablets (768px - 1024px) *
 @media (min-width: 768px) and (max-width: 1024px) {
   .top-bar .logo-w {
     display: none;
@@ -28389,6 +28390,7 @@ Contents:
     padding: 30px;
   }
 }
+/* */
 
 /* #10. Phones & Vertical Tablets (<= 768px) */
 @media (max-width: 768px) {

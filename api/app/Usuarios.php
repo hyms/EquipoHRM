@@ -2,10 +2,11 @@
 
 namespace App;
 
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
-use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Usuarios extends Authenticatable
 {
@@ -27,6 +28,18 @@ class Usuarios extends Authenticatable
             return false;
         }
         return $user;
+    }
+
+    public static function GetAll()
+    {
+        return DB::table('usuarios')
+            ->get()
+            ->all();
+    }
+
+    public static function set(array $usuario)
+    {
+        return DB::table('usuarios')->insertGetId([]);
     }
 
 }

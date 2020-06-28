@@ -4,64 +4,80 @@
             <span>Personal</span>
         </li>
         <li class="">
-            <a href="#">
+            <router-link to="/" >
                 <div class="icon-w">
                     <div class="os-icon os-icon-layout"></div>
                 </div>
                 <span>Vacaciones</span>
-            </a>
+            </router-link>
         </li>
         <li class="">
-            <a href="#">
+            <router-link to="/" >
                 <div class="icon-w">
                     <div class="os-icon os-icon-layers"></div>
                 </div>
-                <span>Perimisos</span></a>
+                <span>Perimisos</span></router-link>
         </li>
         <li class="">
-            <a href="#">
+            <router-link to="/" >
                 <div class="icon-w">
                     <div class="os-icon os-icon-layers"></div>
                 </div>
-                <span>Registro</span></a>
+                <span>Registro</span></router-link>
         </li>
         <li class="sub-header">
             <span>Configuración</span>
         </li>
         <li class=" ">
-            <a href="#">
+            <router-link to="/" >
                 <div class="icon-w">
                     <div class="os-icon os-icon-package"></div>
                 </div>
-                <span>Dias Festivos</span></a>
+                <span>Dias Festivos</span></router-link>
         </li>
         <li class=" ">
-            <a href="#">
+            <router-link to="/" >
                 <div class="icon-w">
                     <div class="os-icon os-icon-file-text"></div>
                 </div>
-                <span>Unidades de Negocio</span></a>
+                <span>Unidades de Negocio</span></router-link>
+        </li>
+        <li class=" ">
+            <router-link to="/usuarios" >
+                <div class="icon-w">
+                    <div class="os-icon os-icon-file-text"></div>
+                </div>
+                <span>Usuarios</span>
+            </router-link>
+        </li>
+        <li class=" ">
+            <router-link to="/roles" >
+                <div class="icon-w">
+                    <div class="os-icon os-icon-file-text"></div>
+                </div>
+                <span>Roles</span>
+            </router-link>
         </li>
 
         <li class="sub-header">
             <span>Reportes</span>
         </li>
         <li class=" ">
-            <a href="#">
+            <router-link to="/" >
                 <div class="icon-w">
                     <div class="os-icon os-icon-layers"></div>
                 </div>
-                <span>Perimisos</span></a>
+                <span>Perimisos</span></router-link>
         </li>
         <li class="sub-header">
             <span>Cuenta</span>
         </li>
         <li class=" ">
-            <a href="#">
+            <router-link to="/" >
                 <div class="icon-w">
                     <div class="os-icon os-icon-layers"></div>
                 </div>
-                <span>Configuración</span></a>
+                <span>Configuración</span></router-link>
         </li>
         <li class=" ">
             <a href="#" v-on:click="logout">

@@ -5,7 +5,7 @@ import router from "./router";
 import store from "./store";
 import axios from 'axios';
 
-import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
+import {BootstrapVue, IconsPlugin} from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
@@ -21,6 +21,9 @@ Vue.use(IconsPlugin);
 
 Vue.use(VueSlideToggle);
 
+axios.defaults.withCredentials = true;
+axios.defaults.baseURL = 'http://localhost/EquipoHRM/api/public/';
+
 new Vue({
     router,
     store,
@@ -30,6 +33,7 @@ new Vue({
             const userData = JSON.parse(userInfo);
             this.$store.commit('setUserData', userData)
         }
+
         axios.interceptors.response.use(
             response => response,
             error => {

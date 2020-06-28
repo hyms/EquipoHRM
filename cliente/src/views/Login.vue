@@ -8,7 +8,7 @@
         </h4>
         <div v-if="m_error" class="col">
             <b-alert show dismissible variant="danger" v-for="(value, key) in m_error" :key="key">
-                {{ key }}: {{ value }}
+                {{ value }}
             </b-alert>
         </div>
         <b-form @submit.prevent="login">
@@ -22,6 +22,7 @@
                         v-model="email"
                         type="text"
                         placeholder="Usuario"
+                        trim
                 ></b-form-input>
                 <div class="pre-icon os-icon os-icon-user-male-circle"></div>
             </b-form-group>
@@ -35,12 +36,13 @@
                         v-model="password"
                         type="password"
                         placeholder="Contraseña"
+                        trim
                 ></b-form-input>
                 <div class="pre-icon os-icon os-icon-fingerprint"></div>
             </b-form-group>
 
             <div class="buttons-w">
-                <b-button type="submit" variant="primary">Submit</b-button>
+                <b-button type="submit" variant="primary" :disabled="loginState">Ingresar</b-button>
             </div>
 
         </b-form>
@@ -54,6 +56,7 @@
                 email: '',
                 password: '',
                 m_error: false,
+                loginState: false,
                 images: {
                     logo: require('../assets/img/logo-big.png')
                 }
@@ -62,6 +65,7 @@
 
         methods: {
             async login() {
+                this.loginState = true;
                 await this.$store
                     .dispatch('login', {
                         email: this.email,
@@ -70,15 +74,11 @@
                     .then(() => {
                         this.$router.push({name: 'Home'})
                     })
-                    .catch(err => {
-                        console.log(err);
+                    .catch(() => {
                     });
 
-                try {
-                    this.m_error = JSON.parse(this.$store.state.message);
-                } catch (e) {
-                    this.m_error = {"mensaje": [this.$store.state.message]};
-                }
+                this.loginState = false;
+                this.m_error = this.$store.state.message;
             }
         }
     }

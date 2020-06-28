@@ -1,8 +1,9 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
+import Home from "../views/Home";
 import Login from "../views/Login";
-import About from "../views/About";
+import Usuarios from "../views/Usuarios";
+import Roles from "../views/Roles";
 
 Vue.use(VueRouter);
 
@@ -17,12 +18,20 @@ const routes = [
         component: Home
     },
     {
-        path: '/about',
-        name: 'About',
+        path: '/usuarios',
+        name: 'Usuarios',
         meta: {
             auth: true
         },
-        component: About
+        component: Usuarios
+    },
+    {
+        path: '/roles',
+        name: 'Roles',
+        meta: {
+            auth: true
+        },
+        component: Roles
     },
     //no auth
     {

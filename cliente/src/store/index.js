@@ -4,9 +4,6 @@ import axios from 'axios'
 
 Vue.use(Vuex);
 
-axios.defaults.withCredentials = true;
-axios.defaults.baseURL = 'http://localhost/EquipoHRM/api/public/';
-axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
 
 export default new Vuex.Store({
@@ -33,13 +30,15 @@ export default new Vuex.Store({
             await axios.get('/sanctum/csrf-cookie');
             return axios
                 .post('api/login', credentials)
-                .then(({ data }) => {
-                    if(data['status_code']===200){
-                        commit('setUserData', data)
-                    }
-                    else {
-                        this.state.message = data['message'];
-                    }
+                .then(({data}) => {
+                    if(data['status']===0)
+                        commit('setUserData', data['data']);
+                    else
+                        //console.log(data['data']);
+                        this.state.message = data['data'];
+                }).catch((err) => {
+                    console.log(err)
+                    //this.state.message = data['message'];
                 })
         },
 
