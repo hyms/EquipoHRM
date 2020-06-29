@@ -24,6 +24,10 @@ Route::delete('/usuarios/delete', 'UsuariosController@delete');
 Route::get('/roles/get', 'RolesController@getAll');
 Route::post('/roles/post', 'RolesController@post');
 Route::delete('/roles/delete', 'RolesController@delete');
+//diasFestivos
+Route::get('/diasfestivos/get', 'DiasfestivosController@getAll');
+Route::post('/diasfestivos/post', 'DiasfestivosController@post');
+Route::delete('/diasfestivos/delete', 'DiasfestivosController@delete');
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

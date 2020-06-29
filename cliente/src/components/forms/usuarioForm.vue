@@ -141,8 +141,12 @@
                         })
                         .then(({data}) => {
                             if (data['status'] === 0) {
-                                this.name.value = data['data'][0]['name'];
-                                this.estado.value = data['data'][0]['estado'];
+                                this.name['value'] = data['data'][0]['name'];
+                                this.estado['value'] = data['data'][0]['estado'];
+                                this.password['value'] = (data['data'][0]['password']?'******':'');
+                                this.alias['value'] = data['data'][0]['alias'];
+                                this.detail['value'] = data['data'][0]['detail'];
+                                this.rol = data['data'][0]['rol'];
                             } else {
                                 this.m_error = data['data'];
                             }

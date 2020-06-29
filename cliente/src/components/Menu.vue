@@ -29,7 +29,7 @@
             <span>Configuración</span>
         </li>
         <li class=" ">
-            <router-link to="/" >
+            <router-link to="/diasfestivos" >
                 <div class="icon-w">
                     <div class="os-icon os-icon-package"></div>
                 </div>

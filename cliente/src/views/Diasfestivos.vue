@@ -14,31 +14,31 @@
                         </h6>
                         <div class="element-box-tp">
                             <div class="table-responsive">
-                                <b-table
-                                        :items="tables"
-                                        :fields="columnas"
-                                        striped
-                                        responsive="sm"
-                                        class="table table-padded"
-                                        show-empty
-                                        empty-text="Sin datos"
-                                >
+                                    <b-table
+                                            :items="tables"
+                                            :fields="columnas"
+                                            striped
+                                            responsive="sm"
+                                            class="table table-padded"
+                                            show-empty
+                                            empty-text="Sin datos"
+                                    >
 
-                                    <template v-slot:cell(created_at)="data">
-                                        <span>{{data.value | formatDate}}</span>
-                                    </template>
-                                    <template v-slot:cell(estado)="data">
-                                        <span>{{data.value | formatState}}</span>
-                                    </template>
-                                    <template v-slot:cell(Acciones)="row">
-                                        <div class="row-actions">
+                                        <template v-slot:cell(fecha)="data">
+                                            <span>{{data.value | formatDateOnly}}</span>
+                                        </template>
+                                        <template v-slot:cell(estado)="data">
+                                            <span>{{data.value | formatState}}</span>
+                                        </template>
+                                        <template v-slot:cell(Acciones)="row">
+                                            <div class="row-actions">
                                             <a @click="setIdForm(row.item.id)" v-b-modal="'modalRol'"><i
                                                     class="os-icon os-icon-ui-44"></i></a>
                                             <a class="text-danger" @click="del(row.item.id)"><i
                                                     class="os-icon os-icon-ui-15"></i></a>
-                                        </div>
-                                    </template>
-                                </b-table>
+                                            </div>
+                                        </template>
+                                    </b-table>
                             </div>
                         </div>
                     </div>
@@ -50,27 +50,22 @@
 </template>
 <script>
     import axios from "axios";
-    import Form from '@/components/forms/usuarioForm'
+    import Form from '@/components/forms/diasfestivosForm'
     import '@/store/funcions';
 
     export default {
         data() {
             return {
-                tituloPagina: 'Usuarios',
-                path:'/api/usuarios',
+                tituloPagina: 'Dias Festivos',
+                path:'/api/diasfestivos',
                 columnas: [
                     {
-                        key: 'name',
-                        label: 'nombre',
+                        key: 'nombre',
                         sortable: true
                     },
                     {
-                        key: 'alias',
-                        sortable: true
-                    },
-                    {
-                        key: 'created_at',
-                        label: 'Fecha Registro',
+                        key: 'fecha',
+                        label: 'Día',
                         sortable: true
                     },
                     {
@@ -91,7 +86,7 @@
         },
         methods: {
             setIdForm(id=null){
-                this.idForm=id;
+              this.idForm=id;
             },
             async getAll() {
                 await axios.get(this.path+'/get')

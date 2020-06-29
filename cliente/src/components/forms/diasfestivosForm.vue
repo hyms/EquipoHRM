@@ -26,6 +26,13 @@
                             required
                     ></b-form-input>
                 </b-form-group>
+                <label for="fechaForm">Date picker with placeholder</label>
+                <b-form-datepicker
+                        id="fechaForm"
+                        v-model="fecha.value"
+                        locale="es"
+                        :date-format-options="{ year: 'numeric', month: '2-digit', day: '2-digit' }"
+                ></b-form-datepicker>
                 <div class="form-check">
                     <input class="form-check-input" type="checkbox" v-model="estado.value" id="defaultCheck1">
                     <label class="form-check-label" for="defaultCheck1">
@@ -40,17 +47,20 @@
 <script>
     import axios from 'axios'
 
-
     export default {
         data() {
             return {
-                path: '/api/roles',
+                path: '/api/diasfestivos',
                 nombre: {
                     value: '',
                     state: null,
                 },
                 estado: {
                     value: false,
+                    state: null,
+                },
+                fecha: {
+                    value: '',
                     state: null,
                 },
                 m_error: false,
@@ -69,6 +79,7 @@
             resetModal() {
                 this.nombre = {value: '', state: null};
                 this.estado = {value: false, state: null};
+                this.fecha = {value: '', state: null};
                 this.m_error = false;
             },
             loadModal() {
@@ -84,6 +95,7 @@
                             if (data['status'] === 0) {
                                 this.nombre.value = data['data'][0]['nombre'];
                                 this.estado.value = data['data'][0]['estado'];
+                                this.fecha.value = data['data'][0]['fecha'];
                             } else {
                                 this.m_error = data['data'];
                             }
@@ -105,7 +117,8 @@
                 // Push the name to submitted names
                 var formData = {
                     'nombre': this.nombre.value,
-                    'estado': this.estado.value
+                    'estado': this.estado.value,
+                    'fecha': this.fecha.value
                 };
                 if (this.idForm)
                     formData['id'] = this.idForm;

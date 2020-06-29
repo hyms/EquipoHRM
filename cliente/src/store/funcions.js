@@ -6,6 +6,11 @@ Vue.filter('formatDate', function(value) {
         return moment(String(value)).format('DD/MM/YYYY hh:mm')
     }
 });
+Vue.filter('formatDateOnly', function(value) {
+    if (value) {
+        return moment(String(value)).format('DD/MM/YYYY')
+    }
+});
 
 Vue.filter('formatState', function(value) {
         return (value === 1) ? 'Activo' : 'Inactivo'

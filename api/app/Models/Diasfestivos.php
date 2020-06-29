@@ -6,15 +6,15 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class Roles
+class Diasfestivos
 {
-    protected static $table = 'roles';
-    protected static $tableHistory = 'rolesHistory';
+    protected static $table = 'dias_festivos';
+    protected static $tableHistory = 'dias_festivosHistory';
 
     public static function GetAll()
     {
         return DB::table(self::$table)
-            ->select('id', 'nombre', 'created_at', 'estado')
+            ->select('id', 'nombre', 'fecha', 'created_at', 'estado')
             ->where([
                 ['borrado', 0],
             ])
@@ -24,7 +24,7 @@ class Roles
     public static function Get($id)
     {
         return DB::table(self::$table)
-            ->select('id', 'nombre', 'created_at', 'estado')
+            ->select('id', 'nombre', 'fecha', 'created_at', 'estado')
             ->where([
                 ['id', $id],
                 ['borrado', 0],
@@ -38,6 +38,7 @@ class Roles
             ->insertGetId([
                 'nombre' => $values['nombre'],
                 'estado' => $values['estado'],
+                'fecha' => $values['fecha'],
                 'borrado' => 0,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
@@ -53,6 +54,7 @@ class Roles
                 ['id', $values['id']],
                 ['nombre', $values['nombre']],
                 ['estado', $values['estado']],
+                ['fecha', $values['fecha']],
                 ['borrado', 0],
             ])
             ->count();
@@ -66,6 +68,7 @@ class Roles
             ->update([
                 'nombre' => $values['nombre'],
                 'estado' => $values['estado'],
+                'fecha' => $values['fecha'],
                 'updated_at' => Carbon::now(),
             ]);
 
@@ -89,7 +92,7 @@ class Roles
         if (!empty($id)) {
             $temp_id = Auth::guard('api')->user();
             $data = DB::table(self::$table)
-                ->select('id', 'nombre', 'estado', 'borrado')
+                ->select('id', 'nombre', 'estado', 'borrado', 'fecha')
                 ->where([
                     ['id', $id],
                 ])
@@ -100,6 +103,7 @@ class Roles
                     'id' => $data['id'],
                     'nombre' => $data['nombre'],
                     'estado' => $data['estado'],
+                    'fecha' => $data['fecha'],
                     'borrado' => $data['borrado'],
                     'registerUtc' => Carbon::now(),
                     'registerBy' => !empty($temp_id) ? $temp_id['id'] : null,

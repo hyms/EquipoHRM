@@ -14,7 +14,15 @@
                         </h6>
                         <div class="element-box-tp">
                             <div class="table-responsive">
-                                    <b-table :items="tables" :fields="columnas" striped responsive="sm" class="table table-padded">
+                                    <b-table
+                                            :items="tables"
+                                            :fields="columnas"
+                                            striped
+                                            responsive="sm"
+                                            class="table table-padded"
+                                            show-empty
+                                            empty-text="Sin datos"
+                                    >
 
                                         <template v-slot:cell(created_at)="data">
                                             <span>{{data.value | formatDate}}</span>

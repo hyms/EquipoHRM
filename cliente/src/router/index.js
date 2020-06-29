@@ -4,6 +4,7 @@ import Home from "../views/Home";
 import Login from "../views/Login";
 import Usuarios from "../views/Usuarios";
 import Roles from "../views/Roles";
+import Diasfestivos from "../views/Diasfestivos";
 
 Vue.use(VueRouter);
 
@@ -32,6 +33,14 @@ const routes = [
             auth: true
         },
         component: Roles
+    },
+    {
+        path: '/diasfestivos',
+        name: 'Diasfestivos',
+        meta: {
+            auth: true
+        },
+        component: Diasfestivos
     },
     //no auth
     {

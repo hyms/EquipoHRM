@@ -20,7 +20,7 @@ class Usuarios extends Authenticatable
         'password', 'remember_token',
     ];
 
-    public static function VerificarUsuario($email,$password)
+    public static function VerificarUsuario($email, $password)
     {
         $user = self::where([
             ['name', $email],
@@ -41,7 +41,7 @@ class Usuarios extends Authenticatable
     public static function GetAllC()
     {
         return DB::table(self::$tableC)
-            ->select('id', 'name','alias', 'created_at', 'estado')
+            ->select('id', 'name', 'alias', 'created_at', 'estado')
             ->where([
                 ['borrado', 0],
             ])
@@ -51,7 +51,7 @@ class Usuarios extends Authenticatable
     public static function GetC($id)
     {
         return DB::table(self::$tableC)
-            ->select('id', 'name','alias', 'detail','created_at', 'estado','rol')
+            ->select('id', 'name', 'alias', 'detail', 'created_at', 'estado', 'rol')
             ->where([
                 ['id', $id],
                 ['borrado', 0],
@@ -66,9 +66,9 @@ class Usuarios extends Authenticatable
                 'name' => $values['name'],
                 'password' => Hash::make($values['password']),
                 'alias' => $values['alias'],
-                'detail' => (is_null($values['detail'])?'':$values['detail']),
+                'detail' => (empty($values['detail']) ? '' : $values['detail']),
                 'estado' => $values['estado'],
-                'rol' =>  $values['rol'],
+                'rol' => $values['rol'],
                 'borrado' => 0,
                 'api_token' => '',
                 'created_at' => Carbon::now(),
@@ -80,34 +80,48 @@ class Usuarios extends Authenticatable
 
     private static function updateC($values)
     {
+        $data = [
+            ['id', $values['id']],
+            ['name', $values['name']],
+            ['alias', $values['alias']],
+            ['detail', (empty($values['detail']) ? '' : $values['detail'])],
+            ['estado', $values['estado']],
+            ['rol', $values['rol']],
+            ['borrado', 0],
+            ['updated_at', Carbon::now()]
+        ];
+        if(!empty($values['password'])) {
+            array_push($data, ['password', Hash::make($values['password'])]);
+        }
+
         $rows = DB::table(self::$tableC)
-            ->where([
-                ['id', $values['id']],
-                ['name' => $values['name']],
-                ['password' => Hash::make($values['password'])],
-                ['alias' => $values['alias']],
-                ['detail' => $values['detail']],
-                ['estado' => $values['estado']],
-                ['rol' =>  $values['rol']],
-                ['borrado', 0],
-            ])
+            ->where($data)
             ->count();
         if ($rows != 0) {
             return $values['id'];
+        }
+        $data = [
+            'name' => $values['name'],
+            'alias' => $values['alias'],
+            'detail' => (empty($values['detail']) ? '' : $values['detail']),
+            'estado' => $values['estado'],
+            'rol' => $values['rol'],
+            'updated_at' => Carbon::now(),
+        ];
+        if(!empty($values['password'])) {
+            $tmp_pass = DB::table(self::$tableC)->where([
+                ['id', $values['id']],
+                ['password', Hash::make($values['password'])]
+            ])->count();
+            if ($tmp_pass == 0) {
+                $data['password']= Hash::make($values['password']);
+            }
         }
         $affected = DB::table(self::$tableC)
             ->where([
                 ['id', $values['id']]
             ])
-            ->update([
-                'name' => $values['name'],
-                'password' => Hash::make($values['password']),
-                'alias' => $values['alias'],
-                'detail' => $values['detail'],
-                'estado' => $values['estado'],
-                'rol' =>  $values['rol'],
-                'updated_at' => Carbon::now(),
-            ]);
+            ->update($data);
 
         if ($affected) {
             self::history($values['id']);

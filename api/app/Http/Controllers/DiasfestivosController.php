@@ -2,36 +2,36 @@
 
 namespace App\Http\Controllers;
 
-use App\Usuarios;
+use App\Models\Diasfestivos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
-class UsuariosController extends Controller
+class DiasfestivosController extends Controller
 {
     public function getAll(Request $request)
     {
         try {
-            Log::debug("Init Get Usuarios user:" . Auth::guard('api')->user()->id);
+            Log::debug("Init Get Diasfestivos user:" . Auth::guard('api')->user()->id);
             Log::info("IP: " . $request->getClientIp());
             Log::info('user-agent:' . $request->userAgent());
 
             if (empty($request->all())) {
-                $Usuarios = Usuarios::GetAllC();
+                $Diasfestivos = Diasfestivos::GetAll();
                 Log::debug("Success get all");
                 return response()->json([
                     'status' => 0,
                     'data' => [
-                        'all' => $Usuarios,
-                        'count' => count($Usuarios),
+                        'all' => $Diasfestivos,
+                        'count' => count($Diasfestivos),
                     ]]);
             }
-            $rol = Usuarios::GetC($request->get('id'));
+            $row = Diasfestivos::Get($request->get('id'));
             Log::debug("Success get id:" . $request->get('id'));
             return response()->json([
-                'status' => (empty($rol) ? -1 : 0),
-                'data' => $rol
+                'status' => (empty($row) ? -1 : 0),
+                'data' => $row
             ]);
         } catch (\Exception $error) {
             Log::error($error->getMessage());
@@ -43,21 +43,20 @@ class UsuariosController extends Controller
     public function post(Request $request)
     {
         try {
-            Log::debug("Init Post Usuarios user:" . Auth::guard('api')->user()->id);
+            Log::debug("Init Post Diasfestivos user:" . Auth::guard('api')->user()->id);
             Log::info("IP: " . $request->getClientIp());
             Log::info('user-agent:' . $request->userAgent());
 
             $validator = Validator::make($request->all(), [
-                'name' => 'required|min:5',
+                'nombre' => 'required|min:5',
                 'estado' => 'required',
-                'rol'=>'required'
             ]);
             if ($validator->fails()) {
                 return response()->json([
                     'status' => -1,
                     'data' => $validator->errors()]);
             }
-            $id = Usuarios::SaveC($request->all());
+            $id = Diasfestivos::Save($request->all());
             if (empty($id)) {
                 return response()->json([
                     'status' => -1,
@@ -67,18 +66,18 @@ class UsuariosController extends Controller
             }
             return response()->json([
                 'status' => 0,
-                'data' => Usuarios::GetC($id)]);
+                'data' => Diasfestivos::Get($id)]);
         } catch (\Exception $error) {
             Log::error($error->getMessage());
             return response()->json([//'message' => $error->getMessage(),
-                'error' => $error], 500);
+                'error' => $error,], 500);
         }
     }
 
     public function delete(Request $request)
     {
         try {
-            Log::debug("Init Delete Usuarios user:" . Auth::guard('api')->user()->id);
+            Log::debug("Init Delete Diasfestivos user:" . Auth::guard('api')->user()->id);
             Log::info("IP: " . $request->getClientIp());
             Log::info('user-agent:' . $request->userAgent());
 
@@ -90,9 +89,9 @@ class UsuariosController extends Controller
                     'status' => -1,
                     'data' => $validator->errors()]);
             }
-            $Usuarios = Usuarios::Del($request->all());
+            $Diasfestivos = Diasfestivos::Delete($request->all());
             return response()->json([
-                'status' => ($Usuarios ? 0 : -1),
+                'status' => ($Diasfestivos ? 0 : -1),
                 'data' => []
             ]);
         } catch (\Exception $error) {
