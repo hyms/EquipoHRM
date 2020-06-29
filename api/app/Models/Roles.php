@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\models;
 
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -13,7 +13,7 @@ class Roles
 
     public static function GetAll()
     {
-        return DB::table(Roles::$table)
+        return DB::table(self::$table)
             ->select('id', 'nombre', 'created_at', 'estado')
             ->where([
                 ['borrado', 0],
@@ -23,7 +23,7 @@ class Roles
 
     public static function Get($id)
     {
-        return DB::table(Roles::$table)
+        return DB::table(self::$table)
             ->select('id', 'nombre', 'created_at', 'estado')
             ->where([
                 ['id', $id],
@@ -34,7 +34,7 @@ class Roles
 
     private static function insert($values)
     {
-        $id = DB::table(Roles::$table)
+        $id = DB::table(self::$table)
             ->insertGetId([
                 'nombre' => $values['nombre'],
                 'estado' => $values['estado'],
@@ -48,7 +48,7 @@ class Roles
 
     private static function update($values)
     {
-        $rows = DB::table(Roles::$table)
+        $rows = DB::table(self::$table)
             ->where([
                 ['id', $values['id']],
                 ['nombre', $values['nombre']],
@@ -59,7 +59,7 @@ class Roles
         if ($rows != 0) {
             return $values['id'];
         }
-        $affected = DB::table(Roles::$table)
+        $affected = DB::table(self::$table)
             ->where([
                 ['id', $values['id']]
             ])
@@ -88,14 +88,14 @@ class Roles
     {
         if (!empty($id)) {
             $temp_id = Auth::guard('api')->user();
-            $data = DB::table(Roles::$table)
+            $data = DB::table(self::$table)
                 ->select('id', 'nombre', 'estado', 'borrado')
                 ->where([
                     ['id', $id],
                 ])
                 ->get()->first();
             $data = (array)$data;
-            DB::table(Roles::$tableHistory)
+            DB::table(self::$tableHistory)
                 ->insert([
                     'id' => $data['id'],
                     'nombre' => $data['nombre'],
@@ -109,7 +109,7 @@ class Roles
 
     public static function Delete(array $values)
     {
-        $affected = DB::table(Roles::$table)
+        $affected = DB::table(self::$table)
             ->where([
                 ['id', $values['id']]
             ])

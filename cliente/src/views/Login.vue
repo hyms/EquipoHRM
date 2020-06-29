@@ -42,7 +42,15 @@
             </b-form-group>
 
             <div class="buttons-w">
-                <b-button type="submit" variant="primary" :disabled="loginState">Ingresar</b-button>
+                <b-button type="submit" variant="primary" :disabled="loginState">
+                    <span  v-if="loginState">
+                    <b-spinner small></b-spinner>
+                    Ingresando...
+                    </span>
+                    <span v-else>
+                    Ingresar
+                    </span>
+                </b-button>
             </div>
 
         </b-form>

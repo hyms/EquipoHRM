@@ -2,10 +2,12 @@
     <div>
         <b-modal
                 id="modalRol"
-                title="Nuevo Rol"
+                :title="this.idForm?'Modificar Rol':'Nuevo Rol'"
                 @show="loadModal"
                 @hidden="resetModal"
                 @ok="handleOk"
+            okTitle="Guardar"
+            cancelTitle="Cancelar"
         >
             <b-alert show dismissible variant="danger" v-for="(value, key) in m_error" :key="key">
                 {{ value }}
@@ -42,25 +44,25 @@
     export default {
         data() {
             return {
-                nombre:{
+                path:'/api/roles',
+                nombre: {
                     value: '',
                     state: null,
                 },
-                estado:{
+                estado: {
                     value: false,
                     state: null,
                 },
                 m_error: false,
             }
         },
-        props:{
-            idForm:Number,
+        props: {
+            idForm: Number,
         },
         methods: {
             checkFormValidity() {
                 const valid = this.$refs.form.checkValidity();
                 this.nombre.state = valid;
-                this.estado.state = valid;
                 this.m_error = false;
                 return valid
             },
@@ -69,14 +71,14 @@
                 this.nombre.state = null;
                 this.estado.value = false;
                 this.estado.state = null;
-                this.m_error= false;
+                this.m_error = false;
             },
             loadModal() {
                 this.resetModal();
                 if (this.idForm) {
                     // Push the name to submitted names
                     axios.get(
-                        'api/roles/get',
+                        this.path+'/get',
                         {
                             params: {'id': this.idForm}
                         })
@@ -105,29 +107,29 @@
                 // Push the name to submitted names
                 var formData = {
                     'nombre': this.nombre.value,
-                    'estado':this.estado.value
+                    'estado': this.estado.value
                 };
-                if(this.idForm)
-                    formData['id']=this.idForm;
+                if (this.idForm)
+                    formData['id'] = this.idForm;
 
                 axios.post(
-                    'api/roles/post',
+                    this.path+'/post',
                     formData
-                    )
+                )
                     .then(({data}) => {
                         if (data['status'] === 0) {
                             // Hide the modal manually
                             this.$nextTick(() => {
+                                this.$emit('finish', true);
                                 this.$bvModal.hide('modalRol');
-                                this.$emit('finish',true);
                             });
-
-                        }
-                        else {
+                        } else {
                             this.m_error = data['data'];
                         }
                     })
                     .catch();
+            },
+            close() {
             }
         }
     }

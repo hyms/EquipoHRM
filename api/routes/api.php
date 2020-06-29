@@ -15,8 +15,11 @@ use Illuminate\Support\Facades\Route;
 */
 //auth
 Route::post('/login', 'AuthController@login');
+Route::post('/logout', 'AuthController@logout');
 //usuarios
 Route::get('/usuarios/get', 'UsuariosController@getAll');
+Route::post('/usuarios/post', 'UsuariosController@post');
+Route::delete('/usuarios/delete', 'UsuariosController@delete');
 //roles
 Route::get('/roles/get', 'RolesController@getAll');
 Route::post('/roles/post', 'RolesController@post');
