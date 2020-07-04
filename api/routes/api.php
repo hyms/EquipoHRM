@@ -28,6 +28,21 @@ Route::delete('/roles/delete', 'RolesController@delete');
 Route::get('/diasfestivos/get', 'DiasfestivosController@getAll');
 Route::post('/diasfestivos/post', 'DiasfestivosController@post');
 Route::delete('/diasfestivos/delete', 'DiasfestivosController@delete');
+//empresa
+Route::get('/empresa/get', 'EmpresaController@get');
+Route::post('/empresa/post', 'EmpresaController@post');
+//unidadesNegocio
+Route::get('/unidadesnegocio/get', 'UnidadesnegocioController@getAll');
+Route::post('/unidadesnegocio/post', 'UnidadesnegocioController@post');
+Route::delete('/unidadesnegocio/delete', 'UnidadesnegocioController@delete');
+//areasTrabajo
+Route::get('/areastrabajo/get', 'AreastrabajoController@getAll');
+Route::post('/areastrabajo/post', 'AreastrabajoController@post');
+Route::delete('/areastrabajo/delete', 'AreastrabajoController@delete');
+//cargos
+Route::get('/cargos/get', 'CargosController@getAll');
+Route::post('/cargos/post', 'CargosController@post');
+Route::delete('/cargos/delete', 'CargosController@delete');
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

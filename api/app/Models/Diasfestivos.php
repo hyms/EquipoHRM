@@ -8,8 +8,8 @@ use Illuminate\Support\Facades\DB;
 
 class Diasfestivos
 {
-    protected static $table = 'dias_festivos';
-    protected static $tableHistory = 'dias_festivosHistory';
+    protected static $table = 'diasFestivos';
+    protected static $tableHistory = 'diasFestivosHistory';
 
     public static function GetAll()
     {

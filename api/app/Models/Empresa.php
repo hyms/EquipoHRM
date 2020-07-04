@@ -11,7 +11,7 @@ class Empresa
     protected static $table = 'empresas';
     protected static $tableHistory = 'empresasHistory';
 
-    public static function GetAll()
+    /*public static function GetAll()
     {
         return DB::table(self::$table)
             ->select(
@@ -19,38 +19,41 @@ class Empresa
                 'nombre',
                 'nit',
                 'direccion',
-                'created_at',
-                'estado'
+                "telefono",
+                "celular",
             )
             ->where([
                 ['borrado', 0],
             ])
             ->get();
-    }
+    }*/
 
     public static function Get($id)
     {
+
         return DB::table(self::$table)
-            ->select('id', 'nombre', 'created_at', 'estado')
+            ->select(
+                'id',
+                "nombre",
+                "nit",
+                "direccion",
+                "telefono",
+                "celular",
+                "fax",
+                "ciudad",
+                "departamento",
+                "gerente",
+                "email",
+                "web",
+                "fecha_nacimiento",
+                'created_at'
+            )
             ->where([
                 ['id', $id],
                 ['borrado', 0],
+                ['estado', 1],
             ])
             ->get();
-    }
-
-    private static function insert($values)
-    {
-        $id = DB::table(self::$table)
-            ->insertGetId([
-                'nombre' => $values['nombre'],
-                'estado' => $values['estado'],
-                'borrado' => 0,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ]);
-        self::history($id);
-        return $id;
     }
 
     private static function update($values)
@@ -59,7 +62,18 @@ class Empresa
             ->where([
                 ['id', $values['id']],
                 ['nombre', $values['nombre']],
-                ['estado', $values['estado']],
+                ["nit",$values['nit']],
+                ["direccion",$values['direccion']],
+                ["telefono",$values['telefono']],
+                ["celular",$values['celular']],
+                ["fax",$values['fax']],
+                ["ciudad",$values['ciudad']],
+                ["departamento",$values['departamento']],
+                ["gerente",$values['gerente']],
+                ["email",$values['email']],
+                ["web",$values['web']],
+                ["fecha_nacimiento",'LIKE',$values['fecha_nacimiento']],
+                ['estado', 1],
                 ['borrado', 0],
             ])
             ->count();
@@ -72,7 +86,17 @@ class Empresa
             ])
             ->update([
                 'nombre' => $values['nombre'],
-                'estado' => $values['estado'],
+                "nit" => $values['nit'],
+                "direccion" => $values['direccion'],
+                "telefono" => $values['telefono'],
+                "celular" => $values['celular'],
+                "fax" => $values['fax'],
+                "ciudad" => $values['ciudad'],
+                "departamento" => $values['departamento'],
+                "gerente" => $values['gerente'],
+                "email" => $values['email'],
+                "web" => $values['web'],
+                "fecha_nacimiento" => $values['fecha_nacimiento'],
                 'updated_at' => Carbon::now(),
             ]);
 
@@ -96,7 +120,6 @@ class Empresa
         if (!empty($id)) {
             $temp_id = Auth::guard('api')->user();
             $data = DB::table(self::$table)
-                ->select('id', 'nombre', 'estado', 'borrado')
                 ->where([
                     ['id', $id],
                 ])
@@ -106,28 +129,23 @@ class Empresa
                 ->insert([
                     'id' => $data['id'],
                     'nombre' => $data['nombre'],
-                    'estado' => $data['estado'],
-                    'borrado' => $data['borrado'],
+                    "nit" => $data['nit'],
+                    "direccion" => $data['direccion'],
+                    "telefono" => $data['telefono'],
+                    "celular" => $data['celular'],
+                    "fax" => $data['fax'],
+                    "ciudad" => $data['ciudad'],
+                    "departamento" => $data['departamento'],
+                    "gerente" => $data['gerente'],
+                    "email" => $data['email'],
+                    "web" => $data['web'],
+                    "fecha_nacimiento" => $data['fecha_nacimiento'],
+                    "estado" => $data['estado'],
+                    "borrado" => $data['borrado'],
                     'registerUtc' => Carbon::now(),
                     'registerBy' => !empty($temp_id) ? $temp_id['id'] : null,
                 ]);
         }
-    }
-
-    public static function Delete(array $values)
-    {
-        $affected = DB::table(self::$table)
-            ->where([
-                ['id', $values['id']]
-            ])
-            ->update([
-                'borrado' => 1,
-                'updated_at' => Carbon::now(),
-            ]);
-        if ($affected) {
-            self::history($values['id']);
-        }
-        return $affected;
     }
 
 }

@@ -6,15 +6,15 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class Roles
+class Areastrabajo
 {
-    protected static $table = 'roles';
-    protected static $tableHistory = 'rolesHistory';
+    protected static $table = 'areasTrabajo';
+    protected static $tableHistory = 'areasTrabajoHistory';
 
     public static function GetAll()
     {
         return DB::table(self::$table)
-            ->select('id', 'nombre', 'created_at', 'estado')
+            ->select('id', 'nombre', 'detalle', 'estado')
             ->where([
                 ['borrado', 0],
             ])
@@ -24,7 +24,7 @@ class Roles
     public static function Get($id)
     {
         return DB::table(self::$table)
-            ->select('id', 'nombre', 'created_at', 'estado')
+            ->select('id', 'nombre', 'estado')
             ->where([
                 ['id', $id],
                 ['borrado', 0],
@@ -38,6 +38,7 @@ class Roles
             ->insertGetId([
                 'nombre' => $values['nombre'],
                 'estado' => $values['estado'],
+                'detalle' => $values['detalle'],
                 'borrado' => 0,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
@@ -53,6 +54,7 @@ class Roles
                 ['id', $values['id']],
                 ['nombre', $values['nombre']],
                 ['estado', $values['estado']],
+                ['detalle', $values['detalle']],
                 ['borrado', 0],
             ])
             ->count();
@@ -66,6 +68,7 @@ class Roles
             ->update([
                 'nombre' => $values['nombre'],
                 'estado' => $values['estado'],
+                'detalle' => $values['detalle'],
                 'updated_at' => Carbon::now(),
             ]);
 
@@ -99,6 +102,7 @@ class Roles
                     'id' => $data['id'],
                     'nombre' => $data['nombre'],
                     'estado' => $data['estado'],
+                    'detalle' => $data['detalle'],
                     'borrado' => $data['borrado'],
                     'registerUtc' => Carbon::now(),
                     'registerBy' => !empty($temp_id) ? $temp_id['id'] : null,

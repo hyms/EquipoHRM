@@ -14,7 +14,7 @@ class CreateConfigTables extends Migration
     public function up()
     {
         Schema::create('diasFestivos', function (Blueprint $table) {
-            $table->id()->autoIncrement();
+            $table->id();
             $table->string("nombre",200);
             $table->date("fecha");
             //$table->decimal("dias");
@@ -38,7 +38,7 @@ class CreateConfigTables extends Migration
         });
 
         Schema::create('empresas', function (Blueprint $table) {
-            $table->id()->autoIncrement();
+            $table->id();
             $table->string("nombre",100);
             $table->string("nit",20);
             $table->string("direccion",200);
@@ -81,7 +81,7 @@ class CreateConfigTables extends Migration
         });
 
         Schema::create('unidadesNegocio', function (Blueprint $table) {
-            $table->id()->autoIncrement();
+            $table->id();
             $table->string("nombre",100);
             $table->string("direccion",200);
             $table->string("telefono",15);
@@ -125,7 +125,7 @@ class CreateConfigTables extends Migration
         });
 
         Schema::create('areasTrabajo', function (Blueprint $table) {
-            $table->id()->autoIncrement();
+            $table->id();
             $table->string("nombre",100);
             $table->text("detalle");
 
@@ -148,10 +148,10 @@ class CreateConfigTables extends Migration
         });
 
         Schema::create('cargos', function (Blueprint $table) {
-            $table->id()->autoIncrement();
+            $table->id();
             $table->string("nombre",100);
             $table->text("detalle");
-            $table->text("cargo_padre")->nullable();
+            $table->unsignedInteger("cargo_padre")->nullable();
 
             //control
             $table->smallInteger("estado");
@@ -162,7 +162,7 @@ class CreateConfigTables extends Migration
         Schema::create('cargosHistory', function (Blueprint $table) {
             $table->string("nombre",100);
             $table->text("detalle");
-            $table->text("cargo_padre")->nullable();
+            $table->unsignedInteger("cargo_padre")->nullable();
             $table->smallInteger("estado");
             $table->boolean("borrado");
             //control de historial
