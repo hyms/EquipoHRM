@@ -24,7 +24,7 @@ class Areastrabajo
     public static function Get($id)
     {
         return DB::table(self::$table)
-            ->select('id', 'nombre', 'estado')
+            ->select('id', 'nombre','detalle', 'estado')
             ->where([
                 ['id', $id],
                 ['borrado', 0],

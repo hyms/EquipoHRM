@@ -11,20 +11,24 @@ class Cargo
     protected static $table = 'cargos';
     protected static $tableHistory = 'cargosHistory';
 
-    public static function GetAll()
+    public static function GetAll($padre=null)
     {
-        return DB::table(self::$table)
-            ->select('id', 'nombre', 'detalle', 'estado')
+        $result =  DB::table(self::$table)
+            ->select('cargos.id', 'cargos.nombre', 'cargos.detalle', 'cargos.estado','Padre.nombre as padre')
             ->where([
-                ['borrado', 0],
-            ])
-            ->get();
+                ['cargos.borrado', 0],
+            ])->leftJoin('cargos as Padre','cargos.cargo_padre','=','Padre.id');
+
+        if(!is_null($padre))
+            $result->where(['id','!=',$padre]);
+
+        return $result->get();
     }
 
     public static function Get($id)
     {
         return DB::table(self::$table)
-            ->select('id', 'nombre', 'estado')
+            ->select('id', 'nombre', 'estado','detalle','cargo_padre')
             ->where([
                 ['id', $id],
                 ['borrado', 0],
@@ -38,7 +42,7 @@ class Cargo
             ->insertGetId([
                 'nombre' => $values['nombre'],
                 'estado' => $values['estado'],
-                'detalle' => $values['detalle'],
+                'detalle' => empty($values['detalle'])?'':$values['detalle'],
                 'cargo_padre' => $values['cargo_padre'],
                 'borrado' => 0,
                 'created_at' => Carbon::now(),
@@ -55,7 +59,7 @@ class Cargo
                 ['id', $values['id']],
                 ['nombre', $values['nombre']],
                 ['estado', $values['estado']],
-                ['detalle', $values['detalle']],
+                ['detalle', empty($values['detalle'])?'':$values['detalle']],
                 ['cargo_padre', $values['cargo_padre']],
                 ['borrado', 0],
             ])

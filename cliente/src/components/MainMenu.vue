@@ -45,7 +45,7 @@
         <!--------------------
             START - Main Menu
             -------------------->
-        <div class="menu-w color-scheme-light color-style-default menu-position-side menu-side-left menu-layout-compact sub-menu-style-inside sub-menu-color-light selected-menu-color-light menu-activated-on-click menu-has-selected-link">
+        <div class="menu-w color-scheme-dark color-style-bright menu-position-side menu-side-left menu-layout-compact sub-menu-style-inside">
             <div class="logo-w">
                 <router-link to="/">
                     <div class="logo-element"></div>
@@ -85,6 +85,7 @@
 
 <script>
     import Menu from "@/components/Menu";
+
     export default {
         props: {
         },

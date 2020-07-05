@@ -2,7 +2,7 @@
     <div>
         <b-modal
                 id="modalRol"
-                :title="this.idForm?'Modificar Rol':'Nuevo Rol'"
+                :title="(this.idForm?'Modificar':'Nuevo') + ' Usuario'"
                 @show="loadModal"
                 @hidden="resetModal"
                 @ok="handleOk"
@@ -84,29 +84,14 @@
     export default {
         data() {
             return {
-                path:'/api/usuarios',
-                name: {
-                    value: '',
-                    state: null,
-                },
-                password: {
-                    value: '',
-                    state: null,
-                },
-                alias: {
-                    value: '',
-                    state: null,
-                },
-                detail: {
-                    value: '',
-                    state: null,
-                },
-                estado: {
-                    value: false,
-                    state: null,
-                },
+                path: '/api/usuarios',
+                name: {value: '', state: null},
+                password: {value: '', state: null},
+                alias: {value: '', state: null},
+                detail: {value: '', state: null},
+                estado: {value: false, state: null},
                 rol: '',
-                roles:{},
+                roles: {},
                 m_error: false,
             }
         },

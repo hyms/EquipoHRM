@@ -48,7 +48,7 @@ class AreastrabajoController extends Controller
             Log::info('user-agent:' . $request->userAgent());
 
             $validator = Validator::make($request->all(), [
-                'nombre' => 'required|min:5',
+                'nombre' => 'required',
                 'estado' => 'required',
             ]);
             if ($validator->fails()) {

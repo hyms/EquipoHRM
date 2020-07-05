@@ -1,51 +1,47 @@
 <template>
-    <div class="content-i">
-        <div class="content-box">
-            <div class="row pt-4">
-                <div class="col">
-                    <!--START - Recent Ticket Comments-->
-                    <div class="element-wrapper">
-                        <div class="element-actions">
-                            <b-button variant="primary" v-b-modal="'modalRol'" @click="setIdForm()">Nuevo</b-button>
-                            <Form :idForm="idForm" @finish="getAll()"/>
-                        </div>
-                        <h6 class="element-header">
-                            {{tituloPagina}}
-                        </h6>
-                        <div class="element-box-tp">
-                            <div class="table-responsive">
-                                <b-table
-                                        :items="tables"
-                                        :fields="columnas"
-                                        striped
-                                        responsive="sm"
-                                        class="table table-padded"
-                                        show-empty
-                                        empty-text="Sin datos"
-                                >
+    <div class="col">
+    <div class="padded-lg">
+        <!--START - Recent Ticket Comments-->
+        <div class="element-wrapper">
+            <div class="element-actions">
+                <b-button variant="primary" v-b-modal="'modalRol'" @click="setIdForm()">Nuevo</b-button>
+                <Form :idForm="idForm" @finish="getAll()"/>
+            </div>
+            <h6 class="element-header">
+                {{tituloPagina}}
+            </h6>
+            <div class="element-box-tp">
+                <div class="table-responsive">
+                    <b-table
+                            :items="tables"
+                            :fields="columnas"
+                            striped
+                            responsive="sm"
+                            class="table table-padded"
+                            show-empty
+                            empty-text="Sin datos"
+                    >
 
-                                    <template v-slot:cell(created_at)="data">
-                                        <span>{{data.value | formatDate}}</span>
-                                    </template>
-                                    <template v-slot:cell(estado)="data">
-                                        <span>{{data.value | formatState}}</span>
-                                    </template>
-                                    <template v-slot:cell(Acciones)="row">
-                                        <div class="row-actions">
-                                            <a @click="setIdForm(row.item.id)" v-b-modal="'modalRol'"><i
-                                                    class="os-icon os-icon-ui-44"></i></a>
-                                            <a class="text-danger" @click="del(row.item.id)"><i
-                                                    class="os-icon os-icon-ui-15"></i></a>
-                                        </div>
-                                    </template>
-                                </b-table>
+                        <template v-slot:cell(created_at)="data">
+                            <span>{{data.value | formatDate}}</span>
+                        </template>
+                        <template v-slot:cell(estado)="data">
+                            <span>{{data.value | formatState}}</span>
+                        </template>
+                        <template v-slot:cell(Acciones)="row">
+                            <div class="row-actions">
+                                <a @click="setIdForm(row.item.id)" v-b-modal="'modalRol'"><i
+                                        class="os-icon os-icon-ui-44"></i></a>
+                                <a class="text-danger" @click="del(row.item.id)"><i
+                                        class="os-icon os-icon-ui-15"></i></a>
                             </div>
-                        </div>
-                    </div>
-                    <!--END - Recent Ticket Comments-->
+                        </template>
+                    </b-table>
                 </div>
             </div>
         </div>
+        <!--END - Recent Ticket Comments-->
+    </div>
     </div>
 </template>
 <script>
@@ -57,7 +53,7 @@
         data() {
             return {
                 tituloPagina: 'Usuarios',
-                path:'/api/usuarios',
+                path: '/api/usuarios',
                 columnas: [
                     {
                         key: 'name',
@@ -90,11 +86,11 @@
             this.getAll();
         },
         methods: {
-            setIdForm(id=null){
-                this.idForm=id;
+            setIdForm(id = null) {
+                this.idForm = id;
             },
             async getAll() {
-                await axios.get(this.path+'/get')
+                await axios.get(this.path + '/get')
                     .then(({data}) => {
                         if (data['status'] === 0) {
                             this.tables = data['data']['all'];
@@ -107,9 +103,9 @@
             },
 
             async del(id) {
-                if(await this.showMsgConfirm()) {
+                if (await this.showMsgConfirm()) {
                     await axios.delete(
-                        this.path +'/delete',
+                        this.path + '/delete',
                         {
                             params: {id: id}
                         })

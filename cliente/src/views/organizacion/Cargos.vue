@@ -1,13 +1,11 @@
 <template>
-    <div class="content-i">
-        <div class="content-box">
-            <div class="row pt-4">
-                <div class="col">
+    <div class="col">
+        <div class="padded-lg">
                     <!--START - Recent Ticket Comments-->
                     <div class="element-wrapper">
                         <div class="element-actions">
-                            <b-button variant="primary" v-b-modal="'modalRol'" @click="setIdForm()">Nuevo</b-button>
-                            <Form :idForm="idForm" @finish="getAll()"/>
+                            <b-button variant="primary" v-b-modal="'modalCargo'" @click="setIdForm()">Nuevo</b-button>
+                            <Form :idForm="idForm" @finish="getAll()" :padres="[...tables]"/>
                         </div>
                         <h6 class="element-header">
                             {{tituloPagina}}
@@ -30,9 +28,10 @@
                                         <template v-slot:cell(estado)="data">
                                             <span>{{data.value | formatState}}</span>
                                         </template>
+
                                         <template v-slot:cell(Acciones)="row">
                                             <div class="row-actions">
-                                            <a @click="setIdForm(row.item.id)" v-b-modal="'modalRol'"><i
+                                            <a @click="setIdForm(row.item.id)" v-b-modal="'modalCargo'"><i
                                                     class="os-icon os-icon-ui-44"></i></a>
                                             <a class="text-danger" @click="del(row.item.id)"><i
                                                     class="os-icon os-icon-ui-15"></i></a>
@@ -45,27 +44,28 @@
                     <!--END - Recent Ticket Comments-->
                 </div>
             </div>
-        </div>
-    </div>
 </template>
 <script>
     import axios from "axios";
-    import Form from '@/components/forms/rolesForm'
+    import Form from '@/components/forms/cargoForm'
     import '@/store/funcions';
 
     export default {
         data() {
             return {
-                tituloPagina: 'Roles',
-                path:'/api/roles',
+                tituloPagina: 'Cargos',
+                path:'/api/cargos',
                 columnas: [
                     {
                         key: 'nombre',
                         sortable: true
                     },
                     {
-                        key: 'created_at',
-                        label: 'Fecha Registro',
+                        key: 'detalle',
+                    },
+                    {
+                        key: 'padre',
+                        label: 'Depende de',
                         sortable: true
                     },
                     {

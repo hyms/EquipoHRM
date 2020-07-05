@@ -1,9 +1,11 @@
 <template>
     <div id="app">
         <div class="all-wrapper" v-bind:class="[isLogged ?  'solid-bg-all' : 'menu-side with-pattern']">
-            <div v-bind:class="[isLogged ?  'layout-w' : 'auth-box-w']">
+            <div v-bind:class="[isLogged ?  'layout-w' : '']">
                 <Menu v-if="isLogged"/>
+                <div :class="[isLogged ? 'content-w':'']">
                 <router-view/>
+                </div>
             </div>
         </div>
     </div>
@@ -36,8 +38,10 @@
             bodyClass() {
                 myBody = document.getElementsByTagName('body')[0];
                 if (this.isLogged) {
+                    myBody.classList.remove('auth-wrapper');
                     myBody.classList.add('menu-position-side', 'menu-side-left', 'full-screen');
                 } else {
+                    myBody.classList.add('menu-position-side', 'menu-side-left', 'full-screen');
                     myBody.classList.add('auth-wrapper');
                 }
 

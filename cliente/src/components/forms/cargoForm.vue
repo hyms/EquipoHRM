@@ -1,8 +1,8 @@
 <template>
     <div>
         <b-modal
-                :id="nameModal"
-                :title="(idForm?'Modificar':'Nuevo')+' Rol'"
+                id="modalCargo"
+                :title="(this.idForm?'Modificar':'Nuevo')+' Cargo'"
                 @show="loadModal"
                 @hidden="resetModal"
                 @ok="handleOk"
@@ -14,20 +14,45 @@
             </b-alert>
             <form ref="form" @submit.stop.prevent="handleSubmit">
                 <b-form-group
-                        :state="form.nombre.state"
+                        :state="nombre.state"
                         label="Nombre"
                         label-for="name-input"
                         invalid-feedback="Nombre es requerido"
                 >
                     <b-form-input
                             id="name-input"
-                            v-model="form.nombre.value"
-                            :state="form.nombre.state"
+                            v-model="nombre.value"
+                            :state="nombre.state"
                             required
                     ></b-form-input>
                 </b-form-group>
+                <b-form-group
+                        :state="detalle.state"
+                        label="Detalle"
+                        label-for="detalle-input"
+                        invalid-feedback="Detalle es requerido"
+                >
+                    <b-form-textarea
+                            id="detalle-input"
+                            v-model="detalle.value"
+                            :state="detalle.state"
+                    ></b-form-textarea>
+                </b-form-group>
+                <b-form-group
+                        :state="cargo_padre.state"
+                        label="Padre"
+                        label-for="padre-input"
+                >
+                    <b-form-select
+                            v-model="cargo_padre.value"
+                            :options="padres"
+                            value-field="id"
+                            text-field="nombre"
+                    ></b-form-select>
+                </b-form-group>
+
                 <div class="form-check">
-                    <input class="form-check-input" type="checkbox" v-model="form.estado.value" id="defaultCheck1">
+                    <input class="form-check-input" type="checkbox" v-model="estado.value" id="defaultCheck1">
                     <label class="form-check-label" for="defaultCheck1">
                         Estado
                     </label>
@@ -40,35 +65,41 @@
 <script>
     import axios from 'axios'
 
+
     export default {
         data() {
             return {
-                path: '/api/roles',
-                form: {
-                    nombre: {value: '', state: null},
-                    estado: {value: false, state: null}
-                },
+                path: '/api/cargos',
+                nombre: {value: '', state: null},
+                detalle: {value: '', state: null},
+                estado: {value: false, state: null},
+                cargo_padre: {value: false, state: null},
                 m_error: false,
             }
         },
         props: {
             idForm: Number,
-            nameModal: String,
+            padres: Array,
         },
         methods: {
             checkFormValidity() {
                 const valid = this.$refs.form.checkValidity();
-                this.form.nombre.state = valid;
+                this.nombre.state = valid;
+                this.detalle.state = valid;
+                this.cargo_padre.state = valid;
                 this.m_error = false;
                 return valid
             },
             resetModal() {
-                this.form.nombre = {value: '', state: null};
-                this.form.estado = {value: false, state: null};
+                this.nombre = {value: '', state: null};
+                this.cargo_padre = {value: '', state: null};
+                this.detalle = {value: '', state: null};
+                this.estado = {value: false, state: null};
                 this.m_error = false;
             },
             loadModal() {
                 this.resetModal();
+                this.loadPadre();
                 if (this.idForm) {
                     // Push the name to submitted names
                     axios.get(
@@ -78,16 +109,23 @@
                         })
                         .then(({data}) => {
                             if (data['status'] === 0) {
-                                Object.entries(data['data'][0])
-                                    .forEach(([key, value]) => {
-                                        if (this.form[key])
-                                            this.form[key].value = value;
-                                    });
+                                this.nombre.value = data['data'][0]['nombre'];
+                                this.detalle.value = data['data'][0]['detalle'];
+                                this.estado.value = data['data'][0]['estado'];
+                                this.cargo_padre.value = data['data'][0]['cargo_padre'];
                             } else {
                                 this.m_error = data['data'];
                             }
                         })
                         .catch();
+                }
+            },
+            loadPadre() {
+                if (this.padres) {
+                    const index = this.padres.findIndex((element) => element.id === this.idForm);
+                    if (index > -1) {
+                        this.padres.splice(index, 1);
+                    }
                 }
             },
             handleOk(bvModalEvt) {
@@ -102,12 +140,12 @@
                     return
                 }
                 // Push the name to submitted names
-                let formData = {};
-                Object.entries(this.form)
-                    .forEach(([key,value])=> {
-                        formData[key] = value.value;
-                    });
-
+                var formData = {
+                    'nombre': this.nombre.value,
+                    'estado': this.estado.value,
+                    'detalle': this.detalle.value,
+                    'cargo_padre': this.cargo_padre.value
+                };
                 if (this.idForm)
                     formData['id'] = this.idForm;
 
@@ -120,7 +158,7 @@
                             // Hide the modal manually
                             this.$nextTick(() => {
                                 this.$emit('finish', true);
-                                this.$bvModal.hide(this.nameModal);
+                                this.$bvModal.hide('modalCargo');
                             });
                         } else {
                             this.m_error = data['data'];

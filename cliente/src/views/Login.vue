@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="auth-box-w">
         <div class="logo-w">
             <a href="#"><img alt="" :src="images.logo"></a>
         </div>

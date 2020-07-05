@@ -15,3 +15,12 @@ Vue.filter('formatDateOnly', function(value) {
 Vue.filter('formatState', function(value) {
         return (value === 1) ? 'Activo' : 'Inactivo'
 });
+
+Vue.filter('formatElementName', function(value,table) {
+    if(table) {
+        const index = table.findIndex((element) => element['id'] === value);
+        if (index > -1)
+            return table[index]['nombre'];
+    }
+    return value;
+});

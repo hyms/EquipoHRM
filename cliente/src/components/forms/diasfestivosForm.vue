@@ -2,7 +2,7 @@
     <div>
         <b-modal
                 id="modalRol"
-                :title="this.idForm?'Modificar Rol':'Nuevo Rol'"
+                :title="(this.idForm?'Modificar':'Nuevo')+' Dias de Trabajo'"
                 @show="loadModal"
                 @hidden="resetModal"
                 @ok="handleOk"
@@ -51,18 +51,9 @@
         data() {
             return {
                 path: '/api/diasfestivos',
-                nombre: {
-                    value: '',
-                    state: null,
-                },
-                estado: {
-                    value: false,
-                    state: null,
-                },
-                fecha: {
-                    value: '',
-                    state: null,
-                },
+                nombre: { value: '', state: null },
+                estado: { value: false, state: null },
+                fecha: { value: '', state: null },
                 m_error: false,
             }
         },

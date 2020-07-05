@@ -14,7 +14,7 @@ class Unidadesnegocio
     public static function GetAll()
     {
         return DB::table(self::$table)
-            ->select('id', 'nombre', 'direccion', 'telefono', 'celular')
+            ->select('id', 'nombre', 'direccion', 'telefono', 'celular','estado')
             ->where([
                 ['borrado', 0],
             ])
@@ -87,7 +87,7 @@ class Unidadesnegocio
                 ["web", $values["web"]],
                 ["fecha_nacimiento", $values["fecha_nacimiento"]],
                 ["id_empresa", $values["id_empresa"]],
-                ['borrado', 0],
+                ['borrado', 0]
             ])
             ->count();
         if ($rows != 0) {

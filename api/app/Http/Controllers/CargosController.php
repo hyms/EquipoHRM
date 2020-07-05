@@ -17,8 +17,9 @@ class CargosController extends Controller
             Log::info("IP: " . $request->getClientIp());
             Log::info('user-agent:' . $request->userAgent());
 
-            if (empty($request->all())) {
-                $Cargo = Cargo::GetAll();
+            if (empty($request->all()) || $request->has('padre')) {
+
+                $Cargo = Cargo::GetAll(($request->has('padre')) ? $request->get('padre') : null);
                 Log::debug("Success get all");
                 return response()->json([
                     'status' => 0,
@@ -27,6 +28,7 @@ class CargosController extends Controller
                         'count' => count($Cargo),
                     ]]);
             }
+
             $row = Cargo::Get($request->get('id'));
             Log::debug("Success get id:" . $request->get('id'));
             return response()->json([
@@ -48,7 +50,7 @@ class CargosController extends Controller
             Log::info('user-agent:' . $request->userAgent());
 
             $validator = Validator::make($request->all(), [
-                'nombre' => 'required|min:5',
+                'nombre' => 'required',
                 'estado' => 'required',
             ]);
             if ($validator->fails()) {
