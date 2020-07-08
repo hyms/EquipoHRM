@@ -1,8 +1,8 @@
 <template>
   <div>
     <b-modal
-      :id="this.nameModal"
-      :title="(this.idForm ? 'Modificar' : 'Nuevo') + ' Usuario'"
+      :id="nameModal"
+      :title="(idForm ? 'Modificar' : 'Nuevo') + ' Usuario'"
       @show="loadModal"
       @hidden="resetModal"
       @ok="handleOk"
@@ -20,7 +20,7 @@
       </b-alert>
       <form ref="form" @submit.stop.prevent="handleSubmit">
         <b-form-group
-          :state="form.ame.state"
+          :state="form.name.state"
           label="Nombre"
           label-for="name-input"
           invalid-feedback="Nombre es requerido"
@@ -66,6 +66,19 @@
             :state="form.detail.state"
           ></b-form-input>
         </b-form-group>
+        <b-form-group
+          :state="form.rol.state"
+          label="Tipo de rol"
+          label-for="rol-input"
+        >
+          <b-form-select
+            id="rol-input"
+            v-model="form.rol.value"
+            :options="roles"
+            value-field="id"
+            text-field="nombre"
+          ></b-form-select>
+        </b-form-group>
         <div class="form-check">
           <input
             class="form-check-input"
@@ -77,12 +90,6 @@
             Estado
           </label>
         </div>
-        <b-form-select
-          v-model="form.rol"
-          :options="roles"
-          value-field="id"
-          text-field="nombre"
-        ></b-form-select>
       </form>
     </b-modal>
   </div>
@@ -101,7 +108,7 @@
         alias: { value: "", state: null },
         detail: { value: "", state: null },
         estado: { value: false, state: null },
-        rol: ""
+        rol: { value: "", state: null }
       },
       roles: {},
       m_error: false
@@ -123,7 +130,7 @@
       this.form.password = { value: "", state: null };
       this.form.detail = { value: "", state: null };
       this.form.alias = { value: "", state: null };
-      this.form.rol = "";
+      this.form.rol = { value: "", state: null };
       this.form.estado = { value: false, state: null };
       this.m_error = false;
     },

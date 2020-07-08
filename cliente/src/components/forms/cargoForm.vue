@@ -1,8 +1,8 @@
 <template>
   <div>
     <b-modal
-      :id="this.nameModal"
-      :title="(this.idForm ? 'Modificar' : 'Nuevo') + ' Cargo'"
+      :id="nameModal"
+      :title="(idForm ? 'Modificar' : 'Nuevo') + ' Cargo'"
       @show="loadModal"
       @hidden="resetModal"
       @ok="handleOk"
@@ -20,37 +20,37 @@
       </b-alert>
       <form ref="form" @submit.stop.prevent="handleSubmit">
         <b-form-group
-          :state="nombre.state"
+          :state="form.nombre.state"
           label="Nombre"
           label-for="name-input"
           invalid-feedback="Nombre es requerido"
         >
           <b-form-input
             id="name-input"
-            v-model="nombre.value"
-            :state="nombre.state"
+            v-model="form.nombre.value"
+            :state="form.nombre.state"
             required
           ></b-form-input>
         </b-form-group>
         <b-form-group
-          :state="detalle.state"
+          :state="form.detalle.state"
           label="Detalle"
           label-for="detalle-input"
           invalid-feedback="Detalle es requerido"
         >
           <b-form-textarea
             id="detalle-input"
-            v-model="detalle.value"
-            :state="detalle.state"
+            v-model="form.detalle.value"
+            :state="form.detalle.state"
           ></b-form-textarea>
         </b-form-group>
         <b-form-group
-          :state="cargo_padre.state"
+          :state="form.cargo_padre.state"
           label="Padre"
           label-for="padre-input"
         >
           <b-form-select
-            v-model="cargo_padre.value"
+            v-model="form.cargo_padre.value"
             :options="padres"
             value-field="id"
             text-field="nombre"
@@ -61,7 +61,7 @@
           <input
             class="form-check-input"
             type="checkbox"
-            v-model="estado.value"
+            v-model="form.estado.value"
             id="defaultCheck1"
           />
           <label class="form-check-label" for="defaultCheck1">

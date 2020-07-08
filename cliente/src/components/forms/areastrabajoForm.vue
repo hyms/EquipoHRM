@@ -1,8 +1,8 @@
 <template>
   <div>
     <b-modal
-      :id="this.nameModal"
-      :title="(this.idForm ? 'Modificar ' : 'Nueva') + ' Area de Trabajo'"
+      :id="nameModal"
+      :title="(idForm ? 'Modificar ' : 'Nueva') + ' Area de Trabajo'"
       @show="loadModal"
       @hidden="resetModal"
       @ok="handleOk"

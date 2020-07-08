@@ -6,7 +6,7 @@
         <div class="element-actions">
           <b-button
             variant="primary"
-            v-b-modal="this.nameModal"
+            v-b-modal="nameModal"
             @click="setIdForm()"
             >Nuevo</b-button
           >
@@ -14,7 +14,7 @@
             :idForm="idForm"
             @finish="getAll()"
             :padres="[...tables]"
-            :nameModal="this.nameModal"
+            :nameModal="nameModal"
           />
         </div>
         <h6 class="element-header">
@@ -40,7 +40,7 @@
 
               <template v-slot:cell(Acciones)="row">
                 <div class="row-actions">
-                  <a @click="setIdForm(row.item.id)" v-b-modal="this.nameModal"
+                  <a @click="setIdForm(row.item.id)" v-b-modal="nameModal"
                     ><i class="os-icon os-icon-ui-44"></i
                   ></a>
                   <a class="text-danger" @click="del(row.item.id)"

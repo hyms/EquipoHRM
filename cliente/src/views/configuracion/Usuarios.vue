@@ -6,14 +6,14 @@
         <div class="element-actions">
           <b-button
             variant="primary"
-            v-b-modal="this.nameModal"
+            v-b-modal="nameModal"
             @click="setIdForm()"
             >Nuevo</b-button
           >
           <Form
             :idForm="idForm"
             @finish="getAll()"
-            :nameModal="this.nameModal"
+            :nameModal="nameModal"
           />
         </div>
         <h6 class="element-header">
@@ -38,7 +38,7 @@
               </template>
               <template v-slot:cell(Acciones)="row">
                 <div class="row-actions">
-                  <a @click="setIdForm(row.item.id)" v-b-modal="this.nameModal"
+                  <a @click="setIdForm(row.item.id)" v-b-modal="nameModal"
                     ><i class="os-icon os-icon-ui-44"></i
                   ></a>
                   <a class="text-danger" @click="del(row.item.id)"
@@ -55,11 +55,11 @@
   </div>
 </template>
 <script>
-  import axios from "axios";
-  import Form from "@/components/forms/usuarioForm";
-  import "@/store/funcions";
+    import axios from "axios";
+    import Form from "@/components/forms/usuarioForm";
+    import "@/store/funcions";
 
-  export default {
+    export default {
   data() {
     return {
       tituloPagina: "Usuarios",
