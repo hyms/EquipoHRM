@@ -1,13 +1,13 @@
 <template>
   <div>
     <b-modal
-      :id="nameModal"
-      :title="(idForm ? 'Modificar' : 'Nuevo') + ' Dias de Trabajo'"
-      @show="loadModal"
-      @hidden="resetModal"
-      @ok="handleOk"
-      okTitle="Guardar"
-      cancelTitle="Cancelar"
+            :id="nameModal"
+            :title="(idForm ? 'Modificar' : 'Nuevo') + ' Dia Festivo'"
+            @show="loadModal"
+            @hidden="resetModal"
+            @ok="handleOk"
+            okTitle="Guardar"
+            cancelTitle="Cancelar"
     >
       <b-alert
         show
@@ -60,19 +60,19 @@
 </template>
 
 <script>
-    import axios from "axios";
+  import axios from "axios";
 
-    export default {
-  data() {
-    return {
-      path: "/api/diasfestivos",
-      form: {
-        nombre: { value: "", state: null },
-        estado: { value: false, state: null },
-        fecha: { value: "", state: null }
-      },
-      m_error: false
-    };
+  export default {
+    data() {
+      return {
+        path: "/api/diasfestivos",
+        form: {
+          nombre: {value: "", state: null},
+          estado: {value: false, state: null},
+          fecha: {value: "", state: null}
+        },
+        m_error: false
+      };
   },
   props: {
     idForm: Number,
@@ -96,9 +96,9 @@
       if (this.idForm) {
         // Push the name to submitted names
         axios
-          .get(this.path + "/get", {
-            params: { id: this.idForm }
-          })
+                .get(this.path, {
+                  params: {id: this.idForm}
+                })
           .then(({ data }) => {
             if (data["status"] === 0) {
               Object.entries(data["data"][0]).forEach(([key, value]) => {
@@ -131,7 +131,7 @@
       if (this.idForm) formData["id"] = this.idForm;
 
       axios
-        .post(this.path + "/post", formData)
+              .post(this.path, formData)
         .then(({ data }) => {
           if (data["status"] === 0) {
             // Hide the modal manually

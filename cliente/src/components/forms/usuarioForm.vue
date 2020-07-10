@@ -96,19 +96,19 @@
 </template>
 
 <script>
-    import axios from "axios";
+  import axios from "axios";
 
-    export default {
-  data() {
-    return {
-      path: "/api/usuarios",
-      form: {
-        name: { value: "", state: null },
-        password: { value: "", state: null },
-        alias: { value: "", state: null },
-        detail: { value: "", state: null },
-        estado: { value: false, state: null },
-        rol: { value: "", state: null }
+  export default {
+    data() {
+      return {
+        path: "/api/usuarios",
+        form: {
+          name: {value: "", state: null},
+          password: {value: "", state: null},
+          alias: {value: "", state: null},
+          detail: {value: "", state: null},
+          estado: {value: false, state: null},
+          rol: {value: "", state: null}
       },
       roles: {},
       m_error: false
@@ -140,9 +140,9 @@
       if (this.idForm) {
         // Push the name to submitted names
         axios
-          .get(this.path + "/get", {
-            params: { id: this.idForm }
-          })
+                .get(this.path, {
+                  params: {id: this.idForm}
+                })
           .then(({ data }) => {
             if (data["status"] === 0) {
               Object.entries(data["data"][0]).forEach(([key, value]) => {
@@ -186,7 +186,7 @@
       if (this.idForm) formData["id"] = this.idForm;
 
       axios
-        .post(this.path + "/post", formData)
+              .post(this.path, formData)
         .then(({ data }) => {
           if (data["status"] === 0) {
             // Hide the modal manually

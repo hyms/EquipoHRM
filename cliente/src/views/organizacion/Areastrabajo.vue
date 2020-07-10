@@ -88,7 +88,7 @@
     },
     async getAll() {
       await axios
-        .get(this.path + "/get")
+              .get(this.path)
         .then(({ data }) => {
           if (data["status"] === 0) {
             this.tables = data["data"]["all"];
@@ -103,9 +103,9 @@
     async del(id) {
       if (await this.showMsgConfirm()) {
         await axios
-          .delete(this.path + "/delete", {
-            params: { id: id }
-          })
+                .delete(this.path, {
+                  params: {id: id}
+                })
           .then(({ data }) => {
             if (data["status"] === 0) {
               this.getAll();

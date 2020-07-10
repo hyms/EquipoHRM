@@ -160,7 +160,7 @@ class CreateConfigTables extends Migration
         });
 
         Schema::create('cargosHistory', function (Blueprint $table) {
-            $table->string("nombre",100);
+            $table->string("nombre", 100);
             $table->text("detalle");
             $table->unsignedInteger("cargo_padre")->nullable();
             $table->smallInteger("estado");
@@ -168,7 +168,29 @@ class CreateConfigTables extends Migration
             //control de historial
             $table->unsignedInteger('id');
             $table->dateTime('registerUtc');
-            $table->primary(['id','registerUtc']);
+            $table->primary(['id', 'registerUtc']);
+            $table->unsignedInteger('registerBy');
+        });
+
+        Schema::create('regional', function (Blueprint $table) {
+            $table->id();
+            $table->string("nombre", 100);
+            $table->text("detalle");
+            //control
+            $table->smallInteger("estado");
+            $table->boolean("borrado"); //Activo,inactivo
+            $table->timestamps();
+        });
+
+        Schema::create('regionalHistory', function (Blueprint $table) {
+            $table->string("nombre", 100);
+            $table->text("detalle");
+            $table->smallInteger("estado");
+            $table->boolean("borrado");
+            //control de historial
+            $table->unsignedInteger('id');
+            $table->dateTime('registerUtc');
+            $table->primary(['id', 'registerUtc']);
             $table->unsignedInteger('registerBy');
         });
     }
@@ -180,6 +202,9 @@ class CreateConfigTables extends Migration
      */
     public function down()
     {
+
+        Schema::dropIfExists('regionalHistory');
+        Schema::dropIfExists('regional');
 
         Schema::dropIfExists('cargosHistory');
         Schema::dropIfExists('cargos');

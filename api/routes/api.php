@@ -17,32 +17,36 @@ use Illuminate\Support\Facades\Route;
 Route::post('/login', 'AuthController@login');
 Route::post('/logout', 'AuthController@logout');
 //usuarios
-Route::get('/usuarios/get', 'UsuariosController@getAll');
-Route::post('/usuarios/post', 'UsuariosController@post');
-Route::delete('/usuarios/delete', 'UsuariosController@delete');
+Route::get('/usuarios', 'UsuariosController@getAll');
+Route::post('/usuarios', 'UsuariosController@post');
+Route::delete('/usuarios', 'UsuariosController@delete');
 //roles
-Route::get('/roles/get', 'RolesController@getAll');
-Route::post('/roles/post', 'RolesController@post');
-Route::delete('/roles/delete', 'RolesController@delete');
+Route::get('/roles', 'RolesController@getAll');
+Route::post('/roles', 'RolesController@post');
+Route::delete('/roles', 'RolesController@delete');
 //diasFestivos
-Route::get('/diasfestivos/get', 'DiasfestivosController@getAll');
-Route::post('/diasfestivos/post', 'DiasfestivosController@post');
-Route::delete('/diasfestivos/delete', 'DiasfestivosController@delete');
+Route::get('/diasfestivos', 'DiasfestivosController@getAll');
+Route::post('/diasfestivos', 'DiasfestivosController@post');
+Route::delete('/diasfestivos', 'DiasfestivosController@delete');
 //empresa
-Route::get('/empresa/get', 'EmpresaController@get');
-Route::post('/empresa/post', 'EmpresaController@post');
+Route::get('/empresa', 'EmpresaController@get');
+Route::post('/empresa', 'EmpresaController@post');
 //unidadesNegocio
-Route::get('/unidadesnegocio/get', 'UnidadesnegocioController@getAll');
-Route::post('/unidadesnegocio/post', 'UnidadesnegocioController@post');
-Route::delete('/unidadesnegocio/delete', 'UnidadesnegocioController@delete');
+Route::get('/unidadesnegocio', 'UnidadesnegocioController@getAll');
+Route::post('/unidadesnegocio', 'UnidadesnegocioController@post');
+Route::delete('/unidadesnegocio', 'UnidadesnegocioController@delete');
 //areasTrabajo
-Route::get('/areastrabajo/get', 'AreastrabajoController@getAll');
-Route::post('/areastrabajo/post', 'AreastrabajoController@post');
-Route::delete('/areastrabajo/delete', 'AreastrabajoController@delete');
+Route::get('/areastrabajo', 'AreastrabajoController@getAll');
+Route::post('/areastrabajo', 'AreastrabajoController@post');
+Route::delete('/areastrabajo', 'AreastrabajoController@delete');
 //cargos
-Route::get('/cargos/get', 'CargosController@getAll');
-Route::post('/cargos/post', 'CargosController@post');
-Route::delete('/cargos/delete', 'CargosController@delete');
+Route::get('/cargos', 'CargosController@getAll');
+Route::post('/cargos', 'CargosController@post');
+Route::delete('/cargos', 'CargosController@delete');
+//regional
+Route::get('/regionales', 'RegionalController@getAll');
+Route::post('/regionales', 'RegionalController@post');
+Route::delete('/regionales', 'RegionalController@delete');
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

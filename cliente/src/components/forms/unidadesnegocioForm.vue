@@ -233,9 +233,9 @@
       if (this.idForm) {
         // Push the name to submitted names
         axios
-          .get(this.path + "/get", {
-            params: { id: this.idForm }
-          })
+                .get(this.path, {
+                  params: {id: this.idForm}
+                })
           .then(({ data }) => {
             if (data["status"] === 0) {
               data["data"][0].forEach((value, key) => {
@@ -268,7 +268,7 @@
       if (this.idForm) formData["id"] = this.idForm;
 
       axios
-        .post(this.path + "/post", formData)
+              .post(this.path, formData)
         .then(({ data }) => {
           if (data["status"] === 0) {
             // Hide the modal manually

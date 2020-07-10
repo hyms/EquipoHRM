@@ -1,12 +1,16 @@
 <template>
     <div>
-        <div class="top-bar color-scheme-light">
-            <ul>
-                <router-link to="/configuracion/usuarios" tag="li" exact exact-active-class="active">
-                    <a>Usuarios</a>
-                </router-link>
-                <router-link to="/configuracion/roles" tag="li" exact exact-active-class="active">
-                    <a>Roles</a>
+        <div class="top-bar color-scheme-light overflow-auto">
+            <ul class="col-12">
+                <router-link
+                        v-for="(link, key) in links"
+                        :to="link.to"
+                        :key="key"
+                        tag="li"
+                        exact
+                        exact-active-class="active"
+                >
+                    <a>{{ link.name }}</a>
                 </router-link>
             </ul>
         </div>
@@ -19,3 +23,16 @@
         </div>
     </div>
 </template>
+
+<script>
+    export default {
+        data() {
+            return {
+                links: {
+                    usuarios: {name: "Usuarios", to: "/configuracion/usuarios"},
+                    roles: {name: "Roles", to: "/configuracion/roles"}
+                }
+            };
+        }
+    };
+</script>

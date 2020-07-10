@@ -50,21 +50,21 @@
   </div>
 </template>
 <script>
-    import axios from "axios";
-    import Form from "@/components/forms/unidadesnegocioForm";
-    import "@/store/funcions";
+  import axios from "axios";
+  import Form from "@/components/forms/unidadesnegocioForm";
+  import "@/store/funcions";
 
-    export default {
-  data() {
-    return {
-      tituloPagina: "Unidades de Negocio",
-      path: "/api/unidadesnegocio",
-      nameModal: "modalUnidadesnegocio",
-      columnas: [
-        {
-          key: "nombre",
-          sortable: true
-        },
+  export default {
+    data() {
+      return {
+        tituloPagina: "Unidades de Negocio",
+        path: "/api/unidadesnegocio",
+        nameModal: "modalUnidadesnegocio",
+        columnas: [
+          {
+            key: "nombre",
+            sortable: true
+          },
         "direccion",
         "telefono",
         "celular",
@@ -90,7 +90,7 @@
     },
     async getAll() {
       await axios
-        .get(this.path + "/get")
+              .get(this.path)
         .then(({ data }) => {
           if (data["status"] === 0) {
             this.tables = data["data"]["all"];
@@ -105,9 +105,9 @@
     async del(id) {
       if (await this.showMsgConfirm()) {
         await axios
-          .delete(this.path + "/delete", {
-            params: { id: id }
-          })
+                .delete(this.path, {
+                  params: {id: id}
+                })
           .then(({ data }) => {
             if (data["status"] === 0) {
               this.getAll();

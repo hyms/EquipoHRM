@@ -2,9 +2,10 @@
     <div id="app">
         <div class="all-wrapper" v-bind:class="[isLogged ?  'solid-bg-all' : 'menu-side with-pattern']">
             <div v-bind:class="[isLogged ?  'layout-w' : '']">
-                <Menu v-if="isLogged"/>
+                <MainMenuMobile v-if="isLogged"/>
+                <MainMenu v-if="isLogged"/>
                 <div :class="[isLogged ? 'content-w':'']">
-                <router-view/>
+                    <router-view/>
                 </div>
             </div>
         </div>
@@ -13,7 +14,8 @@
 
 <script>
     import {mapGetters} from 'vuex'
-    import Menu from "@/components/MainMenu";
+    import MainMenuMobile from "./components/MainMenuMobile";
+    import MainMenu from "./components/MainMenu";
 
     let myBody = null;
     export default {
@@ -27,7 +29,8 @@
             this.bodyClass();
         },
         components: {
-            Menu,
+            MainMenu,
+            MainMenuMobile
         },
         computed: {
             ...mapGetters([
