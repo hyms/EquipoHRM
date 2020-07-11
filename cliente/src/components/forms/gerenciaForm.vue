@@ -2,7 +2,7 @@
   <div>
     <b-modal
             :id="nameModal"
-            :title="(idForm ? 'Modificar' : 'Nuevo') + ' Regional'"
+            :title="(idForm ? 'Modificar' : 'Nuevo') + ' Gerencia'"
             @show="loadModal"
             @hidden="resetModal"
             @ok="handleOk"
@@ -62,19 +62,19 @@
 </template>
 
 <script>
-    import axios from "axios";
+  import axios from "axios";
 
-    export default {
-        data() {
-            return {
-                path: "/api/roles",
-                form: {
-                    nombre: {value: "", state: null},
-                    detalle: {value: "", state: null},
-                    estado: {value: false, state: null}
-                },
-                m_error: false
-            };
+  export default {
+    data() {
+      return {
+        path: "/api/gerencia",
+        form: {
+          nombre: {value: "", state: null},
+          detalle: {value: "", state: null},
+          estado: {value: false, state: null}
+        },
+        m_error: false
+      };
     },
     props: {
       idForm: Number,
@@ -88,11 +88,11 @@
         return valid;
       },
       resetModal() {
-          Object.keys(this.form).forEach(key => {
-              this.form[key].value = "";
-              this.form[key].state = null;
-          });
-          this.m_error = false;
+        Object.keys(this.form).forEach(key => {
+          this.form[key].value = "";
+          this.form[key].state = null;
+        });
+        this.m_error = false;
       },
       loadModal() {
         this.resetModal();

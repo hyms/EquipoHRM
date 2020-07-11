@@ -1,78 +1,80 @@
 <template>
-    <ul class="main-menu">
-        <li class="sub-header">
-            <span>Personal</span>
+  <ul class="main-menu">
+    <template v-for="(link, key) in links">
+      <template v-for="(sublink, ksub) in link">
+        <li class="sub-header" v-if="ksub === 'name'" :key="key + ksub">
+          <span>{{ sublink }}</span>
         </li>
-        <router-link to="/" tag="li" exact exact-active-class="selected">
-            <a>
-                <div class="icon-w">
-                    <div class="os-icon os-icon-layout"></div>
-                </div>
-                <span>Vacaciones</span>
-            </a>
-        </router-link>
-
-
-        <li class="sub-header">
-            <span>Reportes</span>
+        <li v-else-if="ksub === 'logout'" :key="key + ksub">
+          <a v-on:click="logout">
+            <div class="icon-w">
+              <div class="os-icon os-icon-signs-11"></div>
+            </div>
+            <span>{{ sublink }}</span>
+          </a>
         </li>
-        <router-link to="/" tag="li" exact exact-active-class="selected">
-            <a>
-                <div class="icon-w">
-                    <div class="os-icon os-icon-layers"></div>
-                </div>
-                <span>Perimisos</span>
-            </a>
+        <router-link
+                v-else
+                :to="'/' + ksub"
+                tag="li"
+                exact
+                exact-active-class="selected"
+                :key="key + ksub"
+        >
+          <a>
+            <div class="icon-w">
+              <div :class="sublink.icon"></div>
+            </div>
+            <span>{{ sublink.name }}</span>
+          </a>
         </router-link>
-
-        <li class="sub-header">
-            <span>Configuración</span>
-        </li>
-        <router-link to="/organizacion" tag="li" exact exact-active-class="selected">
-            <a>
-                <div class="icon-w">
-                    <div class="os-icon os-icon-package"></div>
-                </div>
-                <span>Organizacion</span>
-            </a>
-        </router-link>
-        <router-link to="/diasfestivos" tag="li" exact exact-active-class="selected">
-            <a>
-                <div class="icon-w">
-                    <div class="os-icon os-icon-package"></div>
-                </div>
-                <span>Dias Festivos</span>
-            </a>
-        </router-link>
-
-        <li class="sub-header">
-            <span>Cuenta</span>
-        </li>
-        <router-link to="/configuracion" tag="li" exact exact-active-class="selected">
-            <a>
-                <div class="icon-w">
-                    <div class="os-icon os-icon-layers"></div>
-                </div>
-                <span>Configuración</span>
-            </a>
-        </router-link>
-        <li class=" ">
-            <a href="#" v-on:click="logout">
-                <div class="icon-w">
-                    <div class="os-icon os-icon-layers"></div>
-                </div>
-                <span>Salir</span></a>
-        </li>
-
-    </ul>
+      </template>
+    </template>
+  </ul>
 </template>
 
 <script>
-    export default {
-        methods: {
-            logout() {
-                this.$store.dispatch('logout')
+  export default {
+    data() {
+      return {
+        links: {
+          personal: {
+            name: "Personal",
+            vacaciones: {
+              name: "Vacaciones",
+              icon: "os-icon os-icon-package"
+            }
+          },
+          configuracion: {
+            name: "Configuración",
+            organizacion: {
+              name: "Organizacion",
+              icon: "os-icon os-icon-package"
             },
-        },
+            personal: {
+              name: "Personal",
+              icon: "os-icon os-icon-package"
+            },
+            diasfestivos: {
+              name: "Dias Festivos",
+              icon: "os-icon os-icon-package"
+            }
+          },
+          cuenta: {
+            name: "Cuenta",
+            configuracion: {
+              name: "Configuración",
+              icon: "os-icon os-icon-layers"
+            },
+            logout: "Salir"
+          }
+        }
+      };
+    },
+    methods: {
+      logout() {
+        this.$store.dispatch("logout");
+      }
     }
+  };
 </script>

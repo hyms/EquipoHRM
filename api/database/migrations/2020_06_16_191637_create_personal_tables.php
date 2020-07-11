@@ -14,25 +14,22 @@ class CreatePersonalTables extends Migration
     public function up()
     {
         Schema::create('personal', function (Blueprint $table) {
-            $table->id()->autoIncrement();
-            $table->string("apellidos",100);
-            $table->string("nombres",100);
-            $table->string("ci",15);
-            $table->string("telefono_propio",15);
-            $table->string("telefono_referencia",15)->nullable();
+            $table->id();
+            $table->string("apellidos", 100);
+            $table->string("nombres", 100);
+            $table->string("ci", 20);
+            $table->string("telefono_propio", 15);
+            $table->string("telefono_referencia", 15)->nullable();
             $table->date("fecha_nacimiento");
-            $table->date("fecha_ingreso");
-            $table->string("profesion",200);
-            $table->text("Direccion");
+            $table->string("profesion", 200);
+            $table->text("direccion");
+            $table->string("estado_civil");
 
             //control
             $table->smallInteger("estado");
             $table->boolean("borrado"); //Activo,inactivo
             $table->timestamps();
 
-            $table->unsignedInteger('areaTrabajo')->nullable();
-            $table->unsignedInteger('cargo')->nullable();
-            $table->unsignedInteger('unidadNegocio')->nullable();
         });
 
         Schema::create('personalHistory', function (Blueprint $table) {
@@ -42,14 +39,39 @@ class CreatePersonalTables extends Migration
             $table->string("telefono_propio", 15);
             $table->string("telefono_referencia", 15)->nullable();
             $table->date("fecha_nacimiento");
-            $table->date("fecha_ingreso");
             $table->string("profesion", 200);
             $table->text("Direccion");
+            $table->string("estado_civil");
             $table->smallInteger("estado");
             $table->boolean("borrado"); //Activo,inactivo
-            $table->unsignedInteger('unidad');
-            $table->unsignedInteger('cargo');
-            $table->unsignedInteger('agencia');
+            //control de historial
+            $table->unsignedInteger('id');
+            $table->dateTime('registerUtc');
+            $table->primary(['id', 'registerUtc']);
+            $table->unsignedInteger('registerBy');
+        });
+
+        Schema::create('carrera', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedInteger("pesonal");
+            $table->unsignedInteger("cargo");
+            $table->unsignedInteger("unidad_negocio");
+            $table->unsignedInteger("area_trabajo");
+            $table->unsignedInteger("regional");
+            $table->unsignedInteger("gerencia");
+            $table->unsignedInteger("usuario")->nulleable();
+            $table->date("fecha_ingreso");
+            $table->timestamps();
+        });
+        Schema::create('carreraHistory', function (Blueprint $table) {
+            $table->unsignedInteger("pesonal");
+            $table->unsignedInteger("cargo");
+            $table->unsignedInteger("unidad_negocio");
+            $table->unsignedInteger("area_trabajo");
+            $table->unsignedInteger("regional");
+            $table->unsignedInteger("gerencia");
+            $table->unsignedInteger("usuario")->nulleable();
+            $table->date("fecha_ingreso");
             //control de historial
             $table->unsignedInteger('id');
             $table->dateTime('registerUtc');
@@ -65,6 +87,9 @@ class CreatePersonalTables extends Migration
      */
     public function down()
     {
+
+        Schema::dropIfExists('carreraHistory');
+        Schema::dropIfExists('carrera');
 
         Schema::dropIfExists('personalHistory');
         Schema::dropIfExists('personal');

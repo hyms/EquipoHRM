@@ -19,49 +19,51 @@
         {{ value }}
       </b-alert>
       <form ref="form" @submit.stop.prevent="handleSubmit">
-        <b-form-group
-          :state="form.nombre.state"
-          label="Nombre"
-          label-for="name-input"
-          invalid-feedback="Nombre es requerido"
-        >
-          <b-form-input
-            id="name-input"
-            v-model="form.nombre.value"
-            :state="form.nombre.state"
-            required
-          ></b-form-input>
-        </b-form-group>
-        <div class="form-check">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            v-model="form.estado.value"
-            id="defaultCheck1"
-          />
-          <label class="form-check-label" for="defaultCheck1">
-            Estado
-          </label>
-        </div>
+          <template v-for="(input, key) in form">
+              <b-form-group
+                      v-if="input.type === 'text'"
+                      :state="input.state"
+                      :label="input.label"
+                      :label-for="key"
+                      :key="key"
+              >
+                  <b-form-input
+                          id="name-input"
+                          v-model="form[key].value"
+                          :state="input.state"
+                  ></b-form-input>
+              </b-form-group>
+              <div class="form-check" v-else-if="input.type === 'check'" :key="key">
+                  <input
+                          class="form-check-input"
+                          type="checkbox"
+                          v-model="form[key].value"
+                          :id="key"
+                  />
+                  <label class="form-check-label" :for="key">
+                      {{ input.label }}
+                  </label>
+              </div>
+          </template>
       </form>
     </b-modal>
   </div>
 </template>
 
 <script>
-  import axios from "axios";
+    import axios from "axios";
 
-  export default {
-  data() {
-    return {
-      path: "/api/roles",
-      form: {
-        nombre: { value: "", state: null },
-        estado: { value: false, state: null }
-      },
-      m_error: false
-    };
-  },
+    export default {
+        data() {
+            return {
+                path: "/api/roles",
+                form: {
+                    nombre: {value: "", state: null, type: "text", label: "Nombre"},
+                    estado: {value: false, state: null, type: "check", label: "Estado"}
+                },
+                m_error: false
+            };
+        },
   props: {
     idForm: Number,
     nameModal: String
@@ -74,18 +76,20 @@
       return valid;
     },
     resetModal() {
-      this.form.nombre = { value: "", state: null };
-      this.form.estado = { value: false, state: null };
-      this.m_error = false;
+        Object.keys(this.form).forEach(key => {
+            this.form[key].value = "";
+            this.form[key].state = null;
+        });
+        this.m_error = false;
     },
     loadModal() {
       this.resetModal();
       if (this.idForm) {
         // Push the name to submitted names
-        axios
-                .get(this.path, {
+          axios
+              .get(this.path, {
                   params: {id: this.idForm}
-                })
+              })
           .then(({ data }) => {
             if (data["status"] === 0) {
               Object.entries(data["data"][0]).forEach(([key, value]) => {
@@ -117,8 +121,8 @@
 
       if (this.idForm) formData["id"] = this.idForm;
 
-      axios
-              .post(this.path, formData)
+        axios
+            .post(this.path, formData)
         .then(({ data }) => {
           if (data["status"] === 0) {
             // Hide the modal manually

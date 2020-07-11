@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Usuarios;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -13,10 +12,6 @@ class UsuariosController extends Controller
     public function getAll(Request $request)
     {
         try {
-            Log::debug("Init Get Usuarios user:" . Auth::guard('api')->user()->id);
-            Log::info("IP: " . $request->getClientIp());
-            Log::info('user-agent:' . $request->userAgent());
-
             if (empty($request->all())) {
                 $Usuarios = Usuarios::GetAllC();
                 Log::debug("Success get all");
@@ -43,10 +38,6 @@ class UsuariosController extends Controller
     public function post(Request $request)
     {
         try {
-            Log::debug("Init Post Usuarios user:" . Auth::guard('api')->user()->id);
-            Log::info("IP: " . $request->getClientIp());
-            Log::info('user-agent:' . $request->userAgent());
-
             $validator = Validator::make($request->all(), [
                 'name' => 'required|min:5',
                 'estado' => 'required',
@@ -78,10 +69,6 @@ class UsuariosController extends Controller
     public function delete(Request $request)
     {
         try {
-            Log::debug("Init Delete Usuarios user:" . Auth::guard('api')->user()->id);
-            Log::info("IP: " . $request->getClientIp());
-            Log::info('user-agent:' . $request->userAgent());
-
             $validator = Validator::make($request->all(), [
                 'id' => 'required',
             ]);

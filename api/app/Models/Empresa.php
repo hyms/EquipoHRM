@@ -56,16 +56,40 @@ class Empresa
             ->get();
     }
 
+    private static function insert($values)
+    {
+        $id = DB::table(self::$table)
+            ->insertGetId([
+                'nombre' => $values['nombre'],
+                "nit" => $values['nit'],
+                "direccion" => $values['direccion'],
+                "telefono" => $values['telefono'],
+                "celular" => $values['celular'],
+                "fax" => $values['fax'],
+                "ciudad" => $values['ciudad'],
+                "departamento" => $values['departamento'],
+                "gerente" => $values['gerente'],
+                "email" => $values['email'],
+                "web" => $values['web'],
+                "fecha_nacimiento" => $values['fecha_nacimiento'],
+                'borrado' => 0,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ]);
+        self::history($id);
+        return $id;
+    }
+
     private static function update($values)
     {
         $rows = DB::table(self::$table)
             ->where([
                 ['id', $values['id']],
                 ['nombre', $values['nombre']],
-                ["nit",$values['nit']],
-                ["direccion",$values['direccion']],
-                ["telefono",$values['telefono']],
-                ["celular",$values['celular']],
+                ["nit", $values['nit']],
+                ["direccion", $values['direccion']],
+                ["telefono", $values['telefono']],
+                ["celular", $values['celular']],
                 ["fax",$values['fax']],
                 ["ciudad",$values['ciudad']],
                 ["departamento",$values['departamento']],
@@ -109,7 +133,7 @@ class Empresa
 
     public static function Save(array $values)
     {
-        if (key_exists('id', $values)) {
+        if (key_exists('id', $values) && !empty($values["id"])) {
             return self::update($values);
         }
         return self::insert($values);

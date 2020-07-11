@@ -2,31 +2,32 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Diasfestivos;
+use App\Models\Gerencia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
-class DiasfestivosController extends Controller
+class GerenciaController extends Controller
 {
     public function getAll(Request $request)
     {
         try {
             if (empty($request->all())) {
-                $Diasfestivos = Diasfestivos::GetAll();
+                $Gerencia = Gerencia::GetAll();
                 Log::debug("Success get all");
                 return response()->json([
                     'status' => 0,
                     'data' => [
-                        'all' => $Diasfestivos,
-                        'count' => count($Diasfestivos),
+                        'all' => $Gerencia,
+                        'count' => count($Gerencia),
                     ]]);
             }
-            $row = Diasfestivos::Get($request->get('id'));
+            $rol = Gerencia::Get($request->get('id'));
             Log::debug("Success get id:" . $request->get('id'));
             return response()->json([
-                'status' => (empty($row) ? -1 : 0),
-                'data' => $row
+                'status' => (empty($rol) ? -1 : 0),
+                'data' => $rol
             ]);
         } catch (\Exception $error) {
             Log::error($error->getMessage());
@@ -38,9 +39,12 @@ class DiasfestivosController extends Controller
     public function post(Request $request)
     {
         try {
+            Log::debug("Init Post Gerencia user:" . Auth::guard('api')->user()->id);
+            Log::info("IP: " . $request->getClientIp());
+            Log::info('user-agent:' . $request->userAgent());
+
             $validator = Validator::make($request->all(), [
-                'nombre' => 'required',
-                'fecha' => 'required',
+                'nombre' => 'required|min:5',
                 'estado' => 'required',
             ]);
             if ($validator->fails()) {
@@ -48,7 +52,7 @@ class DiasfestivosController extends Controller
                     'status' => -1,
                     'data' => $validator->errors()]);
             }
-            $id = Diasfestivos::Save($request->all());
+            $id = Gerencia::Save($request->all());
             if (empty($id)) {
                 return response()->json([
                     'status' => -1,
@@ -58,7 +62,7 @@ class DiasfestivosController extends Controller
             }
             return response()->json([
                 'status' => 0,
-                'data' => Diasfestivos::Get($id)]);
+                'data' => Gerencia::Get($id)]);
         } catch (\Exception $error) {
             Log::error($error->getMessage());
             return response()->json([//'message' => $error->getMessage(),
@@ -69,6 +73,10 @@ class DiasfestivosController extends Controller
     public function delete(Request $request)
     {
         try {
+            Log::debug("Init Delete Gerencia user:" . Auth::guard('api')->user()->id);
+            Log::info("IP: " . $request->getClientIp());
+            Log::info('user-agent:' . $request->userAgent());
+
             $validator = Validator::make($request->all(), [
                 'id' => 'required',
             ]);
@@ -77,9 +85,9 @@ class DiasfestivosController extends Controller
                     'status' => -1,
                     'data' => $validator->errors()]);
             }
-            $Diasfestivos = Diasfestivos::Delete($request->all());
+            $Gerencia = Gerencia::Delete($request->all());
             return response()->json([
-                'status' => ($Diasfestivos ? 0 : -1),
+                'status' => ($Gerencia ? 0 : -1),
                 'data' => []
             ]);
         } catch (\Exception $error) {

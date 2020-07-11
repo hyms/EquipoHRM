@@ -1,16 +1,16 @@
 <template>
     <div>
-        <div class="top-bar color-scheme-light overflow-auto">
+        <div class="top-bar color-scheme-light overflow-auto text-left">
             <ul class="col-12">
                 <router-link
                         v-for="(link, key) in links"
-                        :to="link.to"
+                        :to="path+key"
                         :key="key"
                         tag="li"
                         exact
                         exact-active-class="active"
                 >
-                    <a>{{ link.name }}</a>
+                    <a>{{ link }}</a>
                 </router-link>
             </ul>
         </div>
@@ -28,9 +28,10 @@
     export default {
         data() {
             return {
+                path: "/configuracion/",
                 links: {
-                    usuarios: {name: "Usuarios", to: "/configuracion/usuarios"},
-                    roles: {name: "Roles", to: "/configuracion/roles"}
+                    usuarios: "Usuarios",
+                    roles: "Roles"
                 }
             };
         }

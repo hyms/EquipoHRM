@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Areastrabajo;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -13,10 +12,6 @@ class AreastrabajoController extends Controller
     public function getAll(Request $request)
     {
         try {
-            Log::debug("Init Get Areastrabajo user:" . Auth::guard('api')->user()->id);
-            Log::info("IP: " . $request->getClientIp());
-            Log::info('user-agent:' . $request->userAgent());
-
             if (empty($request->all())) {
                 $Areastrabajo = Areastrabajo::GetAll();
                 Log::debug("Success get all");
@@ -43,10 +38,6 @@ class AreastrabajoController extends Controller
     public function post(Request $request)
     {
         try {
-            Log::debug("Init Post Areastrabajo user:" . Auth::guard('api')->user()->id);
-            Log::info("IP: " . $request->getClientIp());
-            Log::info('user-agent:' . $request->userAgent());
-
             $validator = Validator::make($request->all(), [
                 'nombre' => 'required',
                 'estado' => 'required',
@@ -77,10 +68,6 @@ class AreastrabajoController extends Controller
     public function delete(Request $request)
     {
         try {
-            Log::debug("Init Delete Areastrabajo user:" . Auth::guard('api')->user()->id);
-            Log::info("IP: " . $request->getClientIp());
-            Log::info('user-agent:' . $request->userAgent());
-
             $validator = Validator::make($request->all(), [
                 'id' => 'required',
             ]);

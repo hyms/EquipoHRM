@@ -214,18 +214,10 @@
       return valid;
     },
     resetModal() {
-      this.nombre = { value: "", state: null };
-      this.direccion = { value: "", state: null };
-      this.telefono = { value: "", state: null };
-      this.celular = { value: "", state: null };
-      this.fax = { value: "", state: null };
-      this.ciudad = { value: "", state: null };
-      this.departamento = { value: "", state: null };
-      this.encargado = { value: "", state: null };
-      this.email = { value: "", state: null };
-      this.web = { value: "", state: null };
-      this.fecha_nacimiento = { value: "", state: null };
-      this.estado = { value: false, state: null };
+      Object.keys(this.form).forEach(key => {
+        this.form[key].value = "";
+        this.form[key].state = null;
+      });
       this.m_error = false;
     },
     loadModal() {

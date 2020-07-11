@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Cargo;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -13,10 +12,6 @@ class CargosController extends Controller
     public function getAll(Request $request)
     {
         try {
-            Log::debug("Init Get Cargo user:" . Auth::guard('api')->user()->id);
-            Log::info("IP: " . $request->getClientIp());
-            Log::info('user-agent:' . $request->userAgent());
-
             if (empty($request->all()) || $request->has('padre')) {
 
                 $Cargo = Cargo::GetAll(($request->has('padre')) ? $request->get('padre') : null);
@@ -45,10 +40,6 @@ class CargosController extends Controller
     public function post(Request $request)
     {
         try {
-            Log::debug("Init Post Cargo user:" . Auth::guard('api')->user()->id);
-            Log::info("IP: " . $request->getClientIp());
-            Log::info('user-agent:' . $request->userAgent());
-
             $validator = Validator::make($request->all(), [
                 'nombre' => 'required',
                 'estado' => 'required',
@@ -79,10 +70,6 @@ class CargosController extends Controller
     public function delete(Request $request)
     {
         try {
-            Log::debug("Init Delete Cargo user:" . Auth::guard('api')->user()->id);
-            Log::info("IP: " . $request->getClientIp());
-            Log::info('user-agent:' . $request->userAgent());
-
             $validator = Validator::make($request->all(), [
                 'id' => 'required',
             ]);

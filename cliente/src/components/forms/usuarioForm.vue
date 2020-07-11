@@ -19,97 +19,76 @@
         {{ value }}
       </b-alert>
       <form ref="form" @submit.stop.prevent="handleSubmit">
-        <b-form-group
-          :state="form.name.state"
-          label="Nombre"
-          label-for="name-input"
-          invalid-feedback="Nombre es requerido"
-        >
-          <b-form-input
-            id="name-input"
-            v-model="form.name.value"
-            :state="form.name.state"
-            required
-          ></b-form-input>
-        </b-form-group>
-        <b-form-group
-          :state="form.password.state"
-          label="Contraseña"
-          label-for="pass-input"
-        >
-          <b-form-input
-            id="pass-input"
-            v-model="form.password.value"
-            :state="form.password.state"
-            type="password"
-          ></b-form-input>
-        </b-form-group>
-        <b-form-group
-          :state="form.alias.state"
-          label="Alias"
-          label-for="alias-input"
-        >
-          <b-form-input
-            id="alias-input"
-            v-model="form.alias.value"
-            :state="form.alias.state"
-          ></b-form-input>
-        </b-form-group>
-        <b-form-group
-          :state="form.detail.state"
-          label="Detalle"
-          label-for="detail-input"
-        >
-          <b-form-input
-            id="detail-input"
-            v-model="form.detail.value"
-            :state="form.detail.state"
-          ></b-form-input>
-        </b-form-group>
-        <b-form-group
-          :state="form.rol.state"
-          label="Tipo de rol"
-          label-for="rol-input"
-        >
-          <b-form-select
-            id="rol-input"
-            v-model="form.rol.value"
-            :options="roles"
-            value-field="id"
-            text-field="nombre"
-          ></b-form-select>
-        </b-form-group>
-        <div class="form-check">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            v-model="form.estado.value"
-            id="defaultCheck1"
-          />
-          <label class="form-check-label" for="defaultCheck1">
-            Estado
-          </label>
-        </div>
+          <template v-for="(input, key) in form">
+              <div class="form-check" v-if="input.type === 'check'" :key="key">
+                  <input
+                          class="form-check-input"
+                          type="checkbox"
+                          v-model="form[key].value"
+                          :id="key"
+                  />
+                  <label class="form-check-label" :for="key">
+                      {{ input.label }}
+                  </label>
+              </div>
+              <template v-else>
+                  <b-form-group
+                          :state="input.state"
+                          :label="input.label"
+                          :label-for="key"
+                          :key="key"
+                  >
+                      <b-form-input
+                              v-if="input.type === 'text'"
+                              :id="key"
+                              v-model="form[key].value"
+                              :state="input.state"
+                      ></b-form-input>
+                      <b-form-input
+                              :id="key"
+                              v-model="form[key].value"
+                              :state="input.state"
+                              v-if="input.type === 'password'"
+                              type="password"
+                      ></b-form-input>
+                      <b-form-textarea
+                              :id="key"
+                              v-model="form[key].value"
+                              :state="input.state"
+                              v-if="input.type === 'textarea'"
+                      ></b-form-textarea>
+                      <b-form-select
+                              v-if="input.type === 'select'"
+                              :id="key"
+                              v-model="form[key].value"
+                              :state="input.state"
+                              :options="roles"
+                              value-field="id"
+                              text-field="nombre"
+                      ></b-form-select>
+                  </b-form-group>
+              </template>
+          </template>
       </form>
     </b-modal>
   </div>
 </template>
 
 <script>
-  import axios from "axios";
+    import axios from "axios";
 
-  export default {
-    data() {
-      return {
-        path: "/api/usuarios",
-        form: {
-          name: {value: "", state: null},
-          password: {value: "", state: null},
-          alias: {value: "", state: null},
-          detail: {value: "", state: null},
-          estado: {value: false, state: null},
-          rol: {value: "", state: null}
-      },
+    export default {
+        data() {
+            return {
+                path: "/api/usuarios",
+                form: {
+                    name: {value: "", state: null, type: "text", label: "Nombre"},
+                    password: {value: "", state: null, type: "password", label: "Contraseña"},
+                    alias: {value: "", state: null, type: "text", label: "Alias"},
+                    detail: {value: "", state: null, type: "textarea", label: "Detalle"},
+                    rol: {value: "", state: null, type: "select", label: "Tipo Rol"},
+                    estado: {value: false, state: null, type: "check", label: "Estado"},
+                },
       roles: {},
       m_error: false
     };
@@ -126,13 +105,11 @@
       return valid;
     },
     resetModal() {
-      this.form.name = { value: "", state: null };
-      this.form.password = { value: "", state: null };
-      this.form.detail = { value: "", state: null };
-      this.form.alias = { value: "", state: null };
-      this.form.rol = { value: "", state: null };
-      this.form.estado = { value: false, state: null };
-      this.m_error = false;
+        Object.keys(this.form).forEach(key => {
+            this.form[key].value = "";
+            this.form[key].state = null;
+        });
+        this.m_error = false;
     },
     loadModal() {
       this.resetModal();
@@ -157,7 +134,7 @@
     },
     async loadRoles() {
       await axios
-        .get("api/roles/get")
+          .get("api/roles")
         .then(({ data }) => {
           if (data["status"] === 0) {
             this.roles = data["data"]["all"];

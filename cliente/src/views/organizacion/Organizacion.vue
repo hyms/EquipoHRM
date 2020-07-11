@@ -1,17 +1,17 @@
 <template>
   <div>
-    <div class="top-bar color-scheme-light overflow-auto">
-      <ul class="col-12">
-        <router-link
-                v-for="(link, key) in links"
-                :to="link.to"
-                :key="key"
-                tag="li"
-                exact
-                exact-active-class="active"
-        >
-          <a>{{ link.name }}</a>
-        </router-link>
+    <div class="top-bar color-scheme-light overflow-auto text-left">
+        <ul class="col-12">
+            <router-link
+                    v-for="(link, key) in links"
+                    :to="path + key"
+                    :key="key"
+                    tag="li"
+                    exact
+                    exact-active-class="active"
+            >
+                <a>{{ link }}</a>
+            </router-link>
       </ul>
     </div>
     <div class="content-i">
@@ -25,23 +25,19 @@
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        links: {
-          regional: {name: "Regional", to: "/organizacion/regional"},
-          unidadesnegocio: {
-            name: "Unidades de negocio",
-            to: "/organizacion/unidadesnegocio"
-          },
-          areastrabajo: {
-            name: "Areas de Trabajo",
-            to: "/organizacion/areastrabajo"
-          },
-          cargos: {name: "Cargos", to: "/organizacion/cargos"},
-          empresa: {name: "Empresa", to: "/organizacion/empresa"}
+    export default {
+        data() {
+            return {
+                path: "/organizacion/",
+                links: {
+                    regional: "Regional",
+                    gerencia: "Gerencia",
+                    unidadesnegocio: "Unidades de negocio",
+                    areastrabajo: "Areas de Trabajo",
+                    cargos: "Cargos",
+                    empresa: "Empresa"
+                }
+            };
         }
-      };
-    }
-  };
+    };
 </script>

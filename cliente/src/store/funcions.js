@@ -1,26 +1,41 @@
-import moment from 'moment'
-import Vue from 'vue'
+import moment from "moment";
+import Vue from "vue";
 
-Vue.filter('formatDate', function(value) {
+Vue.filter("formatDate", function (value) {
     if (value) {
-        return moment(String(value)).format('DD/MM/YYYY hh:mm')
+        return moment(String(value)).format("DD/MM/YYYY hh:mm");
     }
 });
-Vue.filter('formatDateOnly', function(value) {
+Vue.filter("formatDateOnly", function (value) {
     if (value) {
-        return moment(String(value)).format('DD/MM/YYYY')
+        return moment(String(value)).format("DD/MM/YYYY");
     }
 });
 
-Vue.filter('formatState', function(value) {
-        return (value === 1) ? 'Activo' : 'Inactivo'
+Vue.filter("formatState", function (value) {
+    return value === 1 ? "Activo" : "Inactivo";
 });
 
-Vue.filter('formatElementName', function(value,table) {
-    if(table) {
-        const index = table.findIndex((element) => element['id'] === value);
-        if (index > -1)
-            return table[index]['nombre'];
+Vue.filter("formatElementName", function (value, table) {
+    if (table) {
+        const index = table.findIndex(element => element["id"] === value);
+        if (index > -1) return table[index]["nombre"];
     }
     return value;
 });
+Vue.filter("formatCivilState", function (value) {
+    if (value) return Helpers.estadoCivil(value);
+    return value;
+});
+
+let Helpers = {
+    estadoCivil(id = null) {
+        const estado = ["soltero/a", "casado/a", "divorciado/a", "viudo/a"];
+        if (id) return estado[id];
+        return estado;
+    }
+}
+
+export default Helpers
+
+

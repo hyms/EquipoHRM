@@ -89,9 +89,10 @@
       return valid;
     },
     resetModal() {
-      this.form.nombre = { value: "", state: null };
-      this.form.detalle = { value: "", state: null };
-      this.form.estado = { value: false, state: null };
+      Object.keys(this.form).forEach(key => {
+        this.form[key].value = "";
+        this.form[key].state = null;
+      });
       this.m_error = false;
     },
     loadModal() {

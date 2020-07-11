@@ -5,6 +5,7 @@ import Error from "../views/Error";
 import Login from "../views/Login";
 import Home from "../views/Home";
 import Diasfestivos from "../views/Diasfestivos";
+import Personal from "../views/personal/Personal";
 //organizacion
 import Organizacion from "../views/organizacion/Organizacion";
 import Cargos from "../views/organizacion/Cargos";
@@ -12,6 +13,7 @@ import Areastrabajo from "../views/organizacion/Areastrabajo";
 import Unidadesnegocio from "../views/organizacion/Unidadesnegocio";
 import Empresa from "../views/organizacion/Empresa";
 import Regional from "../views/organizacion/Regional";
+import Gerencia from "../views/organizacion/Gerencia";
 //configuracion
 import Configuracion from "../views/configuracion/Configuracion";
 import Usuarios from "../views/configuracion/Usuarios";
@@ -104,26 +106,41 @@ const routes = [
         meta: {
           auth: true
         },
-        component: Empresa
+          component: Empresa
       },
-      {
-        path: "/organizacion/regional",
-        name: "Regional",
-        meta: {
-          auth: true
+        {
+            path: "/organizacion/regional",
+            name: "Regional",
+            meta: {
+                auth: true
+            },
+            component: Regional
         },
-        component: Regional
-      }
+        {
+            path: "/organizacion/gerencia",
+            name: "Gerencia",
+            meta: {
+                auth: true
+            },
+            component: Gerencia
+        }
     ]
   },
-  {
-    path: "/diasfestivos",
-    name: "Diasfestivos",
-    meta: {
-      auth: true
-    },
-    component: Diasfestivos
-  }
+    {
+        path: "/personal",
+        name: "Personal",
+        meta: {
+            auth: true
+        },
+        component: Personal
+    }, {
+        path: "/diasfestivos",
+        name: "Diasfestivos",
+        meta: {
+            auth: true
+        },
+        component: Diasfestivos
+    }
 ];
 
 const router = new VueRouter({

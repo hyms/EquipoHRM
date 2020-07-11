@@ -14,9 +14,6 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         try {
-            Log::debug("Init login user:" . $request->email);
-            Log::info("IP: " . $request->getClientIp());
-            Log::info('user-agent:' . $request->userAgent());
             $validator = Validator::make($request->all(), [
                 'email' => 'required',
                 'password' => 'required',
