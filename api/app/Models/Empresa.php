@@ -72,6 +72,7 @@ class Empresa
                 "email" => $values['email'],
                 "web" => $values['web'],
                 "fecha_nacimiento" => $values['fecha_nacimiento'],
+                'estado' => 1,
                 'borrado' => 0,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),

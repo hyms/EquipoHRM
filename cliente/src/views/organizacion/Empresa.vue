@@ -23,162 +23,41 @@
             {{ key }}:{{ value }}
           </b-alert>
           <form ref="form" @submit.stop.prevent="handleSubmit">
-            <b-form-group
-                    :state="form.nombre.state"
-                    label="Nombre"
-                    label-for="name-input"
-                    invalid-feedback="Nombre es requerido"
-            >
-              <b-form-input
-                      id="name-input"
-                      v-model="form.nombre.value"
-                      :state="form.nombre.state"
-                      :disabled="!editable"
-                      required
-              ></b-form-input>
-            </b-form-group>
-            <b-form-group
-                    :state="form.direccion.state"
-                    label="Direccion"
-                    label-for="direccion-input"
-                    invalid-feedback="Direccion es requerido"
-            >
-              <b-form-input
-                      id="direccion-input"
-                      v-model="form.direccion.value"
-                      :state="form.direccion.state"
-                      :disabled="!editable"
-              ></b-form-input>
-            </b-form-group>
-            <b-form-group
-                    :state="form.telefono.state"
-                    label="telefono"
-                    label-for="telefono-input"
-                    invalid-feedback="telefono es requerido"
-            >
-              <b-form-input
-                      id="telefono-input"
-                      v-model="form.telefono.value"
-                      :state="form.telefono.state"
-                      :disabled="!editable"
-              ></b-form-input>
-            </b-form-group>
-            <b-form-group
-                    :state="form.celular.state"
-                    label="celular"
-                    label-for="celular-input"
-                    invalid-feedback="celular es requerido"
-            >
-              <b-form-input
-                      id="celular-input"
-                      v-model="form.celular.value"
-                      :state="form.celular.state"
-                      :disabled="!editable"
-              ></b-form-input>
-            </b-form-group>
-            <b-form-group
-                    :state="form.fax.state"
-                    label="fax"
-                    label-for="fax-input"
-                    invalid-feedback="fax es requerido"
-            >
-              <b-form-input
-                      id="fax-input"
-                      v-model="form.fax.value"
-                      :state="form.fax.state"
-                      :disabled="!editable"
-              ></b-form-input>
-            </b-form-group>
-            <b-form-group
-                    :state="form.ciudad.state"
-                    label="ciudad"
-                    label-for="ciudad-input"
-                    invalid-feedback="ciudad es requerido"
-            >
-              <b-form-input
-                      id="ciudad-input"
-                      v-model="form.ciudad.value"
-                      :state="form.ciudad.state"
-                      :disabled="!editable"
-              ></b-form-input>
-            </b-form-group>
-            <b-form-group
-                    :state="form.departamento.state"
-                    label="departamento"
-                    label-for="departamento-input"
-                    invalid-feedback="departamento es requerido"
-            >
-              <b-form-input
-                      id="departamento-input"
-                      v-model="form.departamento.value"
-                      :state="form.departamento.state"
-                      :disabled="!editable"
-              ></b-form-input>
-            </b-form-group>
-            <b-form-group
-                    :state="form.encargado.state"
-                    label="encargado"
-                    label-for="encargado-input"
-                    invalid-feedback="encargado es requerido"
-            >
-              <b-form-input
-                      id="encargado-input"
-                      v-model="form.encargado.value"
-                      :state="form.encargado.state"
-                      :disabled="!editable"
-              ></b-form-input>
-            </b-form-group>
-            <b-form-group
-                    :state="form.email.state"
-                    label="email"
-                    label-for="email-input"
-                    invalid-feedback="email es requerido"
-            >
-              <b-form-input
-                      id="email-input"
-                      v-model="form.email.value"
-                      :state="form.email.state"
-                      :disabled="!editable"
-              ></b-form-input>
-            </b-form-group>
-            <b-form-group
-                    :state="form.web.state"
-                    label="web"
-                    label-for="web-input"
-                    invalid-feedback="web es requerido"
-            >
-              <b-form-input
-                      id="web-input"
-                      v-model="form.web.value"
-                      :state="form.web.state"
-                      :disabled="!editable"
-              ></b-form-input>
-            </b-form-group>
-            <b-form-group
-                    :state="form.fecha_nacimiento.state"
-                    label="Fecha de Nacimiento"
-                    label-for="fecha_nacimiento-input"
-                    invalid-feedback="fecha_nacimiento es requerido"
-            >
-              <b-form-input
-                      id="fecha_nacimiento-input"
-                      v-model="form.fecha_nacimiento.value"
-                      :state="form.fecha_nacimiento.state"
-                      :disabled="!editable"
-              ></b-form-input>
-            </b-form-group>
-            <div class="form-check">
-              <input
-                      class="form-check-input"
-                      type="checkbox"
-                      v-model="form.estado.value"
-                      id="defaultCheck1"
-                      :disabled="!editable"
-              />
-              <label class="form-check-label" for="defaultCheck1">
-                Estado
-              </label>
-            </div>
+              <template v-for="(input, key) in form">
+                  <b-form-group
+                          :state="input.state"
+                          :label="input.label"
+                          :label-for="key"
+                          :key="key"
+                  >
+                      <b-form-input
+                              v-if=" ['text','number','email','password','url','tel','date'].includes(input.type)"
+                              :id="key"
+                              v-model="form[key].value"
+                              :state="input.state"
+                              :type="input.type"
+                              :disabled="!editable"
+                      ></b-form-input>
+
+                      <b-form-textarea
+                              :id="key"
+                              v-model="form[key].value"
+                              :state="input.state"
+                              v-if="input.type === 'textarea'"
+                              :disabled="!editable"
+                      ></b-form-textarea>
+                      <b-form-select
+                              v-if="input.type === 'select'"
+                              :id="key"
+                              v-model="form[key].value"
+                              :state="input.state"
+                              :options="datos[input.datos]"
+                              value-field="id"
+                              text-field="nombre"
+                              :disabled="!editable"
+                      ></b-form-select>
+                  </b-form-group>
+              </template>
           </form>
         </div>
       </div>
@@ -186,31 +65,32 @@
   </div>
 </template>
 <script>
-  import "@/store/funcions";
-  import axios from "axios";
+    import "@/store/funcions";
+    import axios from "axios";
 
-  export default {
-    data() {
-      return {
-        path: "/api/empresa",
-        tituloPagina: "Empresa",
-        idForm: 1,
-        editable: false,
-        textoBoton: ["Editar", "Guardar"],
-        form: {
-          nombre: {value: "", state: null},
-          direccion: {value: "", state: null},
-          telefono: {value: "", state: null},
-          celular: {value: "", state: null},
-          fax: {value: "", state: null},
-          ciudad: {value: "", state: null},
-          departamento: {value: "", state: null},
-          encargado: {value: "", state: null},
-          email: {value: "", state: null},
-          web: {value: "", state: null},
-          fecha_nacimiento: {value: "", state: null},
-          estado: {value: false, state: null}
-        },
+    export default {
+        data() {
+            return {
+                path: "/api/empresa",
+                tituloPagina: "Empresa",
+                idForm: 1,
+                editable: false,
+                textoBoton: ["Editar", "Guardar"],
+                form: {
+                    nombre: {value: "", state: null, type: 'text', label: 'Nombre'},
+                    direccion: {value: "", state: null, type: 'textarea', label: 'Direccion'},
+                    nit: {value: "", state: null, type: 'text', label: 'Nit'},
+                    telefono: {value: "", state: null, type: 'tel', label: 'Telefono'},
+                    celular: {value: "", state: null, type: 'tel', label: 'Celular'},
+                    fax: {value: "", state: null, type: 'tel', label: 'Fax'},
+                    ciudad: {value: "", state: null, type: 'text', label: 'Ciudad'},
+                    departamento: {value: "", state: null, type: 'text', label: 'Departamento'},
+                    gerente: {value: "", state: null, type: 'text', label: 'Gerente'},
+                    email: {value: "", state: null, type: 'email', label: 'Email'},
+                    web: {value: "", state: null, type: 'url', label: 'Web'},
+                    fecha_nacimiento: {value: "", state: null, type: 'date', label: 'Fecha de Nacimiento'},
+                    estado: {value: 1}
+                },
         m_error: false
       };
     },
@@ -230,11 +110,12 @@
                   })
                   .then(({data}) => {
                     if (data["status"] === 0) {
-                      data["data"][0].forEach((value, key) => {
-                        this[key].value = value;
-                      });
+                        Object.entries(data["data"][0]).forEach(([key, value]) => {
+                            if (this.form[key]) this.form[key].value = value;
+                        });
                     } else {
-                      this.m_error = data["data"];
+                        this.m_error = data["data"];
+                        this.idForm = null;
                     }
                   })
                   .catch();

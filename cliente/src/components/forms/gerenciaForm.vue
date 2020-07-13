@@ -62,19 +62,19 @@
 </template>
 
 <script>
-  import axios from "axios";
+    import axios from "axios";
 
-  export default {
-    data() {
-      return {
-        path: "/api/gerencia",
-        form: {
-          nombre: {value: "", state: null},
-          detalle: {value: "", state: null},
-          estado: {value: false, state: null}
-        },
-        m_error: false
-      };
+    export default {
+        data() {
+            return {
+                path: "/api/gerencia",
+                form: {
+                    nombre: {value: "", state: null},
+                    detalle: {value: "", state: null},
+                    estado: {value: false, state: null}
+                },
+                m_error: false
+            };
     },
     props: {
       idForm: Number,
@@ -83,7 +83,7 @@
     methods: {
       checkFormValidity() {
         const valid = this.$refs.form.checkValidity();
-        this.form.nombre.state = valid;
+          //this.form.nombre.state = valid;
         this.m_error = false;
         return valid;
       },
@@ -122,9 +122,9 @@
       },
       handleSubmit() {
         // Exit when the form isn't valid
-        if (!this.checkFormValidity()) {
-          return;
-        }
+          /* if (!this.checkFormValidity()) {
+             return;
+           }*/
         // Push the name to submitted names
         let formData = {};
         Object.entries(this.form).forEach(([key, value]) => {

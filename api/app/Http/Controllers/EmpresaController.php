@@ -37,8 +37,7 @@ class EmpresaController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'nombre' => 'required|min:5',
-                'estado' => 'required',
+                'nombre' => 'required',
             ]);
             if ($validator->fails()) {
                 return response()->json([

@@ -49,25 +49,25 @@
   </div>
 </template>
 <script>
-  import axios from "axios";
-  import Form from "@/components/forms/regionalForm";
-  import "@/store/funcions";
+    import axios from "axios";
+    import Form from "@/components/forms/regionalForm";
+    import "@/store/funcions";
 
-  export default {
-    data() {
-      return {
-        tituloPagina: "Regionales",
-        path: "/api/regionales",
-        nameModal: "modalRegional",
-        columnas: [
-          {
-            key: "nombre",
-            sortable: true
-          },
-          {
-            key: "created_at",
-            label: "Fecha Registro",
-            sortable: true
+    export default {
+        data() {
+            return {
+                tituloPagina: "Regionales",
+                path: "/api/regional",
+                nameModal: "modalRegional",
+                columnas: [
+                    {
+                        key: "nombre",
+                        sortable: true
+                    },
+                    {
+                        key: "created_at",
+                        label: "Fecha Registro",
+                        sortable: true
           },
           {
             key: "estado",

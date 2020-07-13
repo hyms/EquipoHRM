@@ -98,7 +98,7 @@ class PersonalController extends Controller
         try {
             $data = array();
             $data['cargos'] = Cargo::GetAll();
-            $data['unidades'] = Unidadesnegocio::GetAll();
+            $data['negocios'] = Unidadesnegocio::GetAll();
             $data['areas'] = Areastrabajo::GetAll();
             $data['regionales'] = Regional::GetAll();
             $data['gerencias'] = Gerencia::GetAll();

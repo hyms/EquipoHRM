@@ -31,7 +31,6 @@ class Carrera
                 'area_trabajo' => $values['area_trabajo'],
                 'regional' => $values['regional'],
                 'gerencia' => $values['gerencia'],
-                'usuario' => $values['usuario'],
                 'fecha_ingreso' => $values['fecha_ingreso'],
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
@@ -50,7 +49,6 @@ class Carrera
                 ['area_trabajo', $values['area_trabajo']],
                 ['regional', $values['regional']],
                 ['gerencia', $values['gerencia']],
-                ['usuario', $values['usuario']],
                 ['fecha_ingreso', $values['fecha_ingreso']],
             ])
             ->count();
@@ -68,7 +66,6 @@ class Carrera
                 'area_trabajo' => $values['area_trabajo'],
                 'regional' => $values['regional'],
                 'gerencia' => $values['gerencia'],
-                'usuario' => $values['usuario'],
                 'fecha_ingreso' => $values['fecha_ingreso'],
                 'updated_at' => Carbon::now(),
             ]);

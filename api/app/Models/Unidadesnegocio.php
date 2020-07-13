@@ -62,6 +62,7 @@ class Unidadesnegocio
                 "web" => $values["web"],
                 "fecha_nacimiento" => $values["fecha_nacimiento"],
                 'id_empresa' => $values["id_empresa"],
+                'estado' => $values["estado"],
                 'borrado' => 0,
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
@@ -87,6 +88,7 @@ class Unidadesnegocio
                 ["web", $values["web"]],
                 ["fecha_nacimiento", $values["fecha_nacimiento"]],
                 ["id_empresa", $values["id_empresa"]],
+                ['estado', $values["estado"]],
                 ['borrado', 0]
             ])
             ->count();

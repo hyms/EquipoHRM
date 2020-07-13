@@ -138,7 +138,7 @@
         methods: {
             checkFormValidity() {
                 const valid = this.$refs.form.checkValidity();
-                this.form.nombres.state = valid;
+                //this.form.nombres.state = valid;
                 this.m_error = false;
                 return valid;
             },
@@ -177,9 +177,9 @@
             },
             handleSubmit() {
                 // Exit when the form isn't valid
-                if (!this.checkFormValidity()) {
-                    return;
-                }
+                /* if (!this.checkFormValidity()) {
+                     return;
+                 }*/
                 // Push the name to submitted names
                 let formData = {};
                 Object.entries(this.form).forEach(([key, value]) => {

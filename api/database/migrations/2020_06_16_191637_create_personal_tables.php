@@ -53,24 +53,24 @@ class CreatePersonalTables extends Migration
 
         Schema::create('carrera', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger("pesonal");
+            $table->unsignedInteger("personal");
             $table->unsignedInteger("cargo");
             $table->unsignedInteger("unidad_negocio");
             $table->unsignedInteger("area_trabajo");
             $table->unsignedInteger("regional");
             $table->unsignedInteger("gerencia");
-            $table->unsignedInteger("usuario")->nulleable();
+            $table->unsignedInteger("usuario")->nullable();
             $table->date("fecha_ingreso");
             $table->timestamps();
         });
         Schema::create('carreraHistory', function (Blueprint $table) {
-            $table->unsignedInteger("pesonal");
+            $table->unsignedInteger("personal");
             $table->unsignedInteger("cargo");
             $table->unsignedInteger("unidad_negocio");
             $table->unsignedInteger("area_trabajo");
             $table->unsignedInteger("regional");
             $table->unsignedInteger("gerencia");
-            $table->unsignedInteger("usuario")->nulleable();
+            $table->unsignedInteger("usuario")->nullable();
             $table->date("fecha_ingreso");
             //control de historial
             $table->unsignedInteger('id');

@@ -20,7 +20,6 @@
       </b-alert>
       <form ref="form" @submit.stop.prevent="handleSubmit">
         <template v-for="(input, key) in form">
-
           <b-form-group
                   :state="input.state"
                   :label="input.label"
@@ -28,18 +27,13 @@
                   :key="key"
           >
             <b-form-input
-                    v-if="input.type === 'text'"
+                    v-if=" ['text','number','email','password','url','tel','date'].includes(input.type)"
                     :id="key"
                     v-model="form[key].value"
                     :state="input.state"
+                    :type="input.type"
             ></b-form-input>
-            <b-form-input
-                    :id="key"
-                    v-model="form[key].value"
-                    :state="input.state"
-                    v-if="input.type === 'password'"
-                    type="password"
-            ></b-form-input>
+
             <b-form-textarea
                     :id="key"
                     v-model="form[key].value"
@@ -51,7 +45,9 @@
                     :id="key"
                     v-model="form[key].value"
                     :state="input.state"
-                    :options="estadoCivil()"
+                    :options="datos[input.datos]"
+                    value-field="id"
+                    text-field="nombre"
             ></b-form-select>
           </b-form-group>
         </template>
@@ -68,13 +64,15 @@
     data() {
       return {
         path: "/api/carrera",
+        pathData: "/api/personal/carrera",
         form: {
-          cargo: {value: "", state: null, type: 'select'},
-          unidad_negocio: {value: "", state: null, type: 'select'},
-          area_trabajo: {value: "", state: null, type: 'select'},
-          regional: {value: "", state: null, type: 'select'},
-          gerencia: {value: "", state: null, type: 'select'},
-          fecha_ingreso: {value: "", state: null},
+          cargo: {value: "", state: null, type: 'select', datos: 'cargos', label: "Cargo"},
+          unidad_negocio: {value: "", state: null, type: 'select', datos: 'negocios', label: "Unidad de Negocio"},
+          area_trabajo: {value: "", state: null, type: 'select', datos: 'areas', label: "Area de Trabajo"},
+          regional: {value: "", state: null, type: 'select', datos: 'regionales', label: "Regional"},
+          gerencia: {value: "", state: null, type: 'select', datos: 'gerencias', label: "Gerencia"},
+          fecha_ingreso: {value: "", state: null, type: 'date', label: 'Fecha de Ingreso'},
+          personal: {value: ""}
         },
         datos: [],
         m_error: false
@@ -83,7 +81,6 @@
     props: {
       idForm: Number,
       nameModal: String,
-      pathData: String
     },
     methods: {
       checkFormValidity() {
@@ -98,10 +95,11 @@
           this.form[key].state = null;
         });
         this.m_error = false;
+
+      },
+      loadData() {
         axios
-                .get(this.pathData, {
-                  params: {id: this.idForm}
-                })
+                .get(this.pathData)
                 .then(({data}) => {
                   if (data["status"] === 0) {
                     this.datos = data['data'];
@@ -113,6 +111,7 @@
       },
       loadModal() {
         this.resetModal();
+        this.loadData();
         if (this.idForm) {
           // Push the name to submitted names
           axios
@@ -139,16 +138,16 @@
       },
       handleSubmit() {
         // Exit when the form isn't valid
-        if (!this.checkFormValidity()) {
+        /*if (!this.checkFormValidity()) {
           return;
-        }
+        }*/
         // Push the name to submitted names
         let formData = {};
         Object.entries(this.form).forEach(([key, value]) => {
           formData[key] = value.value;
         });
 
-        if (this.idForm) formData["id"] = this.idForm;
+        if (this.idForm) formData["personal"] = this.idForm;
 
         axios
                 .post(this.path, formData)

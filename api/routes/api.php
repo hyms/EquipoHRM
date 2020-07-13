@@ -44,18 +44,22 @@ Route::get('/cargos', 'CargosController@getAll');
 Route::post('/cargos', 'CargosController@post');
 Route::delete('/cargos', 'CargosController@delete');
 //regional
-Route::get('/regionales', 'RegionalController@getAll');
-Route::post('/regionales', 'RegionalController@post');
-Route::delete('/regionales', 'RegionalController@delete');
+Route::get('/regional', 'RegionalController@getAll');
+Route::post('/regional', 'RegionalController@post');
+Route::delete('/regional', 'RegionalController@delete');
 //gerencial
-Route::get('/gerencia', 'RegionalController@getAll');
-Route::post('/gerencia', 'RegionalController@post');
-Route::delete('/gerencia', 'RegionalController@delete');
+Route::get('/gerencia', 'GerenciaController@getAll');
+Route::post('/gerencia', 'GerenciaController@post');
+Route::delete('/gerencia', 'GerenciaController@delete');
 //personal
 Route::get('/personal', 'PersonalController@getAll');
 Route::post('/personal', 'PersonalController@post');
 Route::delete('/personal', 'PersonalController@delete');
-Route::delete('/personal/carrera', 'PersonalController@getAllCarrera');
+Route::get('/personal/carrera', 'PersonalController@getAllCarrera');
+//carrera
+Route::get('/carrera', 'CarreraController@getAll');
+Route::post('/carrera', 'CarreraController@post');
+
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

@@ -19,6 +19,12 @@
                                         @finish="getAll()"
                                         :nameModal="nameModal"
                                 />
+                                <FormCarrera
+                                        :idForm="idForm"
+                                        @finish="getAll()"
+                                        :nameModal="nameModalCarrera"
+
+                                />
                             </div>
                             <h6 class="element-header">
                                 {{ tituloPagina }}
@@ -45,6 +51,9 @@
                                                 <a @click="setIdForm(row.item.id)" v-b-modal="nameModal"
                                                 ><i class="os-icon os-icon-ui-44"></i
                                                 ></a>
+                                                <a @click="setIdForm(row.item.id)" v-b-modal="nameModalCarrera"
+                                                ><i class="os-icon os-icon-ui-44"></i
+                                                ></a>
                                                 <a class="text-danger" @click="del(row.item.id)"
                                                 ><i class="os-icon os-icon-ui-15"></i
                                                 ></a>
@@ -64,6 +73,7 @@
 <script>
     import axios from "axios";
     import Form from "@/components/forms/personalForm";
+    import FormCarrera from "@/components/forms/carreraForm";
     import "@/store/funcions";
 
     export default {
@@ -72,6 +82,7 @@
                 tituloPagina: "Personal",
                 path: "/api/personal",
                 nameModal: "modalPersonal",
+                nameModalCarrera: "modalCarrera",
                 columnas: [
                     {
                         key: "nombres",
@@ -102,7 +113,8 @@
             };
         },
         components: {
-            Form
+            Form,
+            FormCarrera
         },
         created() {
             this.getAll();
