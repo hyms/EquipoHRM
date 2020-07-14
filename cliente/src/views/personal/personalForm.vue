@@ -1,24 +1,17 @@
 <template>
-    <div>
-        <b-modal
-                :id="nameModal"
-                :title="(idForm ? 'Modificar' : 'Nuevo') + ' Personal'"
-                @show="loadModal"
-                @hidden="resetModal"
-                @ok="handleOk"
-                okTitle="Guardar"
-                cancelTitle="Cancelar"
-        >
-            <b-alert
-                    show
-                    dismissible
-                    variant="danger"
-                    v-for="(value, key) in m_error"
-                    :key="key"
-            >
-                {{ value }}
-            </b-alert>
-            <form ref="form" @submit.stop.prevent="handleSubmit">
+    <div class="col-12">
+        <div class="element-wrapper">
+            <div class="element-box">
+                <b-alert
+                        show
+                        dismissible
+                        variant="danger"
+                        v-for="(value, key) in m_error"
+                        :key="key"
+                >
+                    {{ value }}
+                </b-alert>
+                <form ref="form" @submit.stop.prevent="handleSubmit">
                 <template v-for="(input, key) in form">
                     <div class="form-check" v-if="input.type === 'check'" :key="key">
                         <input
@@ -39,23 +32,19 @@
                                 :key="key"
                         >
                             <b-form-input
-                                    v-if="input.type === 'text'"
+                                    v-if=" ['text','number','email','password','url','tel','date'].includes(input.type)"
                                     :id="key"
                                     v-model="form[key].value"
                                     :state="input.state"
-                            ></b-form-input>
-                            <b-form-input
-                                    :id="key"
-                                    v-model="form[key].value"
-                                    :state="input.state"
-                                    v-if="input.type === 'password'"
-                                    type="password"
+                                    :type="input.type"
+                                    :disabled="!editable"
                             ></b-form-input>
                             <b-form-textarea
                                     :id="key"
                                     v-model="form[key].value"
                                     :state="input.state"
                                     v-if="input.type === 'textarea'"
+                                    :disabled="!editable"
                             ></b-form-textarea>
                             <b-form-select
                                     v-if="input.type === 'select'"
@@ -63,25 +52,21 @@
                                     v-model="form[key].value"
                                     :state="input.state"
                                     :options="estadoCivil()"
+                                    :disabled="!editable"
                             ></b-form-select>
-                            <b-form-datepicker
-                                    v-if="input.type === 'datepicker'"
-                                    :id="key"
-                                    v-model="form[key].value"
-                                    :state="input.state"
-                                    locale="es"
-                                    :show-decade-nav="true"
-                                    :date-format-options="{
-                  year: 'numeric',
-                  month: '2-digit',
-                  day: '2-digit'
-                }"
-                            ></b-form-datepicker>
+
                         </b-form-group>
                     </template>
                 </template>
-            </form>
-        </b-modal>
+                    <div class="row">
+                        <div class="col text-center">
+                            <b-button type="reset" variant="danger" @click="resetModal()">Cancelar</b-button>
+                            <b-button type="submit" variant="primary">Guardar</b-button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -100,19 +85,19 @@
                     telefono_propio: {
                         value: "",
                         state: null,
-                        type: "text",
+                        type: "tel",
                         label: "Telefono Propio"
                     },
                     telefono_referencia: {
                         value: "",
                         state: null,
-                        type: "text",
+                        type: "tel",
                         label: "Telefono Referencia"
                     },
                     fecha_nacimiento: {
                         value: "",
                         state: null,
-                        type: "datepicker",
+                        type: "date",
                         label: "Fecha de Nacimiento"
                     },
                     profesion: {value: "", state: null, type: "text", label: "Profesion"},
@@ -128,12 +113,10 @@
                         label: "Estado"
                     }
                 },
+                id: null,
+                editable: true,
                 m_error: false
             };
-        },
-        props: {
-            idForm: Number,
-            nameModal: String
         },
         methods: {
             checkFormValidity() {
@@ -151,7 +134,9 @@
             },
             loadModal() {
                 this.resetModal();
-                if (this.idForm) {
+                this.id = this.$route.query.id;
+                if (this.id) {
+                    this.editable = false;
                     // Push the name to submitted names
                     axios
                         .get(this.path, {
@@ -164,6 +149,7 @@
                                 });
                             } else {
                                 this.m_error = data["data"];
+                                this.editable = true;
                             }
                         })
                         .catch();
@@ -186,17 +172,15 @@
                     formData[key] = value.value;
                 });
 
-                if (this.idForm) formData["id"] = this.idForm;
+                if (this.id) formData["id"] = this.id;
 
                 axios
                     .post(this.path, formData)
                     .then(({data}) => {
                         if (data["status"] === 0) {
                             // Hide the modal manually
-                            this.$nextTick(() => {
-                                this.$emit("finish", true);
-                                this.$bvModal.hide(this.nameModal);
-                            });
+                            this.id = data['data'][0]['id'];
+                            this.loadModal();
                         } else {
                             this.m_error = data["data"];
                         }
@@ -206,6 +190,9 @@
             estadoCivil() {
                 return Helpers.estadoCivil();
             }
+        },
+        created() {
+            this.loadModal();
         }
     };
 </script>

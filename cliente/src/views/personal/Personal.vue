@@ -7,24 +7,19 @@
                         <!--START - Recent Ticket Comments-->
                         <div class="element-wrapper">
                             <div class="element-actions">
-                                <b-button
-                                        variant="primary"
-                                        v-b-modal="nameModal"
-                                        @click="setIdForm()"
-                                >Nuevo
-                                </b-button
+                                <!-- <b-button
+                                         variant="primary"
+                                         v-b-modal="nameModal"
+                                         @click="setIdForm()"
+                                 >Nuevo
+                                 </b-button
+                                 >-->
+                                <router-link
+                                        to="/personal/detalle"
+                                        class="btn btn-primary"
                                 >
-                                <Form
-                                        :idForm="idForm"
-                                        @finish="getAll()"
-                                        :nameModal="nameModal"
-                                />
-                                <FormCarrera
-                                        :idForm="idForm"
-                                        @finish="getAll()"
-                                        :nameModal="nameModalCarrera"
-
-                                />
+                                    Nuevo
+                                </router-link>
                             </div>
                             <h6 class="element-header">
                                 {{ tituloPagina }}
@@ -48,13 +43,10 @@
                                         </template>
                                         <template v-slot:cell(Acciones)="row">
                                             <div class="row-actions">
-                                                <a @click="setIdForm(row.item.id)" v-b-modal="nameModal"
+                                                <router-link :to="{path:'/personal/detalle',query: {id:row.item.id}}"
                                                 ><i class="os-icon os-icon-ui-44"></i
-                                                ></a>
-                                                <a @click="setIdForm(row.item.id)" v-b-modal="nameModalCarrera"
-                                                ><i class="os-icon os-icon-ui-44"></i
-                                                ></a>
-                                                <a class="text-danger" @click="del(row.item.id)"
+                                                ></router-link>
+                                                <a href="#" class="text-danger" @click="del(row.item.id)"
                                                 ><i class="os-icon os-icon-ui-15"></i
                                                 ></a>
                                             </div>
@@ -72,8 +64,6 @@
 </template>
 <script>
     import axios from "axios";
-    import Form from "@/components/forms/personalForm";
-    import FormCarrera from "@/components/forms/carreraForm";
     import "@/store/funcions";
 
     export default {
@@ -111,10 +101,6 @@
                 tables: [],
                 idForm: null
             };
-        },
-        components: {
-            Form,
-            FormCarrera
         },
         created() {
             this.getAll();

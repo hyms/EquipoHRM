@@ -8,12 +8,12 @@
             <div class="element-actions">
               <b-button
                       variant="primary"
-                      v-b-modal="'modalRol'"
+                      v-b-modal="nameModal"
                       @click="setIdForm()"
               >Nuevo
               </b-button
               >
-              <Form :idForm="idForm" @finish="getAll()"/>
+                <Form :idForm="idForm" @finish="getAll()" :nameModal="nameModal"/>
             </div>
             <h6 class="element-header">
               {{ tituloPagina }}
@@ -37,9 +37,9 @@
                   </template>
                   <template v-slot:cell(Acciones)="row">
                     <div class="row-actions">
-                      <a @click="setIdForm(row.item.id)" v-b-modal="'modalRol'"
-                      ><i class="os-icon os-icon-ui-44"></i
-                      ></a>
+                        <a @click="setIdForm(row.item.id)" v-b-modal="nameModal"
+                        ><i class="os-icon os-icon-ui-44"></i
+                        ></a>
                       <a class="text-danger" @click="del(row.item.id)"
                       ><i class="os-icon os-icon-ui-15"></i
                       ></a>
@@ -56,25 +56,26 @@
   </div>
 </template>
 <script>
-  import axios from "axios";
-  import Form from "@/components/forms/diasfestivosForm";
-  import "@/store/funcions";
+    import axios from "axios";
+    import Form from "@/components/forms/diasfestivosForm";
+    import "@/store/funcions";
 
-  export default {
-    data() {
-      return {
-        tituloPagina: "Dias Festivos",
-        path: "/api/diasfestivos",
-        columnas: [
-          {
-            key: "nombre",
-            sortable: true
-          },
-          {
-            key: "fecha",
-            label: "Día",
-            sortable: true
-          },
+    export default {
+        data() {
+            return {
+                tituloPagina: "Dias Festivos",
+                path: "/api/diasfestivos",
+                nameModal: "modalDiasFestivos",
+                columnas: [
+                    {
+                        key: "nombre",
+                        sortable: true
+                    },
+                    {
+                        key: "fecha",
+                        label: "Día",
+                        sortable: true
+                    },
           {
             key: "estado",
             sortable: true

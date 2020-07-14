@@ -19,41 +19,35 @@
         {{ value }}
       </b-alert>
       <form ref="form" @submit.stop.prevent="handleSubmit">
-        <b-form-group
-          :state="form.nombre.state"
-          label="Nombre"
-          label-for="name-input"
-          invalid-feedback="Nombre es requerido"
-        >
-          <b-form-input
-            id="name-input"
-            v-model="form.nombre.value"
-            :state="form.nombre.state"
-            required
-          ></b-form-input>
-        </b-form-group>
-        <label for="fechaForm">Date picker with placeholder</label>
-        <b-form-datepicker
-          id="fechaForm"
-          v-model="form.fecha.value"
-          locale="es"
-          :date-format-options="{
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit'
-          }"
-        ></b-form-datepicker>
-        <div class="form-check">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            v-model="form.estado.value"
-            id="defaultCheck1"
-          />
-          <label class="form-check-label" for="defaultCheck1">
-            Estado
-          </label>
-        </div>
+        <template v-for="(input, key) in form">
+          <div class="form-check" v-if="input.type === 'check'" :key="key">
+            <input
+                    class="form-check-input"
+                    type="checkbox"
+                    v-model="form[key].value"
+                    :id="key"
+            />
+            <label class="form-check-label" :for="key">
+              {{ input.label }}
+            </label>
+          </div>
+          <b-form-group
+                  v-else
+                  :state="input.state"
+                  :label="input.label"
+                  :label-for="key"
+                  :key="key"
+          >
+            <b-form-input
+                    v-if=" ['text','number','email','password','url','tel','date'].includes(input.type)"
+                    :id="key"
+                    v-model="form[key].value"
+                    :state="input.state"
+                    :type="input.type"
+            ></b-form-input>
+          </b-form-group>
+        </template>
+
       </form>
     </b-modal>
   </div>
@@ -67,9 +61,9 @@
       return {
         path: "/api/diasfestivos",
         form: {
-          nombre: {value: "", state: null},
-          estado: {value: false, state: null},
-          fecha: {value: "", state: null}
+          nombre: {value: "", state: null, type: 'text', label: 'Nombre'},
+          fecha: {value: "", state: null, type: 'date', label: 'Fecha'},
+          estado: {value: false, state: null, type: 'check', label: 'Estado'}
         },
         m_error: false
       };

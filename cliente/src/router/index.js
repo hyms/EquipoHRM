@@ -5,7 +5,9 @@ import Error from "../views/Error";
 import Login from "../views/Login";
 import Home from "../views/Home";
 import Diasfestivos from "../views/Diasfestivos";
+//personal
 import Personal from "../views/personal/Personal";
+import PersonalDetalle from "../views/personal/PersonalDetalle";
 //organizacion
 import Organizacion from "../views/organizacion/Organizacion";
 import Cargos from "../views/organizacion/Cargos";
@@ -18,15 +20,17 @@ import Gerencia from "../views/organizacion/Gerencia";
 import Configuracion from "../views/configuracion/Configuracion";
 import Usuarios from "../views/configuracion/Usuarios";
 import Roles from "../views/configuracion/Roles";
+import personalForm from "../views/personal/personalForm";
+
 
 Vue.use(VueRouter);
 
 const routes = [
-  //no auth
-  {
-    path: "/login",
-    name: "Login",
-    component: Login
+    //no auth
+    {
+        path: "/login",
+        name: "Login",
+        component: Login
   },
   {
     path: "*",
@@ -132,8 +136,27 @@ const routes = [
         meta: {
             auth: true
         },
-        component: Personal
-    }, {
+        component: Personal,
+    },
+    {
+        path: "/personal/detalle",
+        redirect: "/personal/detalle/detalle",
+        name: "Detalle",
+        meta: {
+            auth: true
+        },
+        component: PersonalDetalle,
+        children: [
+            {
+                path: "/personal/detalle/detalle",
+                meta: {
+                    auth: true
+                },
+                component: personalForm,
+            }
+        ]
+    },
+    {
         path: "/diasfestivos",
         name: "Diasfestivos",
         meta: {
