@@ -56,41 +56,30 @@ class Usuarios extends Authenticatable
                 ['id', $id],
                 ['borrado', 0],
             ])
-            ->get();
+            ->get()->first();
     }
 
     private static function insertC($values)
     {
+        $values['password'] = Hash::make($values['password']);
+        $values['borrado'] = 0;
+        $values['api_token'] = '';
+        $values['created_at'] = Carbon::now();
+        $values['updated_at'] = Carbon::now();
         $id = DB::table(self::$tableC)
-            ->insertGetId([
-                'name' => $values['name'],
-                'password' => Hash::make($values['password']),
-                'alias' => $values['alias'],
-                'detail' => (empty($values['detail']) ? '' : $values['detail']),
-                'estado' => $values['estado'],
-                'rol' => $values['rol'],
-                'borrado' => 0,
-                'api_token' => '',
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ]);
+            ->insertGetId($values);
         self::history($id);
         return $id;
     }
 
     private static function updateC($values)
     {
-        $data = [
-            ['id', $values['id']],
-            ['name', $values['name']],
-            ['alias', $values['alias']],
-            ['detail', (empty($values['detail']) ? '' : $values['detail'])],
-            ['estado', $values['estado']],
-            ['rol', $values['rol']],
-            ['borrado', 0],
-            ['updated_at', Carbon::now()]
-        ];
-        if(!empty($values['password'])) {
+        $data = array();
+        foreach ($values as $key => $value) {
+            array_push($data, [$key, $value]);
+        }
+
+        if (!empty($values['password'])) {
             array_push($data, ['password', Hash::make($values['password'])]);
         }
 
@@ -100,28 +89,21 @@ class Usuarios extends Authenticatable
         if ($rows != 0) {
             return $values['id'];
         }
-        $data = [
-            'name' => $values['name'],
-            'alias' => $values['alias'],
-            'detail' => (empty($values['detail']) ? '' : $values['detail']),
-            'estado' => $values['estado'],
-            'rol' => $values['rol'],
-            'updated_at' => Carbon::now(),
-        ];
+        $values['updated_at'] = Carbon::now();
         if(!empty($values['password'])) {
             $tmp_pass = DB::table(self::$tableC)->where([
                 ['id', $values['id']],
                 ['password', Hash::make($values['password'])]
             ])->count();
             if ($tmp_pass == 0) {
-                $data['password']= Hash::make($values['password']);
+                $values['password'] = Hash::make($values['password']);
             }
         }
         $affected = DB::table(self::$tableC)
             ->where([
                 ['id', $values['id']]
             ])
-            ->update($data);
+            ->update($values);
 
         if ($affected) {
             self::history($values['id']);
@@ -132,7 +114,7 @@ class Usuarios extends Authenticatable
 
     public static function SaveC(array $values)
     {
-        if (key_exists('id', $values)) {
+        if (key_exists('id', $values) && !empty($values['id'])) {
             return self::updateC($values);
         }
         return self::insertC($values);
@@ -143,25 +125,18 @@ class Usuarios extends Authenticatable
         if (!empty($id)) {
             $temp_id = Auth::guard('api')->user();
             $data = DB::table(self::$tableC)
-                ->select('id', 'name', 'password', 'alias', 'detail', 'estado', 'borrado', 'rol')
+                ->select(
+                    'id', 'name', 'password', 'alias', 'detail', 'estado', 'borrado', 'rol'
+                )
                 ->where([
                     ['id', $id],
                 ])
                 ->get()->first();
             $data = (array)$data;
+            $data['registerUtc'] = Carbon::now();
+            $data['registerBy'] = (!empty($temp_id) ? $temp_id['id'] : null);
             DB::table(self::$tableHistory)
-                ->insert([
-                    'id' => $data['id'],
-                    'name' => $data['name'],
-                    'password' => $data['password'],
-                    'alias' => $data['alias'],
-                    'detalle' => $data['detail'],
-                    'estado' => $data['estado'],
-                    'borrado' => $data['borrado'],
-                    'rol' => $data['rol'],
-                    'registerUtc' => Carbon::now(),
-                    'registerBy' => !empty($temp_id) ? $temp_id['id'] : null,
-                ]);
+                ->insert($data);
         }
     }
 

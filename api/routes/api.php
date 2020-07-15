@@ -59,6 +59,7 @@ Route::get('/personal/carrera', 'PersonalController@getAllCarrera');
 //carrera
 Route::get('/carrera', 'CarreraController@getAll');
 Route::post('/carrera', 'CarreraController@post');
+Route::get('/carrera/historia', 'CarreraController@getHistoria');
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

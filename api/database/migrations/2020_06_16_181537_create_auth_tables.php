@@ -56,8 +56,8 @@ class CreateAuthTables extends Migration
         Schema::create('usuariosHistory', function (Blueprint $table) {
             $table->string("name");
             $table->string("password");
-            $table->string("alias",20)->nullable();
-            $table->text("detalle")->default("");
+            $table->string("alias", 20)->nullable();
+            $table->text("detail")->default("");
             $table->rememberToken();
             $table->smallInteger("estado");
             $table->boolean("borrado");

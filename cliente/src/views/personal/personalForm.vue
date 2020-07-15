@@ -60,8 +60,9 @@
                 </template>
                     <div class="row">
                         <div class="col text-center">
-                            <b-button type="reset" variant="danger" @click="resetModal()">Cancelar</b-button>
-                            <b-button type="submit" variant="primary">Guardar</b-button>
+                            <b-button variant="primary" v-if="!editable" @click="editable=true">Editar</b-button>
+                            <b-button variant="danger" @click="resetModal()" v-if="editable">Cancelar</b-button>
+                            <b-button variant="primary" v-if="editable" @click="handleSubmit()">Guardar</b-button>
                         </div>
                     </div>
                 </form>
@@ -138,10 +139,9 @@
                 if (this.id) {
                     this.editable = false;
                     // Push the name to submitted names
-                    axios
-                        .get(this.path, {
-                            params: {id: this.idForm}
-                        })
+                    axios.get(this.path, {
+                        params: {id: this.id}
+                    })
                         .then(({data}) => {
                             if (data["status"] === 0) {
                                 Object.entries(data["data"][0]).forEach(([key, value]) => {
@@ -174,12 +174,11 @@
 
                 if (this.id) formData["id"] = this.id;
 
-                axios
-                    .post(this.path, formData)
+                axios.post(this.path, formData)
                     .then(({data}) => {
                         if (data["status"] === 0) {
                             // Hide the modal manually
-                            this.id = data['data'][0]['id'];
+                            this.$route.query['id'] = data['data'][0]['id'];
                             this.loadModal();
                         } else {
                             this.m_error = data["data"];

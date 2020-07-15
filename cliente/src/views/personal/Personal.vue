@@ -7,13 +7,6 @@
                         <!--START - Recent Ticket Comments-->
                         <div class="element-wrapper">
                             <div class="element-actions">
-                                <!-- <b-button
-                                         variant="primary"
-                                         v-b-modal="nameModal"
-                                         @click="setIdForm()"
-                                 >Nuevo
-                                 </b-button
-                                 >-->
                                 <router-link
                                         to="/personal/detalle"
                                         class="btn btn-primary"

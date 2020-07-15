@@ -21,6 +21,9 @@ import Configuracion from "../views/configuracion/Configuracion";
 import Usuarios from "../views/configuracion/Usuarios";
 import Roles from "../views/configuracion/Roles";
 import personalForm from "../views/personal/personalForm";
+import carreraForm from "../views/personal/carreraForm";
+import usuarioAccesoForm from "../views/personal/usuarioAccesoForm";
+import personalHistorico from "../views/personal/personalHistorico";
 
 
 Vue.use(VueRouter);
@@ -153,6 +156,27 @@ const routes = [
                     auth: true
                 },
                 component: personalForm,
+            },
+            {
+                path: "/personal/detalle/carrera",
+                meta: {
+                    auth: true
+                },
+                component: carreraForm,
+            },
+            {
+                path: "/personal/detalle/cuenta",
+                meta: {
+                    auth: true
+                },
+                component: usuarioAccesoForm,
+            },
+            {
+                path: "/personal/detalle/historial",
+                meta: {
+                    auth: true
+                },
+                component: personalHistorico,
             }
         ]
     },

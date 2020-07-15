@@ -18,68 +18,48 @@ class Carrera
             ->where([
                 ['personal', $id],
             ])
-            ->get();
+            ->get()->first();
     }
 
     private static function insert($values)
     {
+        $values['created_at'] = Carbon::now();
+        $values['updated_at'] = Carbon::now();
         $id = DB::table(self::$table)
-            ->insertGetId([
-                'personal' => $values['personal'],
-                'cargo' => $values['cargo'],
-                'unidad_negocio' => $values['unidad_negocio'],
-                'area_trabajo' => $values['area_trabajo'],
-                'regional' => $values['regional'],
-                'gerencia' => $values['gerencia'],
-                'fecha_ingreso' => $values['fecha_ingreso'],
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ]);
+            ->insertGetId($values);
         self::history($id);
         return $id;
     }
 
     private static function update($values)
     {
+        $datos = array();
+        foreach ($values as $key => $value) {
+            array_push($datos, [$key, $value]);
+        }
         $rows = DB::table(self::$table)
-            ->where([
-                ['personal', $values['personal']],
-                ['cargo', $values['cargo']],
-                ['unidad_negocio', $values['unidad_negocio']],
-                ['area_trabajo', $values['area_trabajo']],
-                ['regional', $values['regional']],
-                ['gerencia', $values['gerencia']],
-                ['fecha_ingreso', $values['fecha_ingreso']],
-            ])
+            ->where($values)
             ->count();
         if ($rows != 0) {
-            return $values['id'];
+            return $values['personal'];
         }
+        $values['updated_at'] = Carbon::now();
         $affected = DB::table(self::$table)
             ->where([
-                ['id', $values['id']],
                 ['personal', $values['personal']],
             ])
-            ->update([
-                'cargo' => $values['cargo'],
-                'unidad_negocio' => $values['unidad_negocio'],
-                'area_trabajo' => $values['area_trabajo'],
-                'regional' => $values['regional'],
-                'gerencia' => $values['gerencia'],
-                'fecha_ingreso' => $values['fecha_ingreso'],
-                'updated_at' => Carbon::now(),
-            ]);
+            ->update($values);
 
         if ($affected) {
-            self::history($values['id']);
-            return $values['id'];
+            self::history($values['personal']);
+            return $values['personal'];
         }
         return null;
     }
 
     public static function Save(array $values)
     {
-        if (key_exists('id', $values) && !empty($values['id'])) {
+        if (key_exists('personal', $values) && !empty($values['personal'])) {
             return self::update($values);
         }
         return self::insert($values);
@@ -91,24 +71,14 @@ class Carrera
             $temp_id = Auth::guard('api')->user();
             $data = DB::table(self::$table)
                 ->where([
-                    ['id', $id],
+                    ['personal', $id],
                 ])
                 ->get()->first();
             $data = (array)$data;
+            $data['registerUtc'] = Carbon::now();
+            $data['registerBy'] = (!empty($temp_id) ? $temp_id['id'] : null);
             DB::table(self::$tableHistory)
-                ->insert([
-                    'id' => $data['id'],
-                    'personal' => $data['personal'],
-                    'cargo' => $data['cargo'],
-                    'unidad_negocio' => $data['unidad_negocio'],
-                    'area_trabajo' => $data['area_trabajo'],
-                    'regional' => $data['regional'],
-                    'gerencia' => $data['gerencia'],
-                    'usuario' => $data['usuario'],
-                    'fecha_ingreso' => $data['fecha_ingreso'],
-                    'registerUtc' => Carbon::now(),
-                    'registerBy' => !empty($temp_id) ? $temp_id['id'] : null,
-                ]);
+                ->insert($data);
         }
     }
 
@@ -126,6 +96,19 @@ class Carrera
             self::history($values['id']);
         }
         return $affected;
+    }
+
+    public static function GetHistory($id)
+    {
+        return DB::table(self::$tableHistory)
+            ->select('personal.nombres', 'personal.apellidos', 'cargos.nombre as cargo', 'registerUtc as fecha')
+            ->where([
+                ['personal', $id],
+            ])
+            ->leftJoin('personal', 'personal', '=', 'personal.id')
+            ->leftJoin('cargos', 'cargo', '=', 'cargos.id')
+            ->orderBy('registerUtc', 'desc')
+            ->get();
     }
 
 }
