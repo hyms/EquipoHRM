@@ -28,56 +28,52 @@ class Cargo
     public static function Get($id)
     {
         return DB::table(self::$table)
-            ->select('id', 'nombre', 'estado','detalle','cargo_padre')
+            ->select('id', 'nombre', 'estado', 'detalle', 'cargo_padre')
             ->where([
                 ['id', $id],
                 ['borrado', 0],
             ])
-            ->get();
+            ->get()->first();
     }
 
     private static function insert($values)
     {
+        $values['borrado'] = 0;
+        $values['created_at'] = Carbon::now();
+        $values['updated_at'] = Carbon::now();
+        if (empty($values['cargo_padre']))
+            unset($values['cargo_padre']);
         $id = DB::table(self::$table)
-            ->insertGetId([
-                'nombre' => $values['nombre'],
-                'estado' => $values['estado'],
-                'detalle' => empty($values['detalle'])?'':$values['detalle'],
-                'cargo_padre' => $values['cargo_padre'],
-                'borrado' => 0,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ]);
+            ->insertGetId($values);
         self::history($id);
         return $id;
     }
 
     private static function update($values)
     {
+        $data = array();
+        if (empty($values['cargo_padre'])) {
+            unset($values['cargo_padre']);
+        }
+
+        foreach ($values as $key => $value) {
+            array_push($data, [$key, $value]);
+        }
+        array_push($data, ['borrado', 0]);
+
         $rows = DB::table(self::$table)
-            ->where([
-                ['id', $values['id']],
-                ['nombre', $values['nombre']],
-                ['estado', $values['estado']],
-                ['detalle', empty($values['detalle'])?'':$values['detalle']],
-                ['cargo_padre', $values['cargo_padre']],
-                ['borrado', 0],
-            ])
+            ->where($data)
             ->count();
         if ($rows != 0) {
             return $values['id'];
         }
+
+        $values['updated_at'] = Carbon::now();
         $affected = DB::table(self::$table)
             ->where([
                 ['id', $values['id']]
             ])
-            ->update([
-                'nombre' => $values['nombre'],
-                'estado' => $values['estado'],
-                'detalle' => $values['detalle'],
-                'cargo_padre' => $values['cargo_padre'],
-                'updated_at' => Carbon::now(),
-            ]);
+            ->update($values);
 
         if ($affected) {
             self::history($values['id']);

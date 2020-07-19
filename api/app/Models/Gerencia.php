@@ -29,48 +29,40 @@ class Gerencia
                 ['id', $id],
                 ['borrado', 0],
             ])
-            ->get();
+            ->get()->first();
     }
 
     private static function insert($values)
     {
+        $values['borrado'] = 0;
+        $values['created_at'] = Carbon::now();
+        $values['updated_at'] = Carbon::now();
         $id = DB::table(self::$table)
-            ->insertGetId([
-                'nombre' => $values['nombre'],
-                'estado' => $values['estado'],
-                'detalle' => empty($values['detalle']) ? '' : $values['detalle'],
-                'borrado' => 0,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ]);
+            ->insertGetId($values);
         self::history($id);
         return $id;
     }
 
     private static function update($values)
     {
+        $data = array();
+        foreach ($values as $key => $value) {
+            array_push($data, [$key, $value]);
+        }
+        array_push($data, ['borrado', 0]);
+
         $rows = DB::table(self::$table)
-            ->where([
-                ['id', $values['id']],
-                ['nombre', $values['nombre']],
-                ['estado', $values['estado']],
-                ['detalle', empty($values['detalle']) ? '' : $values['detalle']],
-                ['borrado', 0],
-            ])
+            ->where($data)
             ->count();
         if ($rows != 0) {
             return $values['id'];
         }
+        $values['updated_at'] = Carbon::now();
         $affected = DB::table(self::$table)
             ->where([
                 ['id', $values['id']]
             ])
-            ->update([
-                'nombre' => $values['nombre'],
-                'estado' => $values['estado'],
-                'detalle' => empty($values['detalle']) ? '' : $values['detalle'],
-                'updated_at' => Carbon::now(),
-            ]);
+            ->update($values);
 
         if ($affected) {
             self::history($values['id']);

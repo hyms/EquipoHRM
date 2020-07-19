@@ -24,6 +24,7 @@ import personalForm from "../views/personal/personalForm";
 import carreraForm from "../views/personal/carreraForm";
 import usuarioAccesoForm from "../views/personal/usuarioAccesoForm";
 import personalHistorico from "../views/personal/personalHistorico";
+import TiposVacion from "../views/TiposVacion";
 
 
 Vue.use(VueRouter);
@@ -187,6 +188,14 @@ const routes = [
             auth: true
         },
         component: Diasfestivos
+    },
+    {
+        path: "/tiposvacaciones",
+        name: "Tiposvacaciones",
+        meta: {
+            auth: true
+        },
+        component: TiposVacion
     }
 ];
 

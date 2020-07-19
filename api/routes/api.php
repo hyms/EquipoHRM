@@ -60,6 +60,10 @@ Route::get('/personal/carrera', 'PersonalController@getAllCarrera');
 Route::get('/carrera', 'CarreraController@getAll');
 Route::post('/carrera', 'CarreraController@post');
 Route::get('/carrera/historia', 'CarreraController@getHistoria');
+//tipo Vacaciones/permisos
+Route::get('/tipovacaciones', 'TipoVacacionController@getAll');
+Route::post('/tipovacaciones', 'TipoVacacionController@post');
+Route::delete('/tipovacaciones', 'TipoVacacionController@delete');
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

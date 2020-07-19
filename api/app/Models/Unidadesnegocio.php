@@ -43,76 +43,41 @@ class Unidadesnegocio
                 ['id', $id],
                 ['borrado', 0],
             ])
-            ->get();
+            ->get()->first();
     }
 
     private static function insert($values)
     {
+        $values['borrado'] = 0;
+        $values['created_at'] = Carbon::now();
+        $values['updated_at'] = Carbon::now();
         $id = DB::table(self::$table)
-            ->insertGetId([
-                "nombre" => $values["nombre"],
-                "direccion" => $values["direccion"],
-                "telefono" => $values["telefono"],
-                "celular" => $values["celular"],
-                "fax" => $values["fax"],
-                "ciudad" => $values["ciudad"],
-                "departamento" => $values["departamento"],
-                "encargado" => $values["encargado"],
-                "email" => $values["email"],
-                "web" => $values["web"],
-                "fecha_nacimiento" => $values["fecha_nacimiento"],
-                'id_empresa' => $values["id_empresa"],
-                'estado' => $values["estado"],
-                'borrado' => 0,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ]);
+            ->insertGetId($values);
         self::history($id);
         return $id;
     }
 
     private static function update($values)
     {
+        $data = array();
+        foreach ($values as $key => $value) {
+            array_push($data, [$key, $value]);
+        }
+        array_push($data, ['borrado', 0]);
+
         $rows = DB::table(self::$table)
-            ->where([
-                ['id', $values['id']],
-                ["nombre", $values["nombre"]],
-                ["direccion", $values["direccion"]],
-                ["telefono", $values["telefono"]],
-                ["celular", $values["celular"]],
-                ["fax", $values["fax"]],
-                ["ciudad", $values["ciudad"]],
-                ["departamento", $values["departamento"]],
-                ["encargado", $values["encargado"]],
-                ["email", $values["email"]],
-                ["web", $values["web"]],
-                ["fecha_nacimiento", $values["fecha_nacimiento"]],
-                ["id_empresa", $values["id_empresa"]],
-                ['estado', $values["estado"]],
-                ['borrado', 0]
-            ])
+            ->where($data)
             ->count();
         if ($rows != 0) {
             return $values['id'];
         }
+
+        $values['updated_at'] = Carbon::now();
         $affected = DB::table(self::$table)
             ->where([
                 ['id', $values['id']]
             ])
-            ->update([
-                'nombre' => $values['nombre'],
-                "direccion" => $values["direccion"],
-                "telefono" => $values["telefono"],
-                "celular" => $values["celular"],
-                "fax" => $values["fax"],
-                "ciudad" => $values["ciudad"],
-                "departamento" => $values["departamento"],
-                "encargado" => $values["encargado"],
-                "email" => $values["email"],
-                "web" => $values["web"],
-                "fecha_nacimiento" => $values["fecha_nacimiento"],
-                'updated_at' => Carbon::now()
-            ]);
+            ->update($values);
 
         if ($affected) {
             self::history($values['id']);
@@ -134,31 +99,32 @@ class Unidadesnegocio
         if (!empty($id)) {
             $temp_id = Auth::guard('api')->user();
             $data = DB::table(self::$table)
+                ->select(
+                    'id',
+                    'nombre',
+                    "direccion",
+                    "telefono",
+                    "celular",
+                    "fax",
+                    "ciudad",
+                    "departamento",
+                    "encargado",
+                    "email",
+                    "web",
+                    "fecha_nacimiento",
+                    "estado",
+                    'borrado',
+                    'id_empresa'
+                )
                 ->where([
                     ['id', $id],
                 ])
                 ->get()->first();
             $data = (array)$data;
+            $data['registerUtc'] = Carbon::now();
+            $data['registerBy'] = (!empty($temp_id) ? $temp_id['id'] : null);
             DB::table(self::$tableHistory)
-                ->insert([
-                    'id' => $data['id'],
-                    'nombre' => $data['nombre'],
-                    "direccion" => $data["direccion"],
-                    "telefono" => $data["telefono"],
-                    "celular" => $data["celular"],
-                    "fax" => $data["fax"],
-                    "ciudad" => $data["ciudad"],
-                    "departamento" => $data["departamento"],
-                    "encargado" => $data["encargado"],
-                    "email" => $data["email"],
-                    "web" => $data["web"],
-                    "fecha_nacimiento" => $data["fecha_nacimiento"],
-                    "estado" => $data["estado"],
-                    'borrado' => $data['borrado'],
-                    'id_empresa' => $data['id_empresa'],
-                    'registerUtc' => Carbon::now(),
-                    'registerBy' => !empty($temp_id) ? $temp_id['id'] : null,
-                ]);
+                ->insert($data);
         }
     }
 

@@ -84,7 +84,7 @@
                     nombre: {value: "", state: null},
                     detalle: {value: "", state: null},
                     estado: {value: false, state: null},
-                    cargo_padre: {value: false, state: null}
+                    cargo_padre: {value: null, state: null}
                 },
                 m_error: false
     };
@@ -119,9 +119,9 @@
                 })
           .then(({ data }) => {
             if (data["status"] === 0) {
-              Object.entries(data["data"][0]).forEach(([key, value]) => {
-                if (this.form[key]) this.form[key].value = value;
-              });
+                Object.entries(data["data"]).forEach(([key, value]) => {
+                    if (this.form[key]) this.form[key].value = value;
+                });
             } else {
               this.m_error = data["data"];
             }

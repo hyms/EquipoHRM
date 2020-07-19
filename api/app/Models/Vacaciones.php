@@ -6,15 +6,15 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-class Personal
+class Vacaciones
 {
-    protected static $table = 'personal';
-    protected static $tableHistory = 'personalHistory';
+    protected static $table = 'permisoVacacion';
+    protected static $tableHistory = 'permisoVacacionHistory';
 
     public static function GetAll()
     {
         return DB::table(self::$table)
-            ->select('id', 'nombres', 'apellidos', 'ci', 'telefono_propio', 'telefono_referencia', 'estado')
+            ->select('id', 'tipo_parcial', 'tiempp_completo', 'numero_dias', 'fecha_inicio', 'fecha_fin', 'estado')
             ->where([
                 ['borrado', 0],
             ])
@@ -24,7 +24,7 @@ class Personal
     public static function Get($id)
     {
         return DB::table(self::$table)
-            ->select('id', 'apellidos', 'nombres', 'ci', 'telefono_propio', 'telefono_referencia', 'fecha_nacimiento', 'profesion', 'direccion', 'estado_civil', 'estado')
+            ->select('id', 'tipo_parcial', 'tiempp_completo', 'numero_dias', 'fecha_inicio', 'fecha_fin', 'estado')
             ->where([
                 ['id', $id],
                 ['borrado', 0],
@@ -84,28 +84,18 @@ class Personal
         if (!empty($id)) {
             $temp_id = Auth::guard('api')->user();
             $data = DB::table(self::$table)
+                ->select(
+                    'id', 'tipo_parcial', 'tiempp_completo', 'numero_dias', 'fecha_inicio', 'fecha_fin', 'estado'
+                )
                 ->where([
                     ['id', $id],
                 ])
                 ->get()->first();
             $data = (array)$data;
+            $data['registerUtc'] = Carbon::now();
+            $data['registerBy'] = (!empty($temp_id) ? $temp_id['id'] : null);
             DB::table(self::$tableHistory)
-                ->insert([
-                    'id' => $data['id'],
-                    'estado' => $data['estado'],
-                    'apellidos' => $data['apellidos'],
-                    'nombres' => $data['nombres'],
-                    'ci' => $data['ci'],
-                    'telefono_propio' => $data['telefono_propio'],
-                    'telefono_referencia' => $data['telefono_referencia'],
-                    'fecha_nacimiento' => $data['fecha_nacimiento'],
-                    'profesion' => $data['profesion'],
-                    'direccion' => $data['direccion'],
-                    'estado_civil' => $data['estado_civil'],
-                    'borrado' => $data['borrado'],
-                    'registerUtc' => Carbon::now(),
-                    'registerBy' => !empty($temp_id) ? $temp_id['id'] : null,
-                ]);
+                ->insert($data);
         }
     }
 

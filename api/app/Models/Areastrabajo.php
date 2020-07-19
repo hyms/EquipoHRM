@@ -24,53 +24,45 @@ class Areastrabajo
     public static function Get($id)
     {
         return DB::table(self::$table)
-            ->select('id', 'nombre','detalle', 'estado')
+            ->select('id', 'nombre', 'detalle', 'estado')
             ->where([
                 ['id', $id],
                 ['borrado', 0],
             ])
-            ->get();
+            ->get()->first();
     }
 
     private static function insert($values)
     {
+        $values['borrado'] = 0;
+        $values['created_at'] = Carbon::now();
+        $values['updated_at'] = Carbon::now();
         $id = DB::table(self::$table)
-            ->insertGetId([
-                'nombre' => $values['nombre'],
-                'estado' => $values['estado'],
-                'detalle' => $values['detalle'],
-                'borrado' => 0,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now(),
-            ]);
+            ->insertGetId($values);
         self::history($id);
         return $id;
     }
 
     private static function update($values)
     {
+        $data = array();
+        foreach ($values as $key => $value) {
+            array_push($data, [$key, $value]);
+        }
+        array_push($data, ['borrado', 0]);
+
         $rows = DB::table(self::$table)
-            ->where([
-                ['id', $values['id']],
-                ['nombre', $values['nombre']],
-                ['estado', $values['estado']],
-                ['detalle', $values['detalle']],
-                ['borrado', 0],
-            ])
+            ->where($data)
             ->count();
         if ($rows != 0) {
             return $values['id'];
         }
+        $values['updated_at'] = Carbon::now();
         $affected = DB::table(self::$table)
             ->where([
                 ['id', $values['id']]
             ])
-            ->update([
-                'nombre' => $values['nombre'],
-                'estado' => $values['estado'],
-                'detalle' => $values['detalle'],
-                'updated_at' => Carbon::now(),
-            ]);
+            ->update($values);
 
         if ($affected) {
             self::history($values['id']);
@@ -92,21 +84,18 @@ class Areastrabajo
         if (!empty($id)) {
             $temp_id = Auth::guard('api')->user();
             $data = DB::table(self::$table)
+                ->select(
+                    'id', 'nombre', 'estado', 'detalle', 'borrado'
+                )
                 ->where([
                     ['id', $id],
                 ])
                 ->get()->first();
             $data = (array)$data;
+            $data['registerUtc'] = Carbon::now();
+            $data['registerBy'] = (!empty($temp_id) ? $temp_id['id'] : null);
             DB::table(self::$tableHistory)
-                ->insert([
-                    'id' => $data['id'],
-                    'nombre' => $data['nombre'],
-                    'estado' => $data['estado'],
-                    'detalle' => $data['detalle'],
-                    'borrado' => $data['borrado'],
-                    'registerUtc' => Carbon::now(),
-                    'registerBy' => !empty($temp_id) ? $temp_id['id'] : null,
-                ]);
+                ->insert($data);
         }
     }
 

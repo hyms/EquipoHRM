@@ -67,7 +67,6 @@
                 form: {
                     nombre: {value: "", state: null, type: 'text', label: 'Nombre'},
                     direccion: {value: "", state: null, type: 'textarea', label: 'Direccion'},
-                    nit: {value: "", state: null, type: 'text', label: 'Nit'},
                     telefono: {value: "", state: null, type: 'tel', label: 'Telefono'},
                     celular: {value: "", state: null, type: 'tel', label: 'Celular'},
                     fax: {value: "", state: null, type: 'tel', label: 'Fax'},
@@ -112,9 +111,9 @@
                 })
           .then(({ data }) => {
             if (data["status"] === 0) {
-              data["data"][0].forEach((value, key) => {
-                this[key].value = value;
-              });
+                Object.entries(data["data"]).forEach(([key, value]) => {
+                    if (this.form[key]) this.form[key].value = value;
+                });
             } else {
               this.m_error = data["data"];
             }

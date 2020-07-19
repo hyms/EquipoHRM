@@ -23,7 +23,7 @@ Vue.use(IconsPlugin);
 Vue.use(VueSlideToggle);
 
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = 'http://localhost/EquipoHRM/api/public/';
+axios.defaults.baseURL = 'http://localhost:8000';
 
 new Vue({
     router,

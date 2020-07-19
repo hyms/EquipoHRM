@@ -48,17 +48,21 @@
           configuracion: {
             name: "Configuración",
             organizacion: {
-              name: "Organizacion",
-              icon: "os-icon os-icon-package"
+                name: "Organizacion",
+                icon: "os-icon os-icon-package"
             },
-            personal: {
-              name: "Personal",
-              icon: "os-icon os-icon-package"
-            },
-            diasfestivos: {
-              name: "Dias Festivos",
-              icon: "os-icon os-icon-package"
-            }
+              personal: {
+                  name: "Personal",
+                  icon: "os-icon os-icon-package"
+              },
+              diasfestivos: {
+                  name: "Dias Festivos",
+                  icon: "os-icon os-icon-package"
+              },
+              tiposvacaciones: {
+                  name: "Tipos de Vacaciones",
+                  icon: "os-icon os-icon-package"
+              }
           },
           cuenta: {
             name: "Cuenta",

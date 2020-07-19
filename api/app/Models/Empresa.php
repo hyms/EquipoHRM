@@ -53,7 +53,7 @@ class Empresa
                 ['borrado', 0],
                 ['estado', 1],
             ])
-            ->get();
+            ->get()->first();
     }
 
     private static function insert($values)

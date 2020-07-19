@@ -104,7 +104,7 @@
                   })
                   .then(({data}) => {
                     if (data["status"] === 0) {
-                      Object.entries(data["data"][0]).forEach(([key, value]) => {
+                      Object.entries(data["data"]).forEach(([key, value]) => {
                         if (this.form[key]) this.form[key].value = value;
                       });
                     } else {
