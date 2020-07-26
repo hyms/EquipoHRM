@@ -8,13 +8,13 @@ use Illuminate\Support\Facades\DB;
 
 class Vacaciones
 {
-    protected static $table = 'permisoVacacion';
-    protected static $tableHistory = 'permisoVacacionHistory';
+    protected static $table = 'permisosVacacion';
+    protected static $tableHistory = 'permisosVacacionHistory';
 
     public static function GetAll()
     {
         return DB::table(self::$table)
-            ->select('id', 'tipo_parcial', 'tiempp_completo', 'numero_dias', 'fecha_inicio', 'fecha_fin', 'estado')
+            ->select('id', 'tiempo_parcial', 'tiempo_completo', 'numero_dias', 'fecha_inicio', 'fecha_fin', 'estado')
             ->where([
                 ['borrado', 0],
             ])
@@ -24,7 +24,7 @@ class Vacaciones
     public static function Get($id)
     {
         return DB::table(self::$table)
-            ->select('id', 'tipo_parcial', 'tiempp_completo', 'numero_dias', 'fecha_inicio', 'fecha_fin', 'estado')
+            ->select('id', 'tiempo_parcial', 'tiempo_completo', 'numero_dias', 'fecha_inicio', 'fecha_fin', 'estado')
             ->where([
                 ['id', $id],
                 ['borrado', 0],
@@ -85,7 +85,7 @@ class Vacaciones
             $temp_id = Auth::guard('api')->user();
             $data = DB::table(self::$table)
                 ->select(
-                    'id', 'tipo_parcial', 'tiempp_completo', 'numero_dias', 'fecha_inicio', 'fecha_fin', 'estado'
+                    'id', 'tiempo_parcial', 'tiempo_completo', 'numero_dias', 'fecha_inicio', 'fecha_fin', 'estado'
                 )
                 ->where([
                     ['id', $id],

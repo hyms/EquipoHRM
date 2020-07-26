@@ -16,54 +16,90 @@ use Illuminate\Support\Facades\Route;
 //auth
 Route::post('/login', 'AuthController@login');
 Route::post('/logout', 'AuthController@logout');
+
+//auth control
+//Route::group(['middleware' => 'auth:sanctum'], function () {
 //usuarios
-Route::get('/usuarios', 'UsuariosController@getAll')->middleware('auth:sanctum');
-Route::post('/usuarios', 'UsuariosController@post');
-Route::delete('/usuarios', 'UsuariosController@delete');
+Route::group(['prefix' => 'usuarios'], function () {
+    Route::get('/', 'UsuariosController@getAll');
+    Route::post('/', 'UsuariosController@post');
+    Route::delete('/', 'UsuariosController@delete');
+});
 //roles
-Route::get('/roles', 'RolesController@getAll');
-Route::post('/roles', 'RolesController@post');
-Route::delete('/roles', 'RolesController@delete');
+Route::group(['prefix' => 'roles'], function () {
+    Route::get('/', 'RolesController@getAll');
+    Route::post('/', 'RolesController@post');
+    Route::delete('/', 'RolesController@delete');
+});
 //diasFestivos
-Route::get('/diasfestivos', 'DiasfestivosController@getAll');
-Route::post('/diasfestivos', 'DiasfestivosController@post');
-Route::delete('/diasfestivos', 'DiasfestivosController@delete');
+Route::group(['prefix' => 'diasfestivos'], function () {
+    Route::get('/', 'DiasfestivosController@getAll');
+    Route::post('/', 'DiasfestivosController@post');
+    Route::delete('/', 'DiasfestivosController@delete');
+});
 //empresa
-Route::get('/empresa', 'EmpresaController@get');
-Route::post('/empresa', 'EmpresaController@post');
+Route::group(['prefix' => 'empresa'], function () {
+    Route::get('/', 'EmpresaController@get');
+    Route::post('/', 'EmpresaController@post');
+});
 //unidadesNegocio
-Route::get('/unidadesnegocio', 'UnidadesnegocioController@getAll');
-Route::post('/unidadesnegocio', 'UnidadesnegocioController@post');
-Route::delete('/unidadesnegocio', 'UnidadesnegocioController@delete');
+Route::group(['prefix' => 'unidadesnegocio'], function () {
+    Route::get('/', 'UnidadesnegocioController@getAll');
+    Route::post('/', 'UnidadesnegocioController@post');
+    Route::delete('/', 'UnidadesnegocioController@delete');
+});
 //areasTrabajo
-Route::get('/areastrabajo', 'AreastrabajoController@getAll');
-Route::post('/areastrabajo', 'AreastrabajoController@post');
-Route::delete('/areastrabajo', 'AreastrabajoController@delete');
+Route::group(['prefix' => 'areastrabajo'], function () {
+    Route::get('/', 'AreastrabajoController@getAll');
+    Route::post('/', 'AreastrabajoController@post');
+    Route::delete('/', 'AreastrabajoController@delete');
+});
 //cargos
-Route::get('/cargos', 'CargosController@getAll');
-Route::post('/cargos', 'CargosController@post');
-Route::delete('/cargos', 'CargosController@delete');
+Route::group(['prefix' => 'cargos'], function () {
+    Route::get('/', 'CargosController@getAll');
+    Route::post('/', 'CargosController@post');
+    Route::delete('/', 'CargosController@delete');
+});
 //regional
-Route::get('/regional', 'RegionalController@getAll');
-Route::post('/regional', 'RegionalController@post');
-Route::delete('/regional', 'RegionalController@delete');
+Route::group(['prefix' => 'regional'], function () {
+    Route::get('/', 'RegionalController@getAll');
+    Route::post('/', 'RegionalController@post');
+    Route::delete('/', 'RegionalController@delete');
+});
 //gerencial
-Route::get('/gerencia', 'GerenciaController@getAll');
-Route::post('/gerencia', 'GerenciaController@post');
-Route::delete('/gerencia', 'GerenciaController@delete');
-//personal
-Route::get('/personal', 'PersonalController@getAll');
-Route::post('/personal', 'PersonalController@post');
-Route::delete('/personal', 'PersonalController@delete');
-Route::get('/personal/carrera', 'PersonalController@getAllCarrera');
+Route::group(['prefix' => 'gerencia'], function () {
+    Route::get('/', 'GerenciaController@getAll');
+    Route::post('/', 'GerenciaController@post');
+    Route::delete('/', 'GerenciaController@delete');
+});
 //carrera
-Route::get('/carrera', 'CarreraController@getAll');
-Route::post('/carrera', 'CarreraController@post');
-Route::get('/carrera/historia', 'CarreraController@getHistoria');
+Route::group(['prefix' => 'carrera'], function () {
+    Route::get('/', 'CarreraController@getAll');
+    Route::post('/', 'CarreraController@post');
+    Route::get('/historia', 'CarreraController@getHistoria');
+});
+//personal
+Route::group(['prefix' => 'personal'], function () {
+    Route::get('/', 'PersonalController@getAll');
+    Route::post('/', 'PersonalController@post');
+    Route::delete('/', 'PersonalController@delete');
+    Route::get('/carrera', 'PersonalController@getAllCarrera');
+});
+
 //tipo Vacaciones/permisos
-Route::get('/tipovacaciones', 'TipoVacacionController@getAll');
-Route::post('/tipovacaciones', 'TipoVacacionController@post');
-Route::delete('/tipovacaciones', 'TipoVacacionController@delete');
+Route::group(['prefix' => 'tipovacaciones'], function () {
+    Route::get('/', 'TipoVacacionController@getAll');
+    Route::post('/', 'TipoVacacionController@post');
+    Route::delete('/', 'TipoVacacionController@delete');
+});
+//Vacaciones
+Route::group(['prefix' => 'vacaciones'], function () {
+    Route::get('/', 'VacacionesController@getAll');
+    Route::post('/', 'VacacionesController@post');
+    Route::delete('/', 'VacacionesController@delete');
+});
+
+//});
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

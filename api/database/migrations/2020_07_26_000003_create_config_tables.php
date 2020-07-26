@@ -13,72 +13,6 @@ class CreateConfigTables extends Migration
      */
     public function up()
     {
-        Schema::create('diasFestivos', function (Blueprint $table) {
-            $table->id();
-            $table->string("nombre",200);
-            $table->date("fecha");
-            //$table->decimal("dias");
-
-            //control
-            $table->smallInteger("estado");
-            $table->boolean("borrado"); //Activo,inactivo
-            $table->timestamps();
-        });
-
-        Schema::create('diasFestivosHistory', function (Blueprint $table) {
-            $table->string("nombre",200);
-            $table->date("fecha");
-            $table->smallInteger("estado");
-            $table->boolean("borrado");
-            //control de historial
-            $table->unsignedInteger('id');
-            $table->dateTime('registerUtc');
-            $table->primary(['id','registerUtc']);
-            $table->unsignedInteger('registerBy');
-        });
-
-        Schema::create('empresas', function (Blueprint $table) {
-            $table->id();
-            $table->string("nombre",100);
-            $table->string("nit",20);
-            $table->string("direccion",200);
-            $table->string("telefono",15);
-            $table->string("celular",15);
-            $table->string("fax",15)->nullable();
-            $table->string("ciudad",50);
-            $table->string("departamento",50);
-            $table->string("gerente",100)->nullable();
-            $table->string("email",100)->nullable();
-            $table->string("web",100)->nullable();
-            $table->date("fecha_nacimiento");
-
-            //control
-            $table->smallInteger("estado");
-            $table->boolean("borrado"); //Activo,inactivo
-            $table->timestamps();
-        });
-
-        Schema::create('empresasHistory', function (Blueprint $table) {
-            $table->string("nombre",100);
-            $table->string("nit",20);
-            $table->string("direccion",200);
-            $table->string("telefono",15);
-            $table->string("celular",15);
-            $table->string("fax",15)->nullable();
-            $table->string("ciudad",50);
-            $table->string("departamento",50);
-            $table->string("gerente",100)->nullable();
-            $table->string("email",100)->nullable();
-            $table->string("web",100)->nullable();
-            $table->date("fecha_nacimiento");
-            $table->smallInteger("estado");
-            $table->boolean("borrado"); //Activo,inactivo
-            //control de historial
-            $table->unsignedInteger('id');
-            $table->dateTime('registerUtc');
-            $table->primary(['id','registerUtc']);
-            $table->unsignedInteger('registerBy');
-        });
 
         Schema::create('unidadesNegocio', function (Blueprint $table) {
             $table->id();
@@ -93,13 +27,8 @@ class CreateConfigTables extends Migration
             $table->string("email",100)->nullable();
             $table->string("web",100)->nullable();
             $table->date("fecha_nacimiento");
-
-            //control
-            $table->smallInteger("estado");
-            $table->boolean("borrado"); //Activo,inactivo
             $table->timestamps();
-
-            $table->foreignId('id_empresa')->constrained('empresas');
+            $table->softDeletes();
         });
 
         Schema::create('unidadesNegocioHistory', function (Blueprint $table) {
@@ -114,9 +43,6 @@ class CreateConfigTables extends Migration
             $table->string("email",100)->nullable();
             $table->string("web",100)->nullable();
             $table->date("fecha_nacimiento");
-            $table->smallInteger("estado");
-            $table->boolean("borrado");
-            $table->unsignedInteger('id_empresa');
             //control de historial
             $table->unsignedInteger('id');
             $table->dateTime('registerUtc');
@@ -128,19 +54,14 @@ class CreateConfigTables extends Migration
             $table->id();
             $table->string("nombre",100);
             $table->text("detalle");
-
-            //control
-            $table->smallInteger("estado");
-            $table->boolean("borrado"); //Activo,inactivo
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('areasTrabajoHistory', function (Blueprint $table) {
             $table->string("nombre",100);
             $table->text("detalle");
-            $table->smallInteger("estado");
-            $table->boolean("borrado"); //Activo,inactivo
-//control de historial
+            //control de historial
             $table->unsignedInteger('id');
             $table->dateTime('registerUtc');
             $table->primary(['id','registerUtc']);
@@ -152,19 +73,14 @@ class CreateConfigTables extends Migration
             $table->string("nombre",100);
             $table->text("detalle");
             $table->unsignedInteger("cargo_padre")->nullable();
-
-            //control
-            $table->smallInteger("estado");
-            $table->boolean("borrado"); //Activo,inactivo
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('cargosHistory', function (Blueprint $table) {
             $table->string("nombre", 100);
             $table->text("detalle");
             $table->unsignedInteger("cargo_padre")->nullable();
-            $table->smallInteger("estado");
-            $table->boolean("borrado");
             //control de historial
             $table->unsignedInteger('id');
             $table->dateTime('registerUtc');
@@ -176,17 +92,13 @@ class CreateConfigTables extends Migration
             $table->id();
             $table->string("nombre", 100);
             $table->text("detalle");
-            //control
-            $table->smallInteger("estado");
-            $table->boolean("borrado"); //Activo,inactivo
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('regionalHistory', function (Blueprint $table) {
             $table->string("nombre", 100);
             $table->text("detalle");
-            $table->smallInteger("estado");
-            $table->boolean("borrado");
             //control de historial
             $table->unsignedInteger('id');
             $table->dateTime('registerUtc');
@@ -197,17 +109,13 @@ class CreateConfigTables extends Migration
             $table->id();
             $table->string("nombre", 100);
             $table->text("detalle");
-            //control
-            $table->smallInteger("estado");
-            $table->boolean("borrado"); //Activo,inactivo
             $table->timestamps();
+            $table->softDeletes();
         });
 
         Schema::create('gerenciaHistory', function (Blueprint $table) {
             $table->string("nombre", 100);
             $table->text("detalle");
-            $table->smallInteger("estado");
-            $table->boolean("borrado");
             //control de historial
             $table->unsignedInteger('id');
             $table->dateTime('registerUtc');
@@ -223,6 +131,9 @@ class CreateConfigTables extends Migration
      */
     public function down()
     {
+
+        Schema::dropIfExists('gerenciaHistory');
+        Schema::dropIfExists('gerencia');
 
         Schema::dropIfExists('regionalHistory');
         Schema::dropIfExists('regional');
