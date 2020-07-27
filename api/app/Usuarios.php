@@ -2,11 +2,9 @@
 
 namespace App;
 
-use Carbon\Carbon;
+use App\Models\History;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -14,17 +12,10 @@ class Usuarios extends Authenticatable
 {
     use Notifiable, HasApiTokens;
 
-    protected $fillable = ['email', 'password'];
-
-    protected $hidden = [
-        'password', 'remember_token',
-    ];
-
-    public static function VerificarUsuario($email, $password)
+    public static function VerificarUsuario($username, $password)
     {
         $user = self::where([
-            ['name', $email],
-            ['borrado', 0]
+            ['username', $username],
         ])->first();
         if (!$user) {
             return false;
@@ -35,125 +26,20 @@ class Usuarios extends Authenticatable
         return $user;
     }
 
-    protected static $tableC = 'usuarios';
-    protected static $tableHistory = 'usuariosHistory';
+    protected $table = 'usuarios';
+    protected static $tableHistory = 'usuarios_history';
 
-    public static function GetAllC()
-    {
-        return DB::table(self::$tableC)
-            ->select('id', 'name', 'alias', 'created_at', 'estado')
-            ->where([
-                ['borrado', 0],
-            ])
-            ->get();
-    }
-
-    public static function GetC($id)
-    {
-        return DB::table(self::$tableC)
-            ->select('id', 'name', 'alias', 'detail', 'created_at', 'estado', 'rol')
-            ->where([
-                ['id', $id],
-                ['borrado', 0],
-            ])
-            ->get()->first();
-    }
-
-    private static function insertC($values)
-    {
-        $values['password'] = Hash::make($values['password']);
-        $values['borrado'] = 0;
-        $values['api_token'] = '';
-        $values['created_at'] = Carbon::now();
-        $values['updated_at'] = Carbon::now();
-        $id = DB::table(self::$tableC)
-            ->insertGetId($values);
-        self::history($id);
-        return $id;
-    }
-
-    private static function updateC($values)
-    {
-        $data = array();
-        foreach ($values as $key => $value) {
-            array_push($data, [$key, $value]);
-        }
-
-        if (!empty($values['password'])) {
-            array_push($data, ['password', Hash::make($values['password'])]);
-        }
-
-        $rows = DB::table(self::$tableC)
-            ->where($data)
-            ->count();
-        if ($rows != 0) {
-            return $values['id'];
-        }
-        $values['updated_at'] = Carbon::now();
-        if(!empty($values['password'])) {
-            $tmp_pass = DB::table(self::$tableC)->where([
-                ['id', $values['id']],
-                ['password', Hash::make($values['password'])]
-            ])->count();
-            if ($tmp_pass == 0) {
-                $values['password'] = Hash::make($values['password']);
-            }
-        }
-        $affected = DB::table(self::$tableC)
-            ->where([
-                ['id', $values['id']]
-            ])
-            ->update($values);
-
-        if ($affected) {
-            self::history($values['id']);
-            return $values['id'];
-        }
-        return null;
-    }
-
-    public static function SaveC(array $values)
-    {
-        if (key_exists('id', $values) && !empty($values['id'])) {
-            return self::updateC($values);
-        }
-        return self::insertC($values);
-    }
-
-    private static function history($id)
+    public static function history($id)
     {
         if (!empty($id)) {
-            $temp_id = Auth::guard('api')->user();
-            $data = DB::table(self::$tableC)
-                ->select(
-                    'id', 'name', 'password', 'alias', 'detail', 'estado', 'borrado', 'rol'
-                )
+            $data = self::select(
+                'id', 'username', 'password', 'email', 'alias', 'api_token', 'estado', 'ultimo_acceso', 'rol'
+            )
                 ->where([
                     ['id', $id],
-                ])
-                ->get()->first();
-            $data = (array)$data;
-            $data['registerUtc'] = Carbon::now();
-            $data['registerBy'] = (!empty($temp_id) ? $temp_id['id'] : null);
-            DB::table(self::$tableHistory)
-                ->insert($data);
+                ])->first();
+            History::save(self::$tableHistory, $data);
         }
-    }
-
-    public static function Del(array $values)
-    {
-        $affected = DB::table(self::$tableC)
-            ->where([
-                ['id', $values['id']]
-            ])
-            ->update([
-                'borrado' => 1,
-                'updated_at' => Carbon::now(),
-            ]);
-        if ($affected) {
-            self::history($values['id']);
-        }
-        return $affected;
     }
 
 }
