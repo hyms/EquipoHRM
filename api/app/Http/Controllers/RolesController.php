@@ -13,7 +13,7 @@ class RolesController extends Controller
     {
         try {
             if (empty($request->all())) {
-                $roles = Roles::GetAll();
+                $roles = Roles::all();
                 Log::debug("Success get all");
                 return response()->json([
                     'status' => 0,
@@ -22,7 +22,7 @@ class RolesController extends Controller
                         'count' => count($roles),
                     ]]);
             }
-            $rol = Roles::Get($request->get('id'));
+            $rol = Roles::where('id', $request->get('id'))->first();
             Log::debug("Success get id:" . $request->get('id'));
             return response()->json([
                 'status' => (empty($rol) ? -1 : 0),
@@ -39,25 +39,25 @@ class RolesController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'nombre' => 'required|min:5',
-                'estado' => 'required',
+                'name' => 'required|min:5',
             ]);
             if ($validator->fails()) {
                 return response()->json([
                     'status' => -1,
                     'data' => $validator->errors()]);
             }
-            $id = Roles::Save($request->all());
-            if (empty($id)) {
-                return response()->json([
-                    'status' => -1,
-                    'data' => [
-                        'message' => 'Ocurrio un error al guardar los datos.'
-                    ]]);
+            $roles = new Roles;
+            if (!empty($request['id'])) {
+                $roles = Roles::find($request['id']);
+            }
+            $roles->fill($request->all());
+            $roles->save();
+            if ($roles->wasChanged()) {
+                Roles::history($roles->id);
             }
             return response()->json([
                 'status' => 0,
-                'data' => Roles::Get($id)]);
+                'data' => $roles]);
         } catch (\Exception $error) {
             Log::error($error->getMessage());
             return response()->json([//'message' => $error->getMessage(),
@@ -76,7 +76,11 @@ class RolesController extends Controller
                     'status' => -1,
                     'data' => $validator->errors()]);
             }
-            $roles = Roles::Delete($request->all());
+            $roles = Roles::find($request['id'])->delete();
+            Log::debug($roles);
+            if ($roles) {
+                Roles::history($request['id']);
+            }
             return response()->json([
                 'status' => ($roles ? 0 : -1),
                 'data' => []

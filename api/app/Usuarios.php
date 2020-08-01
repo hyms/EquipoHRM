@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Models\History;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
@@ -10,7 +11,10 @@ use Laravel\Sanctum\HasApiTokens;
 
 class Usuarios extends Authenticatable
 {
-    use Notifiable, HasApiTokens;
+    use Notifiable, HasApiTokens, SoftDeletes;
+
+    protected $table = 'usuarios';
+    protected static $tableHistory = 'usuarios_history';
 
     public static function VerificarUsuario($username, $password)
     {
@@ -26,8 +30,6 @@ class Usuarios extends Authenticatable
         return $user;
     }
 
-    protected $table = 'usuarios';
-    protected static $tableHistory = 'usuarios_history';
 
     public static function history($id)
     {

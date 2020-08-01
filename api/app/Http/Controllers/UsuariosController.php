@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Usuarios;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -13,20 +14,20 @@ class UsuariosController extends Controller
     {
         try {
             if (empty($request->all())) {
-                $Usuarios = Usuarios::GetAllC();
+                $Usuarios = Usuarios::all();
                 Log::debug("Success get all");
                 return response()->json([
                     'status' => 0,
                     'data' => [
                         'all' => $Usuarios,
-                        'count' => count($Usuarios),
+                        'count' => Usuarios::all()->count(),
                     ]]);
             }
-            $rol = Usuarios::GetC($request->get('id'));
+            $usuario = Usuarios::where('id', $request->get('id'))->first();
             Log::debug("Success get id:" . $request->get('id'));
             return response()->json([
-                'status' => (empty($rol) ? -1 : 0),
-                'data' => $rol
+                'status' => (empty($usuario) ? -1 : 0),
+                'data' => $usuario
             ]);
         } catch (\Exception $error) {
             Log::error($error->getMessage());
@@ -41,24 +42,28 @@ class UsuariosController extends Controller
             $validator = Validator::make($request->all(), [
                 'name' => 'required|min:5',
                 'estado' => 'required',
-                'rol'=>'required'
+                'rol' => 'required'
             ]);
             if ($validator->fails()) {
                 return response()->json([
                     'status' => -1,
                     'data' => $validator->errors()]);
             }
-            $id = Usuarios::SaveC($request->all());
-            if (empty($id)) {
-                return response()->json([
-                    'status' => -1,
-                    'data' => [
-                        'message' => 'Ocurrio un error al guardar los datos.'
-                    ]]);
+            $usuarios = new Usuarios;
+            if (!empty($request['id'])) {
+                $usuarios = Usuarios::find($request['id']);
+            }
+            if (!empty($request['password'])) {
+                $request['password'] = Hash::make($request['password']);
+            }
+            $usuarios->fill($request->all());
+            $usuarios->save();
+            if ($usuarios->wasChanged()) {
+                Usuarios::history($usuarios->id);
             }
             return response()->json([
                 'status' => 0,
-                'data' => Usuarios::GetC($id)]);
+                'data' => Usuarios::where('id', $id)->fisrt()]);
         } catch (\Exception $error) {
             Log::error($error->getMessage());
             return response()->json([//'message' => $error->getMessage(),
@@ -77,7 +82,7 @@ class UsuariosController extends Controller
                     'status' => -1,
                     'data' => $validator->errors()]);
             }
-            $Usuarios = Usuarios::Del($request->all());
+            $Usuarios = Usuarios::where('id', $request['id'])->first()->delete();
             return response()->json([
                 'status' => ($Usuarios ? 0 : -1),
                 'data' => []

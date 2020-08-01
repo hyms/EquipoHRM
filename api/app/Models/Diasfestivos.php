@@ -3,13 +3,16 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class Diasfestivos
 {
-    protected static $table = 'diasFestivos';
-    protected static $tableHistory = 'diasFestivosHistory';
+    use SoftDeletes;
+
+    protected static $table = 'dias_festivos';
+    protected static $tableHistory = 'dias_festivos_history';
 
     public static function GetAll()
     {
