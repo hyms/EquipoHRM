@@ -9,21 +9,19 @@ use Illuminate\Support\Facades\Validator;
 
 class RegionalController extends Controller
 {
-    public function getAll(Request $request)
+    public function get(Request $request)
     {
         try {
             if (empty($request->all())) {
-                $Regional = Regional::GetAll();
-                Log::debug("Success get all");
+                $Regional = Regional::all();
                 return response()->json([
                     'status' => 0,
                     'data' => [
                         'all' => $Regional,
-                        'count' => count($Regional),
+                        'count' => $Regional->count(),
                     ]]);
             }
-            $rol = Regional::Get($request->get('id'));
-            Log::debug("Success get id:" . $request->get('id'));
+            $rol = Regional::find($request->get('id'));
             return response()->json([
                 'status' => (empty($rol) ? -1 : 0),
                 'data' => $rol
@@ -40,24 +38,22 @@ class RegionalController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'nombre' => 'required|min:5',
-                'estado' => 'required',
             ]);
             if ($validator->fails()) {
                 return response()->json([
                     'status' => -1,
                     'data' => $validator->errors()]);
             }
-            $id = Regional::Save($request->all());
-            if (empty($id)) {
-                return response()->json([
-                    'status' => -1,
-                    'data' => [
-                        'message' => 'Ocurrio un error al guardar los datos.'
-                    ]]);
+            $regional = new Regional;
+            if (!empty($request['id'])) {
+                $regional = Regional::find($request['id']);
             }
+            $regional->fill($request->all());
+            $regional->save();
             return response()->json([
                 'status' => 0,
-                'data' => Regional::Get($id)]);
+                'data' => $regional
+            ]);
         } catch (\Exception $error) {
             Log::error($error->getMessage());
             return response()->json([//'message' => $error->getMessage(),
@@ -76,9 +72,9 @@ class RegionalController extends Controller
                     'status' => -1,
                     'data' => $validator->errors()]);
             }
-            $Regional = Regional::Delete($request->all());
+            $regional = Regional::find($request['id'])->delete();
             return response()->json([
-                'status' => ($Regional ? 0 : -1),
+                'status' => ($regional ? 0 : -1),
                 'data' => []
             ]);
         } catch (\Exception $error) {

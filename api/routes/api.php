@@ -21,83 +21,79 @@ Route::post('/logout', 'AuthController@logout');
 //Route::group(['middleware' => 'auth:sanctum'], function () {
 //usuarios
 Route::group(['prefix' => 'usuarios'], function () {
-    Route::get('/', 'UsuariosController@getAll');
+    Route::get('/', 'UsuariosController@get');
     Route::post('/', 'UsuariosController@post');
     Route::delete('/', 'UsuariosController@delete');
 });
 //roles
 Route::group(['prefix' => 'roles'], function () {
-    Route::get('/', 'RolesController@getAll');
+    Route::get('/', 'RolesController@get');
     Route::post('/', 'RolesController@post');
     Route::delete('/', 'RolesController@delete');
 });
-//diasFestivos
-Route::group(['prefix' => 'diasfestivos'], function () {
-    Route::get('/', 'DiasfestivosController@getAll');
-    Route::post('/', 'DiasfestivosController@post');
-    Route::delete('/', 'DiasfestivosController@delete');
-});
-//empresa
-Route::group(['prefix' => 'empresa'], function () {
-    Route::get('/', 'EmpresaController@get');
-    Route::post('/', 'EmpresaController@post');
-});
-//unidadesNegocio
-Route::group(['prefix' => 'unidadesnegocio'], function () {
-    Route::get('/', 'UnidadesnegocioController@getAll');
-    Route::post('/', 'UnidadesnegocioController@post');
-    Route::delete('/', 'UnidadesnegocioController@delete');
-});
 //areasTrabajo
 Route::group(['prefix' => 'areastrabajo'], function () {
-    Route::get('/', 'AreastrabajoController@getAll');
+    Route::get('/', 'AreastrabajoController@get');
     Route::post('/', 'AreastrabajoController@post');
     Route::delete('/', 'AreastrabajoController@delete');
 });
-//cargos
-Route::group(['prefix' => 'cargos'], function () {
-    Route::get('/', 'CargosController@getAll');
-    Route::post('/', 'CargosController@post');
-    Route::delete('/', 'CargosController@delete');
-});
-//regional
-Route::group(['prefix' => 'regional'], function () {
-    Route::get('/', 'RegionalController@getAll');
-    Route::post('/', 'RegionalController@post');
-    Route::delete('/', 'RegionalController@delete');
-});
-//gerencial
+//gerencia
 Route::group(['prefix' => 'gerencia'], function () {
-    Route::get('/', 'GerenciaController@getAll');
+    Route::get('/', 'GerenciaController@get');
     Route::post('/', 'GerenciaController@post');
     Route::delete('/', 'GerenciaController@delete');
 });
-//carrera
-Route::group(['prefix' => 'carrera'], function () {
-    Route::get('/', 'CarreraController@getAll');
-    Route::post('/', 'CarreraController@post');
-    Route::get('/historia', 'CarreraController@getHistoria');
+//unidadesNegocio
+Route::group(['prefix' => 'unidadesnegocio'], function () {
+    Route::get('/', 'UnidadesnegocioController@get');
+    Route::post('/', 'UnidadesnegocioController@post');
+    Route::delete('/', 'UnidadesnegocioController@delete');
 });
-//personal
+//regional
+Route::group(['prefix' => 'regional'], function () {
+    Route::get('/', 'RegionalController@get');
+    Route::post('/', 'RegionalController@post');
+    Route::delete('/', 'RegionalController@delete');
+});
+//cargos
+Route::group(['prefix' => 'cargos'], function () {
+    Route::get('/', 'CargosController@get');
+    Route::post('/', 'CargosController@post');
+    Route::delete('/', 'CargosController@delete');
+});
+//empleado
 Route::group(['prefix' => 'personal'], function () {
-    Route::get('/', 'PersonalController@getAll');
+    Route::get('/', 'PersonalController@get');
     Route::post('/', 'PersonalController@post');
     Route::delete('/', 'PersonalController@delete');
-    Route::get('/carrera', 'PersonalController@getAllCarrera');
+    Route::group(['prefix' => 'empresa'], function () {
+        Route::get('/', 'PersonalEmpresaController@get');
+        Route::post('/', 'PersonalEmpresaController@post');
+        Route::delete('/', 'PersonalEmpresaController@delete');
+    });
 });
-
-//tipo Vacaciones/permisos
-Route::group(['prefix' => 'tipovacaciones'], function () {
-    Route::get('/', 'TipoVacacionController@getAll');
-    Route::post('/', 'TipoVacacionController@post');
-    Route::delete('/', 'TipoVacacionController@delete');
+//diasFestivos
+Route::group(['prefix' => 'diasfestivos'], function () {
+    Route::get('/', 'DiasFestivosController@get');
+    Route::post('/', 'DiasFestivosController@post');
+    Route::delete('/', 'DiasFestivosController@delete');
 });
 //Vacaciones
 Route::group(['prefix' => 'vacaciones'], function () {
-    Route::get('/', 'VacacionesController@getAll');
-    Route::post('/', 'VacacionesController@post');
-    Route::delete('/', 'VacacionesController@delete');
+    Route::get('/', 'PersonalVacacionesController@get');
+    Route::post('/', 'PersonalVacacionesController@post');
+    Route::delete('/', 'PersonalVacacionesController@delete');
+    Route::group(['prefix' => 'tipo'], function () {
+        Route::get('/', 'VacacionesTipoController@get');
+        Route::post('/', 'VacacionesTipoController@post');
+        Route::delete('/', 'VacacionesTipoController@delete');
+    });
+    Route::group(['prefix' => 'estado'], function () {
+        Route::get('/', 'PersonalVacacionesEstadoController@get');
+        Route::post('/', 'PersonalVacacionesEstadoController@post');
+    });
 });
+
 
 //});
 

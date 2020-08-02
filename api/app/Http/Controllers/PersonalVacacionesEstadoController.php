@@ -2,29 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Empresa;
+use App\Models\PersonalVacacionesEstado;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
-class EmpresaController extends Controller
+class PersonalVacacionesEstadoController extends Controller
 {
     public function get(Request $request)
     {
         try {
-            $validator = Validator::make($request->all(), [
-                'id' => 'required',
-            ]);
-            if ($validator->fails()) {
+            if (empty($request->all())) {
+                $PersonalVacacionesEstado = PersonalVacacionesEstado::all();
                 return response()->json([
-                    'status' => -1,
-                    'data' => $validator->errors()]);
+                    'status' => 0,
+                    'data' => [
+                        'all' => $PersonalVacacionesEstado,
+                        'count' => $PersonalVacacionesEstado->count(),
+                    ]]);
             }
-            $row = Empresa::Get($request->get('id'));
-            Log::debug("Success get id:" . $request->get('id'));
+            $rol = PersonalVacacionesEstado::find($request->get('id'));
             return response()->json([
-                'status' => (empty($row) ? -1 : 0),
-                'data' => $row
+                'status' => (empty($rol) ? -1 : 0),
+                'data' => $rol
             ]);
         } catch (\Exception $error) {
             Log::error($error->getMessage());
@@ -37,24 +37,24 @@ class EmpresaController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'nombre' => 'required',
+                'empleado_id' => 'required',
+                'total_usado' => 'required|numeric',
             ]);
             if ($validator->fails()) {
                 return response()->json([
                     'status' => -1,
                     'data' => $validator->errors()]);
             }
-            $id = Empresa::Save($request->all());
-            if (empty($id)) {
-                return response()->json([
-                    'status' => -1,
-                    'data' => [
-                        'message' => 'Ocurrio un error al guardar los datos.'
-                    ]]);
+            $PersonalVacacionesEstado = new PersonalVacacionesEstado;
+            if (!empty($request['id'])) {
+                $PersonalVacacionesEstado = PersonalVacacionesEstado::find($request['id']);
             }
+            $PersonalVacacionesEstado->fill($request->all());
+            $PersonalVacacionesEstado->save();
             return response()->json([
                 'status' => 0,
-                'data' => Empresa::Get($id)]);
+                'data' => $PersonalVacacionesEstado
+            ]);
         } catch (\Exception $error) {
             Log::error($error->getMessage());
             return response()->json([//'message' => $error->getMessage(),

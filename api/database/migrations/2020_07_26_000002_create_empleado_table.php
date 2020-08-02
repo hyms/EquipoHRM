@@ -24,7 +24,7 @@ class CreateEmpleadoTable extends Migration
             $table->string("profesion", 200);
             $table->text("direccion");
             $table->string("estado_civil");
-            $table->unsignedInteger('id_usuario')->nulleable();
+            $table->unsignedInteger('id_usuario')->nullable();
             $table->date('fecha_ingreso');
             $table->timestamps();
             $table->softDeletes();
@@ -40,7 +40,7 @@ class CreateEmpleadoTable extends Migration
             $table->string("profesion", 200);
             $table->text("direccion");
             $table->string("estado_civil");
-            $table->unsignedInteger('id_usuario')->nulleable();
+            $table->unsignedInteger('id_usuario')->nullable();
             $table->date('fecha_ingreso');
             //control de historial
             $table->unsignedInteger('id');

@@ -10,6 +10,7 @@ class Cargo extends Model
     use SoftDeletes;
     protected $table = 'cargos';
     protected static $tableHistory = 'cargosHistory';
+    protected $guarded = [];
 
     public static function history($id)
     {

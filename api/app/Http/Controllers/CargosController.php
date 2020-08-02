@@ -9,23 +9,23 @@ use Illuminate\Support\Facades\Validator;
 
 class CargosController extends Controller
 {
-    public function getAll(Request $request)
+    public function get(Request $request)
     {
         try {
             if (empty($request->all()) || $request->has('padre')) {
-
-                $Cargo = Cargo::GetAll(($request->has('padre')) ? $request->get('padre') : null);
-                Log::debug("Success get all");
+                $Cargo = Cargo::all();
+                if ($request->has('padre')) {
+                    $Cargo = $Cargo->where('id', '!=', $request->get('padre'));
+                }
                 return response()->json([
                     'status' => 0,
                     'data' => [
                         'all' => $Cargo,
-                        'count' => count($Cargo),
+                        'count' => $Cargo->count(),
                     ]]);
             }
 
-            $row = Cargo::Get($request->get('id'));
-            Log::debug("Success get id:" . $request->get('id'));
+            $row = Cargo::find($request->get('id'));
             return response()->json([
                 'status' => (empty($row) ? -1 : 0),
                 'data' => $row
@@ -42,24 +42,21 @@ class CargosController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'nombre' => 'required',
-                'estado' => 'required',
             ]);
             if ($validator->fails()) {
                 return response()->json([
                     'status' => -1,
                     'data' => $validator->errors()]);
             }
-            $id = Cargo::Save($request->all());
-            if (empty($id)) {
-                return response()->json([
-                    'status' => -1,
-                    'data' => [
-                        'message' => 'Ocurrio un error al guardar los datos.'
-                    ]]);
+            $cargo = new Cargo;
+            if (!empty($request['id'])) {
+                $cargo = Cargo::find($request['id']);
             }
+            $cargo->fill($request->all());
+            $cargo->save();
             return response()->json([
                 'status' => 0,
-                'data' => Cargo::Get($id)]);
+                'data' => $cargo]);
         } catch (\Exception $error) {
             Log::error($error->getMessage());
             return response()->json([//'message' => $error->getMessage(),
@@ -78,9 +75,12 @@ class CargosController extends Controller
                     'status' => -1,
                     'data' => $validator->errors()]);
             }
-            $Cargo = Cargo::Delete($request->all());
+            $cargo = Cargo::find($request['id'])->delete();
+            if ($cargo) {
+                Cargo::history($request['id']);
+            }
             return response()->json([
-                'status' => ($Cargo ? 0 : -1),
+                'status' => ($cargo ? 0 : -1),
                 'data' => []
             ]);
         } catch (\Exception $error) {

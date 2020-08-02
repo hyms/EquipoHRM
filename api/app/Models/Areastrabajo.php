@@ -10,6 +10,16 @@ class Areastrabajo extends Model
     use SoftDeletes;
     protected $table = 'areasTrabajo';
     protected static $tableHistory = 'areasTrabajoHistory';
+    protected $guarded = [];
+
+    public function save(array $options = [])
+    {
+        $result = parent::save($options);
+        if ($this->wasChanged()) {
+            self::history($this->id);
+        }
+        return $result;
+    }
 
     public static function history($id)
     {
@@ -17,9 +27,9 @@ class Areastrabajo extends Model
             $data = self::select(
                 'id', 'nombre', 'detalle'
             )
-                ->where([
-                    ['id', $id],
-                ])->first();
+                ->withTrashed()
+                ->find($id)
+                ->toArray();
             History::save(self::$tableHistory, $data);
         }
     }

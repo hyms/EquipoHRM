@@ -2,31 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Diasfestivos;
+use App\Models\DiasFestivos;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
-class DiasfestivosController extends Controller
+class DiasFestivosController extends Controller
 {
-    public function getAll(Request $request)
+    public function get(Request $request)
     {
         try {
             if (empty($request->all())) {
-                $Diasfestivos = Diasfestivos::GetAll();
-                Log::debug("Success get all");
+                $DiasFestivos = DiasFestivos::all();
                 return response()->json([
                     'status' => 0,
                     'data' => [
-                        'all' => $Diasfestivos,
-                        'count' => count($Diasfestivos),
+                        'all' => $DiasFestivos,
+                        'count' => $DiasFestivos->count(),
                     ]]);
             }
-            $row = Diasfestivos::Get($request->get('id'));
-            Log::debug("Success get id:" . $request->get('id'));
+            $rol = DiasFestivos::find($request->get('id'));
             return response()->json([
-                'status' => (empty($row) ? -1 : 0),
-                'data' => $row
+                'status' => (empty($rol) ? -1 : 0),
+                'data' => $rol
             ]);
         } catch (\Exception $error) {
             Log::error($error->getMessage());
@@ -39,26 +37,22 @@ class DiasfestivosController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'nombre' => 'required',
-                'fecha' => 'required',
-                'estado' => 'required',
+                'fecha' => 'required|unique:dias_festivos',
             ]);
             if ($validator->fails()) {
                 return response()->json([
                     'status' => -1,
                     'data' => $validator->errors()]);
             }
-            $id = Diasfestivos::Save($request->all());
-            if (empty($id)) {
-                return response()->json([
-                    'status' => -1,
-                    'data' => [
-                        'message' => 'Ocurrio un error al guardar los datos.'
-                    ]]);
+            $DiasFestivos = new DiasFestivos;
+            if (!empty($request['id'])) {
+                $DiasFestivos = DiasFestivos::find($request['id']);
             }
+            $DiasFestivos->fill($request->all());
+            $DiasFestivos->save();
             return response()->json([
                 'status' => 0,
-                'data' => Diasfestivos::Get($id)]);
+                'data' => $DiasFestivos]);
         } catch (\Exception $error) {
             Log::error($error->getMessage());
             return response()->json([//'message' => $error->getMessage(),
@@ -77,9 +71,12 @@ class DiasfestivosController extends Controller
                     'status' => -1,
                     'data' => $validator->errors()]);
             }
-            $Diasfestivos = Diasfestivos::Delete($request->all());
+            $DiasFestivos = DiasFestivos::find($request['id'])->delete();
+            if ($DiasFestivos) {
+                DiasFestivos::history($request['id']);
+            }
             return response()->json([
-                'status' => ($Diasfestivos ? 0 : -1),
+                'status' => ($DiasFestivos ? 0 : -1),
                 'data' => []
             ]);
         } catch (\Exception $error) {

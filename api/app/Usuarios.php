@@ -15,6 +15,7 @@ class Usuarios extends Authenticatable
 
     protected $table = 'usuarios';
     protected static $tableHistory = 'usuarios_history';
+    protected $guarded = [];
 
     public static function VerificarUsuario($username, $password)
     {
@@ -30,6 +31,14 @@ class Usuarios extends Authenticatable
         return $user;
     }
 
+    public function save(array $options = [])
+    {
+        $result = parent::save($options);
+        if ($this->wasChanged()) {
+            self::history($this->id);
+        }
+        return $result;
+    }
 
     public static function history($id)
     {
@@ -37,9 +46,9 @@ class Usuarios extends Authenticatable
             $data = self::select(
                 'id', 'username', 'password', 'email', 'alias', 'api_token', 'estado', 'ultimo_acceso', 'rol'
             )
-                ->where([
-                    ['id', $id],
-                ])->first();
+                ->withTrashed()
+                ->find($id)
+                ->toArray();
             History::save(self::$tableHistory, $data);
         }
     }

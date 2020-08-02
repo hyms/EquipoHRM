@@ -10,21 +10,19 @@ use Illuminate\Support\Facades\Validator;
 
 class UsuariosController extends Controller
 {
-    public function getAll(Request $request)
+    public function get(Request $request)
     {
         try {
             if (empty($request->all())) {
                 $Usuarios = Usuarios::all();
-                Log::debug("Success get all");
                 return response()->json([
                     'status' => 0,
                     'data' => [
                         'all' => $Usuarios,
-                        'count' => Usuarios::all()->count(),
+                        'count' => $Usuarios->count(),
                     ]]);
             }
-            $usuario = Usuarios::where('id', $request->get('id'))->first();
-            Log::debug("Success get id:" . $request->get('id'));
+            $usuario = Usuarios::find($request->get('id'));
             return response()->json([
                 'status' => (empty($usuario) ? -1 : 0),
                 'data' => $usuario
@@ -40,7 +38,7 @@ class UsuariosController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'name' => 'required|min:5',
+                'username' => 'required|min:5',
                 'estado' => 'required',
                 'rol' => 'required'
             ]);
@@ -53,17 +51,16 @@ class UsuariosController extends Controller
             if (!empty($request['id'])) {
                 $usuarios = Usuarios::find($request['id']);
             }
-            if (!empty($request['password'])) {
+            if (!empty($request['password']) && strcmp($usuarios->password, Hash::make($request['password'])) == 0) {
                 $request['password'] = Hash::make($request['password']);
+            } else {
+                unset($request['password']);
             }
             $usuarios->fill($request->all());
             $usuarios->save();
-            if ($usuarios->wasChanged()) {
-                Usuarios::history($usuarios->id);
-            }
             return response()->json([
                 'status' => 0,
-                'data' => Usuarios::where('id', $id)->fisrt()]);
+                'data' => $usuarios]);
         } catch (\Exception $error) {
             Log::error($error->getMessage());
             return response()->json([//'message' => $error->getMessage(),
@@ -82,7 +79,10 @@ class UsuariosController extends Controller
                     'status' => -1,
                     'data' => $validator->errors()]);
             }
-            $Usuarios = Usuarios::where('id', $request['id'])->first()->delete();
+            $Usuarios = Usuarios::find($request['id'])->delete();
+            if ($Usuarios) {
+                Usuarios::history($request['id']);
+            }
             return response()->json([
                 'status' => ($Usuarios ? 0 : -1),
                 'data' => []

@@ -17,20 +17,24 @@ class CreateEmpleadoVacacionesTable extends Migration
             $table->id();
             $table->unsignedInteger('empleado_id');
             $table->unsignedInteger('tipo_vacaciones_id');
-            $table->unsignedDecimal("numero_dias");
+            $table->unsignedFloat("numero_dias");
             $table->date("fecha_inicio");
             $table->date("fecha_fin");
             $table->text("observaciones");
+            $table->unsignedTinyInteger("estado")->default(0);
+            $table->unsignedInteger("aprobado_por")->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
         Schema::create('empleado_vacaciones_history', function (Blueprint $table) {
             $table->unsignedInteger('empleado_id');
             $table->unsignedInteger('tipo_vacaciones_id');
-            $table->unsignedDecimal("numero_dias");
+            $table->unsignedFloat("numero_dias");
             $table->date("fecha_inicio");
             $table->date("fecha_fin");
             $table->text("observaciones");
+            $table->unsignedTinyInteger("estado");
+            $table->unsignedInteger("aprobado_por")->nullable();
             //control de historial
             $table->unsignedInteger('id');
             $table->timestamp('registerUtc');
@@ -47,6 +51,6 @@ class CreateEmpleadoVacacionesTable extends Migration
     public function down()
     {
         Schema::dropIfExists('empleado_vacaciones_history');
-        Schema::dropIfExists('usuario_vacaciones');
+        Schema::dropIfExists('empleado_vacaciones');
     }
 }

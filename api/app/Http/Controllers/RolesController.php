@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Validator;
 
 class RolesController extends Controller
 {
-    public function getAll(Request $request)
+    public function get(Request $request)
     {
         try {
             if (empty($request->all())) {
@@ -19,10 +19,10 @@ class RolesController extends Controller
                     'status' => 0,
                     'data' => [
                         'all' => $roles,
-                        'count' => count($roles),
+                        'count' => $roles->count(),
                     ]]);
             }
-            $rol = Roles::where('id', $request->get('id'))->first();
+            $rol = Roles::find($request->get('id'));
             Log::debug("Success get id:" . $request->get('id'));
             return response()->json([
                 'status' => (empty($rol) ? -1 : 0),
@@ -52,9 +52,6 @@ class RolesController extends Controller
             }
             $roles->fill($request->all());
             $roles->save();
-            if ($roles->wasChanged()) {
-                Roles::history($roles->id);
-            }
             return response()->json([
                 'status' => 0,
                 'data' => $roles]);
@@ -77,7 +74,6 @@ class RolesController extends Controller
                     'data' => $validator->errors()]);
             }
             $roles = Roles::find($request['id'])->delete();
-            Log::debug($roles);
             if ($roles) {
                 Roles::history($request['id']);
             }

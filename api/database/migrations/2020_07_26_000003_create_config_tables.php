@@ -36,18 +36,18 @@ class CreateConfigTables extends Migration
             $table->string("direccion",200);
             $table->string("telefono",15);
             $table->string("celular",15);
-            $table->string("fax",15)->nullable();
-            $table->string("ciudad",50);
-            $table->string("departamento",50);
-            $table->string("encargado",100);
-            $table->string("email",100)->nullable();
-            $table->string("web",100)->nullable();
+            $table->string("fax", 15)->nullable();
+            $table->string("ciudad", 50);
+            $table->string("departamento", 50);
+            $table->string("encargado", 100);
+            $table->string("email", 100)->nullable();
+            $table->string("web", 100)->nullable();
             $table->date("fecha_nacimiento");
             //control de historial
             $table->unsignedInteger('id');
             $table->dateTime('registerUtc');
-            $table->primary(['id','registerUtc']);
-            $table->unsignedInteger('registerBy');
+            $table->primary(['id', 'registerUtc']);
+            $table->unsignedInteger('registerBy')->nullable();
         });
 
         Schema::create('areasTrabajo', function (Blueprint $table) {
@@ -59,13 +59,13 @@ class CreateConfigTables extends Migration
         });
 
         Schema::create('areasTrabajoHistory', function (Blueprint $table) {
-            $table->string("nombre",100);
+            $table->string("nombre", 100);
             $table->text("detalle");
             //control de historial
             $table->unsignedInteger('id');
             $table->dateTime('registerUtc');
-            $table->primary(['id','registerUtc']);
-            $table->unsignedInteger('registerBy');
+            $table->primary(['id', 'registerUtc']);
+            $table->unsignedInteger('registerBy')->nullable();
         });
 
         Schema::create('cargos', function (Blueprint $table) {
@@ -85,7 +85,7 @@ class CreateConfigTables extends Migration
             $table->unsignedInteger('id');
             $table->dateTime('registerUtc');
             $table->primary(['id', 'registerUtc']);
-            $table->unsignedInteger('registerBy');
+            $table->unsignedInteger('registerBy')->nullable();
         });
 
         Schema::create('regional', function (Blueprint $table) {
@@ -103,7 +103,7 @@ class CreateConfigTables extends Migration
             $table->unsignedInteger('id');
             $table->dateTime('registerUtc');
             $table->primary(['id', 'registerUtc']);
-            $table->unsignedInteger('registerBy');
+            $table->unsignedInteger('registerBy')->nullable();
         });
         Schema::create('gerencia', function (Blueprint $table) {
             $table->id();
@@ -120,7 +120,7 @@ class CreateConfigTables extends Migration
             $table->unsignedInteger('id');
             $table->dateTime('registerUtc');
             $table->primary(['id', 'registerUtc']);
-            $table->unsignedInteger('registerBy');
+            $table->unsignedInteger('registerBy')->nullable();
         });
     }
 
@@ -131,7 +131,6 @@ class CreateConfigTables extends Migration
      */
     public function down()
     {
-
         Schema::dropIfExists('gerenciaHistory');
         Schema::dropIfExists('gerencia');
 
@@ -141,17 +140,10 @@ class CreateConfigTables extends Migration
         Schema::dropIfExists('cargosHistory');
         Schema::dropIfExists('cargos');
 
-        Schema::dropIfExists('areasTrabajoHistory');
-        Schema::dropIfExists('areasTrabajo');
-
         Schema::dropIfExists('unidadesNegocioHistory');
         Schema::dropIfExists('unidadesNegocio');
 
-        Schema::dropIfExists('empresasHistory');
-        Schema::dropIfExists('empresas');
-
-        Schema::dropIfExists('diasFestivosHistory');
-        Schema::dropIfExists('diasFestivos');
-
+        Schema::dropIfExists('areasTrabajoHistory');
+        Schema::dropIfExists('areasTrabajo');
     }
 }

@@ -5,12 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Roles extends Model
+class PersonalVacaciones extends Model
 {
     use SoftDeletes;
-    protected $table = 'roles';
-    protected static $tableHistory = 'roles_history';
-    protected $guarded = ['deleted_at', 'updated_at'];
+    protected $table = 'empleado_vacaciones';
+    protected static $tableHistory = 'empleado_vacaciones_history';
+    protected $guarded = [];
 
     public function save(array $options = [])
     {
@@ -25,7 +25,7 @@ class Roles extends Model
     {
         if (!empty($id)) {
             $data = self::select(
-                'id', 'name', 'description'
+                'id', 'empleado_id', 'tipo_vacaciones_id', 'numero_dias', 'fecha_inicio', 'fecha_fin', 'estado', 'observaciones', 'aprobado_por'
             )
                 ->withTrashed()
                 ->find($id)

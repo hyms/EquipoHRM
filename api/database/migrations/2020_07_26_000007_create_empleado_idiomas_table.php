@@ -42,6 +42,6 @@ class CreateEmpleadoIdiomasTable extends Migration
     public function down()
     {
         Schema::dropIfExists('empleado_idiomas_history');
-        Schema::dropIfExists('usuario_idiomas');
+        Schema::dropIfExists('empleado_idiomas');
     }
 }

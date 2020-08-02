@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Carrera;
+use App\Models\PersonalEmpresa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
-class CarreraController extends Controller
+class PersonalEmpresaController extends Controller
 {
-    public function getAll(Request $request)
+    public function get(Request $request)
     {
         try {
             $validator = Validator::make($request->all(), [
@@ -20,11 +20,10 @@ class CarreraController extends Controller
                     'status' => -1,
                     'data' => $validator->errors()]);
             }
-            $row = Carrera::Get($request->get('id'));
-            Log::debug("Success get id:" . $request->get('id'));
+            $personal = PersonalEmpresa::firstWhere('empleado', $request->get('id'));
             return response()->json([
-                'status' => (empty($row) ? -1 : 0),
-                'data' => $row
+                'status' => (empty($personal) ? -1 : 0),
+                'data' => $personal
             ]);
         } catch (\Exception $error) {
             Log::error($error->getMessage());
@@ -36,17 +35,24 @@ class CarreraController extends Controller
     public function post(Request $request)
     {
         try {
-            $id = Carrera::Save($request->all());
-            if (empty($id)) {
+            $validator = Validator::make($request->all(), [
+                'empleado' => 'required',
+            ]);
+            if ($validator->fails()) {
                 return response()->json([
                     'status' => -1,
-                    'data' => [
-                        'message' => 'Ocurrio un error al guardar los datos.'
-                    ]]);
+                    'data' => $validator->errors()]);
             }
+            $Personal = new PersonalEmpresa;
+            if (!empty($request['id'])) {
+                $Personal = PersonalEmpresa::find($request->get('id'));
+            }
+            $Personal->fill($request->all());
+            $Personal->save();
             return response()->json([
                 'status' => 0,
-                'data' => Carrera::Get($id)]);
+                'data' => $Personal
+            ]);
         } catch (\Exception $error) {
             Log::error($error->getMessage());
             return response()->json([//'message' => $error->getMessage(),
@@ -54,27 +60,4 @@ class CarreraController extends Controller
         }
     }
 
-    public function getHistoria(Request $request)
-    {
-        try {
-            $validator = Validator::make($request->all(), [
-                'id' => 'required',
-            ]);
-            if ($validator->fails()) {
-                return response()->json([
-                    'status' => -1,
-                    'data' => $validator->errors()]);
-            }
-            $row = Carrera::GetHistory($request->get('id'));
-            Log::debug("Success get id:" . $request->get('id'));
-            return response()->json([
-                'status' => (empty($row) ? -1 : 0),
-                'data' => $row
-            ]);
-        } catch (\Exception $error) {
-            Log::error($error->getMessage());
-            return response()->json([//'message' => $error->getMessage(),
-                'error' => $error,], 500);
-        }
-    }
 }

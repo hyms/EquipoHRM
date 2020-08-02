@@ -9,21 +9,19 @@ use Illuminate\Support\Facades\Validator;
 
 class AreastrabajoController extends Controller
 {
-    public function getAll(Request $request)
+    public function get(Request $request)
     {
         try {
             if (empty($request->all())) {
-                $Areastrabajo = Areastrabajo::GetAll();
-                Log::debug("Success get all");
+                $Areastrabajo = Areastrabajo::all();
                 return response()->json([
                     'status' => 0,
                     'data' => [
                         'all' => $Areastrabajo,
-                        'count' => count($Areastrabajo),
+                        'count' => $Areastrabajo - count(),
                     ]]);
             }
-            $row = Areastrabajo::Get($request->get('id'));
-            Log::debug("Success get id:" . $request->get('id'));
+            $row = Areastrabajo::find($request->get('id'));
             return response()->json([
                 'status' => (empty($row) ? -1 : 0),
                 'data' => $row
@@ -40,28 +38,26 @@ class AreastrabajoController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'nombre' => 'required',
-                'estado' => 'required',
             ]);
             if ($validator->fails()) {
                 return response()->json([
                     'status' => -1,
                     'data' => $validator->errors()]);
             }
-            $id = Areastrabajo::Save($request->all());
-            if (empty($id)) {
-                return response()->json([
-                    'status' => -1,
-                    'data' => [
-                        'message' => 'Ocurrio un error al guardar los datos.'
-                    ]]);
+            $areas = new Areastrabajo;
+            if (!empty($request['id'])) {
+                $areas = Areastrabajo::find($request['id']);
             }
+            $areas->fill($request->all());
+            $areas->save();
             return response()->json([
                 'status' => 0,
-                'data' => Areastrabajo::Get($id)]);
+                'data' => $areas
+            ]);
         } catch (\Exception $error) {
             Log::error($error->getMessage());
             return response()->json([//'message' => $error->getMessage(),
-                'error' => $error,], 500);
+                'error' => $error], 500);
         }
     }
 
@@ -76,9 +72,12 @@ class AreastrabajoController extends Controller
                     'status' => -1,
                     'data' => $validator->errors()]);
             }
-            $Areastrabajo = Areastrabajo::Delete($request->all());
+            $areas = Areastrabajo::find($request['id'])->delete();
+            if ($areas) {
+                Areastrabajo::history($request['id']);
+            }
             return response()->json([
-                'status' => ($Areastrabajo ? 0 : -1),
+                'status' => ($areas ? 0 : -1),
                 'data' => []
             ]);
         } catch (\Exception $error) {

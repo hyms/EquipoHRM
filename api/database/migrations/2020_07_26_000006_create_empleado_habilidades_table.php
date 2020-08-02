@@ -40,6 +40,6 @@ class CreateEmpleadoHabilidadesTable extends Migration
     public function down()
     {
         Schema::dropIfExists('empleado_habilidades_history');
-        Schema::dropIfExists('usuario_habilidades');
+        Schema::dropIfExists('empleado_habilidades');
     }
 }

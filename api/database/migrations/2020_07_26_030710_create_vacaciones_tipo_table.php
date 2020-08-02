@@ -16,14 +16,14 @@ class CreateVacacionesTipoTable extends Migration
         Schema::create('vacaciones_tipo', function (Blueprint $table) {
             $table->id();
             $table->string('tipo');
-            $table->integer('tiempo_dias');
+            $table->decimal('tiempo_dias');
             $table->timestamps();
             $table->softDeletes();
         });
 
         Schema::create('vacaciones_tipo_history', function (Blueprint $table) {
             $table->string('tipo');
-            $table->integer('tiempo_dias');
+            $table->decimal('tiempo_dias');
             //control de historial
             $table->unsignedInteger('id');
             $table->timestamp('registerUtc');

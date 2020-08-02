@@ -2,31 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\TipoPermisoVacacion;
+use App\Models\VacacionesTipo;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
-class TipoVacacionController extends Controller
+class VacacionesTipoController extends Controller
 {
-    public function getAll(Request $request)
+    public function get(Request $request)
     {
         try {
             if (empty($request->all())) {
-                $TipoPermisoVacacion = TipoPermisoVacacion::GetAll();
-                Log::debug("Success get all");
+                $VacacionesTipo = VacacionesTipo::all();
                 return response()->json([
                     'status' => 0,
                     'data' => [
-                        'all' => $TipoPermisoVacacion,
-                        'count' => count($TipoPermisoVacacion),
+                        'all' => $VacacionesTipo,
+                        'count' => $VacacionesTipo->count(),
                     ]]);
             }
-            $row = TipoPermisoVacacion::Get($request->get('id'));
-            Log::debug("Success get id:" . $request->get('id'));
+            $rol = VacacionesTipo::find($request->get('id'));
             return response()->json([
-                'status' => (empty($row) ? -1 : 0),
-                'data' => $row
+                'status' => (empty($rol) ? -1 : 0),
+                'data' => $rol
             ]);
         } catch (\Exception $error) {
             Log::error($error->getMessage());
@@ -39,25 +37,23 @@ class TipoVacacionController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'nombre' => 'required',
-                'estado' => 'required',
+                'tipo' => 'required',
+                'tiempo_dias' => 'required|numeric',
             ]);
             if ($validator->fails()) {
                 return response()->json([
                     'status' => -1,
                     'data' => $validator->errors()]);
             }
-            $id = TipoPermisoVacacion::Save($request->all());
-            if (empty($id)) {
-                return response()->json([
-                    'status' => -1,
-                    'data' => [
-                        'message' => 'Ocurrio un error al guardar los datos.'
-                    ]]);
+            $VacacionesTipo = new VacacionesTipo;
+            if (!empty($request['id'])) {
+                $VacacionesTipo = VacacionesTipo::find($request['id']);
             }
+            $VacacionesTipo->fill($request->all());
+            $VacacionesTipo->save();
             return response()->json([
                 'status' => 0,
-                'data' => TipoPermisoVacacion::Get($id)]);
+                'data' => $VacacionesTipo]);
         } catch (\Exception $error) {
             Log::error($error->getMessage());
             return response()->json([//'message' => $error->getMessage(),
@@ -76,9 +72,12 @@ class TipoVacacionController extends Controller
                     'status' => -1,
                     'data' => $validator->errors()]);
             }
-            $TipoPermisoVacacion = TipoPermisoVacacion::Delete($request->all());
+            $VacacionesTipo = VacacionesTipo::find($request['id'])->delete();
+            if ($VacacionesTipo) {
+                VacacionesTipo::history($request['id']);
+            }
             return response()->json([
-                'status' => ($TipoPermisoVacacion ? 0 : -1),
+                'status' => ($VacacionesTipo ? 0 : -1),
                 'data' => []
             ]);
         } catch (\Exception $error) {

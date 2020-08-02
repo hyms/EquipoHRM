@@ -45,7 +45,7 @@ class CreateEmpleadoEducacionTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('usuario_educacion_history');
-        Schema::dropIfExists('usuario_educacion');
+        Schema::dropIfExists('empleado_educacion_history');
+        Schema::dropIfExists('empleado_educacion');
     }
 }

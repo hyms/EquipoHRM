@@ -10,21 +10,19 @@ use Illuminate\Support\Facades\Validator;
 
 class GerenciaController extends Controller
 {
-    public function getAll(Request $request)
+    public function get(Request $request)
     {
         try {
             if (empty($request->all())) {
-                $Gerencia = Gerencia::GetAll();
-                Log::debug("Success get all");
+                $Gerencia = Gerencia::all();
                 return response()->json([
                     'status' => 0,
                     'data' => [
                         'all' => $Gerencia,
-                        'count' => count($Gerencia),
+                        'count' => $Gerencia->count(),
                     ]]);
             }
-            $rol = Gerencia::Get($request->get('id'));
-            Log::debug("Success get id:" . $request->get('id'));
+            $rol = Gerencia::find($request->get('id'));
             return response()->json([
                 'status' => (empty($rol) ? -1 : 0),
                 'data' => $rol
@@ -39,30 +37,23 @@ class GerenciaController extends Controller
     public function post(Request $request)
     {
         try {
-            Log::debug("Init Post Gerencia user:" . Auth::guard('api')->user()->id);
-            Log::info("IP: " . $request->getClientIp());
-            Log::info('user-agent:' . $request->userAgent());
-
             $validator = Validator::make($request->all(), [
                 'nombre' => 'required|min:5',
-                'estado' => 'required',
             ]);
             if ($validator->fails()) {
                 return response()->json([
                     'status' => -1,
                     'data' => $validator->errors()]);
             }
-            $id = Gerencia::Save($request->all());
-            if (empty($id)) {
-                return response()->json([
-                    'status' => -1,
-                    'data' => [
-                        'message' => 'Ocurrio un error al guardar los datos.'
-                    ]]);
+            $gerencia = new Gerencia;
+            if (!empty($request['id'])) {
+                $gerencia = Gerencia::find($request['id']);
             }
+            $gerencia->fill($request->all());
+            $gerencia->save();
             return response()->json([
                 'status' => 0,
-                'data' => Gerencia::Get($id)]);
+                'data' => $gerencia]);
         } catch (\Exception $error) {
             Log::error($error->getMessage());
             return response()->json([//'message' => $error->getMessage(),
@@ -73,10 +64,6 @@ class GerenciaController extends Controller
     public function delete(Request $request)
     {
         try {
-            Log::debug("Init Delete Gerencia user:" . Auth::guard('api')->user()->id);
-            Log::info("IP: " . $request->getClientIp());
-            Log::info('user-agent:' . $request->userAgent());
-
             $validator = Validator::make($request->all(), [
                 'id' => 'required',
             ]);
@@ -85,9 +72,12 @@ class GerenciaController extends Controller
                     'status' => -1,
                     'data' => $validator->errors()]);
             }
-            $Gerencia = Gerencia::Delete($request->all());
+            $gerencia = Gerencia::find($request['id'])->delete();
+            if ($gerencia) {
+                Gerencia::history($request['id']);
+            }
             return response()->json([
-                'status' => ($Gerencia ? 0 : -1),
+                'status' => ($gerencia ? 0 : -1),
                 'data' => []
             ]);
         } catch (\Exception $error) {
