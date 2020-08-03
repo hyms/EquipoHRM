@@ -15,7 +15,7 @@
         </li>
         <router-link
                 v-else
-                :to="'/' + ksub"
+                :to="'/'+key+'/' + ksub"
                 tag="li"
                 exact
                 exact-active-class="selected"
@@ -38,38 +38,19 @@
     data() {
       return {
         links: {
-          personal: {
-            name: "Personal",
-            vacaciones: {
-              name: "Vacaciones",
-              icon: "os-icon os-icon-package"
-            }
-          },
           configuracion: {
             name: "Configuración",
             organizacion: {
-                name: "Organizacion",
-                icon: "os-icon os-icon-package"
+              name: "Organizacion",
+              icon: "os-icon os-icon-package"
             },
-              personal: {
-                  name: "Personal",
-                  icon: "os-icon os-icon-package"
-              },
-              diasfestivos: {
-                  name: "Dias Festivos",
-                  icon: "os-icon os-icon-package"
-              },
-              tiposvacaciones: {
-                  name: "Tipos de Vacaciones",
-                  icon: "os-icon os-icon-package"
-              }
+            usuarios: {
+              name: "Usuarios",
+              icon: "os-icon os-icon-package"
+            },
           },
           cuenta: {
             name: "Cuenta",
-            configuracion: {
-              name: "Configuración",
-              icon: "os-icon os-icon-layers"
-            },
             logout: "Salir"
           }
         }

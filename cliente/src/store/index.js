@@ -29,9 +29,11 @@ export default new Vuex.Store({
       return axios
         .post("api/login", credentials)
         .then(({ data }) => {
-          if (data["status"] === 0) commit("setUserData", data["data"]);
-          //console.log(data['data']);
-          else this.state.message = data["data"];
+          if (data["status"] === 0) {
+            commit("setUserData", data["data"]);
+          } else {
+            this.state.message = data["data"]['message'];
+          }
         })
         .catch(err => {
           console.log(err);

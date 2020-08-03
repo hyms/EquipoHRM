@@ -28,7 +28,7 @@
     export default {
         data() {
             return {
-                path: "/configuracion/",
+                path: "/configuracion/usuarios/",
                 links: {
                     usuarios: "Usuarios",
                     roles: "Roles"

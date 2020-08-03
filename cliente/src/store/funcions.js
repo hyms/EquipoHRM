@@ -36,6 +36,6 @@ let Helpers = {
     }
 }
 
-export default Helpers
+export default Helpers;
 
 

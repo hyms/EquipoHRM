@@ -1,3 +1,2 @@
-import $ from 'jquery';
+import $ from "jquery";
 window.jQuery = window.$ = $;
-

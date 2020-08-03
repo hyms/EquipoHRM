@@ -15,19 +15,22 @@ class AuthController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'email' => 'required',
+                'username' => 'required',
                 'password' => 'required',
             ]);
             if ($validator->fails()) {
-                Log::warning('Invalid data user:' . $request->email . ' fails:' . $validator->errors()->toJson());
+                Log::warning('Invalid data user:' . $request->username . ' fails:' . $validator->errors()->toJson());
                 return response()->json([
                     'status' => -1,
-                    'data' => $validator->errors()]);
+                    'data' => [
+                        'message' => 'Datos invalidos',
+                        'validation' => $validator->errors()
+                    ]]);
             }
 
-            $user = Usuarios::VerificarUsuario($request->email, $request->password);
+            $user = Usuarios::VerificarUsuario($request->username, $request->password);
             if (!$user) {
-                Log::warning('Invalid Dates user:' . $request->email);
+                Log::warning('Invalid Dates user:' . $request->username);
                 return response()->json([
                     'status' => -1,
                     'data' => [
@@ -37,7 +40,7 @@ class AuthController extends Controller
             $tokenResult = $user->createToken('authToken')->plainTextToken;
             $user->api_token = $tokenResult;
             $user->save();
-            Log::debug("Success login user:" . $request->email);
+            Log::debug("Success login user:" . $request->username);
             return response()->json([
                 'status' => 0,
                 'data' => [

@@ -14,8 +14,8 @@
 
 <script>
     import {mapGetters} from 'vuex'
-    import MainMenuMobile from "./components/MainMenuMobile";
-    import MainMenu from "./components/MainMenu";
+    import MainMenuMobile from "./components/menu/MainMenuMobile";
+    import MainMenu from "./components/menu/MainMenu";
 
     let myBody = null;
     export default {
@@ -47,13 +47,8 @@
                     myBody.classList.add('menu-position-side', 'menu-side-left', 'full-screen');
                     myBody.classList.add('auth-wrapper');
                 }
-
             },
-
-
         },
-
-
     }
 </script>
 

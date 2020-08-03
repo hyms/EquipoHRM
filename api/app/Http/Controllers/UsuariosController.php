@@ -45,7 +45,9 @@ class UsuariosController extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'status' => -1,
-                    'data' => $validator->errors()]);
+                    'data' => $validator->errors(),
+                    'message' => "Error al ingresar los datos"
+                ]);
             }
             $usuarios = new Usuarios;
             if (!empty($request['id'])) {

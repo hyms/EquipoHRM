@@ -16,17 +16,17 @@ class CreateConfigTables extends Migration
 
         Schema::create('unidadesNegocio', function (Blueprint $table) {
             $table->id();
-            $table->string("nombre",100);
-            $table->string("direccion",200);
-            $table->string("telefono",15);
-            $table->string("celular",15);
-            $table->string("fax",15)->nullable();
-            $table->string("ciudad",50);
-            $table->string("departamento",50);
-            $table->string("encargado",100);
-            $table->string("email",100)->nullable();
-            $table->string("web",100)->nullable();
-            $table->date("fecha_nacimiento");
+            $table->string("nombre", 100);
+            $table->string("direccion", 200);
+            $table->string("telefono", 15);
+            $table->string("celular", 15);
+            $table->string("fax", 15)->nullable();
+            $table->string("ciudad", 50);
+            $table->string("departamento", 50);
+            $table->string("encargado", 100);
+            $table->string("email", 100)->nullable();
+            $table->string("web", 100)->nullable();
+            $table->dateTime("fecha_nacimiento");
             $table->timestamps();
             $table->softDeletes();
         });
@@ -42,7 +42,7 @@ class CreateConfigTables extends Migration
             $table->string("encargado", 100);
             $table->string("email", 100)->nullable();
             $table->string("web", 100)->nullable();
-            $table->date("fecha_nacimiento");
+            $table->dateTime("fecha_nacimiento");
             //control de historial
             $table->unsignedInteger('id');
             $table->dateTime('registerUtc');

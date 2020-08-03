@@ -18,7 +18,7 @@ class AreastrabajoController extends Controller
                     'status' => 0,
                     'data' => [
                         'all' => $Areastrabajo,
-                        'count' => $Areastrabajo - count(),
+                        'count' => $Areastrabajo->count(),
                     ]]);
             }
             $row = Areastrabajo::find($request->get('id'));
@@ -42,7 +42,9 @@ class AreastrabajoController extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'status' => -1,
-                    'data' => $validator->errors()]);
+                    'data' => $validator->errors(),
+                    'message' => "Error al ingresar los datos"
+                ]);
             }
             $areas = new Areastrabajo;
             if (!empty($request['id'])) {

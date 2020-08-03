@@ -17,6 +17,7 @@
     "sass": "^1.26.10",
     "sass-loader": "^8.0.2",
     "vue": "^2.6.11",
+    "vue-form-generator": "^2.3.4",
     "vue-router": "^3.2.0",
     "vue-slide-toggle": "^1.1.1",
     "vuex": "^3.5.1"

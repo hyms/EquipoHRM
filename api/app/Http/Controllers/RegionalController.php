@@ -42,7 +42,9 @@ class RegionalController extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'status' => -1,
-                    'data' => $validator->errors()]);
+                    'data' => $validator->errors(),
+                    'message' => "Error al ingresar los datos"
+                ]);
             }
             $regional = new Regional;
             if (!empty($request['id'])) {
@@ -70,7 +72,8 @@ class RegionalController extends Controller
             if ($validator->fails()) {
                 return response()->json([
                     'status' => -1,
-                    'data' => $validator->errors()]);
+                    'data' => $validator->errors()
+                ]);
             }
             $regional = Regional::find($request['id'])->delete();
             return response()->json([

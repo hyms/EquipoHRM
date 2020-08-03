@@ -28,14 +28,13 @@
     export default {
         data() {
             return {
-                path: "/organizacion/",
+                path: "/configuracion/organizacion/",
                 links: {
                     regional: "Regional",
                     gerencia: "Gerencia",
-                    unidadesnegocio: "Unidades de negocio",
                     areastrabajo: "Areas de Trabajo",
-                    cargos: "Cargos",
-                    empresa: "Empresa"
+                    unidadesnegocio: "Unidades de negocio",
+                    cargos: "Cargos"
                 }
             };
         }

@@ -19,7 +19,7 @@ class CreateUsuariosTable extends Migration
             $table->string("password")->nullable();
             $table->string("email")->nullable();
             $table->string("alias", 20)->nullable();
-            $table->string('api_token');
+            $table->string('api_token')->nullable();
             $table->boolean("estado");
             $table->tinyInteger("rol");
             $table->date("ultimo_acceso")->nullable();
@@ -33,7 +33,7 @@ class CreateUsuariosTable extends Migration
             $table->string("password")->nullable();
             $table->string("email")->nullable();
             $table->string("alias", 20)->nullable();
-            $table->string('api_token');
+            $table->string('api_token')->nullable();
             $table->boolean("estado");
             $table->tinyInteger("rol");
             $table->date("ultimo_acceso")->nullable();
