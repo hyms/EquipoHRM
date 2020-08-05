@@ -38,17 +38,32 @@
     data() {
       return {
         links: {
-          configuracion: {
-            name: "Configuración",
-            organizacion: {
-              name: "Organizacion",
-              icon: "os-icon os-icon-package"
+            vacaciones: {
+                name: "Vacaciones/Permisos",
+                tipovacacion: {
+                    name: "Tipos",
+                    icon: "os-icon os-icon-package"
+                },
+                diasfestivos: {
+                    name: "Dias Festivos",
+                    icon: "os-icon os-icon-package"
+                },
             },
-            usuarios: {
-              name: "Usuarios",
-              icon: "os-icon os-icon-package"
+            configuracion: {
+                name: "Configuración",
+                personal: {
+                    name: "Personal",
+                    icon: "os-icon os-icon-package"
+                },
+                organizacion: {
+                    name: "Organizacion",
+                    icon: "os-icon os-icon-package"
+                },
+                usuarios: {
+                    name: "Usuarios",
+                    icon: "os-icon os-icon-package"
+                },
             },
-          },
           cuenta: {
             name: "Cuenta",
             logout: "Salir"

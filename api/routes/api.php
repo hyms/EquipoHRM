@@ -66,10 +66,10 @@ Route::group(['prefix' => 'personal'], function () {
     Route::get('/', 'PersonalController@get');
     Route::post('/', 'PersonalController@post');
     Route::delete('/', 'PersonalController@delete');
+    Route::get('/carrera', 'PersonalEmpresaController@getData');
     Route::group(['prefix' => 'empresa'], function () {
         Route::get('/', 'PersonalEmpresaController@get');
         Route::post('/', 'PersonalEmpresaController@post');
-        Route::delete('/', 'PersonalEmpresaController@delete');
     });
 });
 //diasFestivos

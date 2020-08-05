@@ -8,6 +8,7 @@ import Home from "../views/Home";
 //configuracion
 import ConfiguracionUsuarios from "./configuracionUsuarios";
 import ConfiguracionOrganizacion from "./configuracionOrganizacion";
+import configuracionPersonal from "./configuracionPersonal";
 
 Vue.use(VueRouter);
 
@@ -33,6 +34,7 @@ const routes = [
   },
   ...ConfiguracionUsuarios,
   ...ConfiguracionOrganizacion,
+    ...configuracionPersonal
 ];
 
 const router = new VueRouter({

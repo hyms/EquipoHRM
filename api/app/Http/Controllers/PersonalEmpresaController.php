@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Areastrabajo;
+use App\Models\Cargo;
+use App\Models\Gerencia;
 use App\Models\PersonalEmpresa;
+use App\Models\Regional;
+use App\Models\Unidadesnegocio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -52,6 +57,26 @@ class PersonalEmpresaController extends Controller
             return response()->json([
                 'status' => 0,
                 'data' => $Personal
+            ]);
+        } catch (\Exception $error) {
+            Log::error($error->getMessage());
+            return response()->json([//'message' => $error->getMessage(),
+                'error' => $error,], 500);
+        }
+    }
+
+    public function getData()
+    {
+        try {
+            $data = [];
+            $data['cargo'] = Cargo::all('id', 'nombre as name');
+            $data['area_trabajo'] = Areastrabajo::all('id', 'nombre as name');
+            $data['unidad_negocio'] = Unidadesnegocio::all('id', 'nombre as name');
+            $data['regional'] = Regional::all('id', 'nombre as name');
+            $data['gerencia'] = Gerencia::all('id', 'nombre as name');
+            return response()->json([
+                'status' => 0,
+                'data' => $data
             ]);
         } catch (\Exception $error) {
             Log::error($error->getMessage());

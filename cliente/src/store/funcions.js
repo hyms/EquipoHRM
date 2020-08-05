@@ -30,7 +30,12 @@ Vue.filter("formatCivilState", function (value) {
 
 let Helpers = {
     estadoCivil(id = null) {
-        const estado = ["soltero/a", "casado/a", "divorciado/a", "viudo/a"];
+        const estado = ["Soltero/a", "Casado/a", "Divorciado/a", "Viudo/a"];
+        if (id) return estado[id];
+        return estado;
+    },
+    tipoEmpleado(id = null) {
+        const estado = ["Obrero/a", "Oficinista"];
         if (id) return estado[id];
         return estado;
     }

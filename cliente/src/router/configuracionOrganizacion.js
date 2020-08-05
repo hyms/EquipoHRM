@@ -5,6 +5,7 @@ import Regional from "../views/Configuracion/Organizacion/Regional";
 import Gerencia from "../views/Configuracion/Organizacion/Gerencia";
 import Unidadesnegocio from "../views/Configuracion/Organizacion/Unidadesnegocio";
 import Areastrabajo from "../views/Configuracion/Organizacion/Areastrabajo";
+import Cargos from "../views/Configuracion/Organizacion/Cargos";
 
 export default [
     {
@@ -42,6 +43,13 @@ export default [
                     auth: true
                 },
                 component: Areastrabajo
+            },
+            {
+                path: "cargos",
+                meta: {
+                    auth: true
+                },
+                component: Cargos
             },
 
         ]

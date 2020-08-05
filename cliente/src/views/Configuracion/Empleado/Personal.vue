@@ -8,7 +8,7 @@
                         <div class="element-wrapper">
                             <div class="element-actions">
                                 <router-link
-                                        to="/personal/detalle"
+                                        :to="{name:'detalle'}"
                                         class="btn btn-primary"
                                 >
                                     Nuevo
@@ -27,7 +27,14 @@
                                             class="table table-padded"
                                             show-empty
                                             empty-text="Sin datos"
+                                            :busy="isBusy"
                                     >
+                                        <template v-slot:table-busy>
+                                            <div class="text-center my-2">
+                                                <b-spinner class="align-middle"></b-spinner>
+                                                <strong>Cargando...</strong>
+                                            </div>
+                                        </template>
                                         <template v-slot:cell(created_at)="data">
                                             <span>{{ data.value | formatDate }}</span>
                                         </template>
@@ -36,7 +43,7 @@
                                         </template>
                                         <template v-slot:cell(Acciones)="row">
                                             <div class="row-actions">
-                                                <router-link :to="{path:'/personal/detalle',query: {id:row.item.id}}"
+                                                <router-link :to="{name:'detalle',query: {id:row.item.id}}"
                                                 ><i class="os-icon os-icon-ui-44"></i
                                                 ></router-link>
                                                 <a href="#" class="text-danger" @click="del(row.item.id)"
@@ -64,8 +71,7 @@
             return {
                 tituloPagina: "Personal",
                 path: "/api/personal",
-                nameModal: "modalPersonal",
-                nameModalCarrera: "modalCarrera",
+                isBusy: false,
                 columnas: [
                     {
                         key: "nombres",
@@ -79,30 +85,19 @@
                         key: "ci",
                         sortable: true
                     },
-                    {
-                        key: "telefono_propio",
-                    },
-                    {
-                        key: "telefono_referencia",
-                    },
-                    {
-                        key: "estado",
-                        sortable: true
-                    },
+                    "telefono_propio",
+                    "telefono_referencia",
                     "Acciones"
                 ],
                 tables: [],
-                idForm: null
             };
         },
         created() {
             this.getAll();
         },
         methods: {
-            setIdForm(id = null) {
-                this.idForm = id;
-            },
             async getAll() {
+                this.isBusy = true;
                 await axios
                     .get(this.path)
                     .then(({data}) => {
@@ -113,7 +108,7 @@
                     .catch(err => {
                         console.log(err);
                     });
-                return true;
+                this.isBusy = false;
             },
 
             async del(id) {

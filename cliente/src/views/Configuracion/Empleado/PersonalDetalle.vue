@@ -7,7 +7,7 @@
                     <ul class="nav nav-tabs upper">
                         <li class="nav-item" v-for="(link,key) in links" :key="key">
                             <router-link
-                                    :to="{path:'/personal/detalle/'+key,query:$route.query}"
+                                    :to="{path:key,query:$route.query}"
                                     exact
                                     exact-active-class="active"
                                     class="nav-link"
