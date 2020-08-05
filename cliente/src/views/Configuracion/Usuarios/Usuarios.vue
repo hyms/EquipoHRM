@@ -182,7 +182,8 @@
           label: "Rol",
           model: "rol",
           required: true,
-          values: this.roles
+          values: this.roles,
+          selectOptions: {noneSelectedText: "Selecciona un Rol"}
         }
       ];
       this.message_error = false;
@@ -200,7 +201,6 @@
                 }
               })
               .catch();
-      return this.roles;
     },
     handleOk(bvModalEvt) {
       // Prevent modal from closing
@@ -232,7 +232,7 @@
                 })
                 .then(({data}) => {
                   if (data["status"] === 0) {
-                    this.getAll();
+                    this.getAllData();
                   }
                 })
           .catch(err => {

@@ -22,6 +22,7 @@ class CreateEmpleadoEmpresaTables extends Migration
             $table->unsignedInteger("area_trabajo");
             $table->unsignedInteger("regional");
             $table->unsignedInteger("gerencia");
+            $table->string("tipo_empleado");
             $table->timestamps();
             $table->softDeletes();
         });
@@ -32,6 +33,7 @@ class CreateEmpleadoEmpresaTables extends Migration
             $table->unsignedInteger("area_trabajo");
             $table->unsignedInteger("regional");
             $table->unsignedInteger("gerencia");
+            $table->string("tipo_empleado");
             //control de historial
             $table->unsignedInteger('id');
             $table->dateTime('registerUtc');

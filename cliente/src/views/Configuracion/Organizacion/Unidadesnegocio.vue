@@ -258,7 +258,7 @@
                   })
                   .then(({data}) => {
                     if (data["status"] === 0) {
-                      this.getAll();
+                      this.getAllData();
                     }
                   })
                   .catch(err => {

@@ -15,10 +15,12 @@ class Cargo extends Model
     public static function history($id)
     {
         if (!empty($id)) {
-            $data = self::select('id', 'nombre', 'detalle', 'cargo_padre')
-                ->where([
-                    ['id', $id],
-                ])->first();
+            $data = self::select(
+                'id', 'nombre', 'detalle', 'cargo_padre'
+            )
+                ->withTrashed()
+                ->find($id)
+                ->toArray();
             History::save(self::$tableHistory, $data);
         }
     }
