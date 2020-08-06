@@ -25,7 +25,7 @@ class DiasFestivos extends Model
     {
         if (!empty($id)) {
             $data = self::select(
-                'id', 'name', 'fecha'
+                'id', 'nombre', 'fecha'
             )
                 ->withTrashed()
                 ->find($id)

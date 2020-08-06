@@ -9,6 +9,7 @@ import Home from "../views/Home";
 import ConfiguracionUsuarios from "./configuracionUsuarios";
 import ConfiguracionOrganizacion from "./configuracionOrganizacion";
 import configuracionPersonal from "./configuracionPersonal";
+import Vacaciones from "./Vacaciones";
 
 Vue.use(VueRouter);
 
@@ -24,17 +25,18 @@ const routes = [
     component: Error
   },
   //auth
-  {
-    path: "/",
-    name: "Home",
-    meta: {
-      auth: true
+    {
+        path: "/",
+        name: "Home",
+        meta: {
+            auth: true
+        },
+        component: Home
     },
-    component: Home
-  },
-  ...ConfiguracionUsuarios,
-  ...ConfiguracionOrganizacion,
-    ...configuracionPersonal
+    ...ConfiguracionUsuarios,
+    ...ConfiguracionOrganizacion,
+    ...configuracionPersonal,
+    ...Vacaciones
 ];
 
 const router = new VueRouter({

@@ -37,12 +37,14 @@ class DiasFestivosController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'fecha' => 'required|unique:dias_festivos',
+                'fecha' => 'required',
             ]);
             if ($validator->fails()) {
                 return response()->json([
                     'status' => -1,
-                    'data' => $validator->errors()]);
+                    'data' => $validator->errors(),
+                    'message' => 'Datos Incorrectos'
+                ]);
             }
             $DiasFestivos = new DiasFestivos;
             if (!empty($request['id'])) {
