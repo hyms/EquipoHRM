@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Personal;
+use App\Usuarios;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -79,6 +80,42 @@ class PersonalController extends Controller
             return response()->json([
                 'status' => ($Personal ? 0 : -1),
                 'data' => []
+            ]);
+        } catch (\Exception $error) {
+            Log::error($error->getMessage());
+            return response()->json([//'message' => $error->getMessage(),
+                'error' => $error,], 500);
+        }
+    }
+
+    public function postUsuario(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'empleado' => 'required',
+            ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => -1,
+                    'data' => $validator->errors()]);
+            }
+            $Usuarios = new Usuarios();
+            $Personal = Personal::find($request['empleado']);
+            if (!empty($request['id'])) {
+                $Usuarios = Usuarios::find($request['id']);
+            }
+            unset($request['empleado']);
+            $Usuarios->fill($request->all());
+            $Usuarios->save();
+            if (empty($request['id'])) {
+                $Personal->id_usuario = $Usuarios->id;
+                $Personal->save();
+            }
+            //$Usuarios = $Usuarios->toArray();
+            $Usuarios['empleado'] = $Personal->id;
+            return response()->json([
+                'status' => 0,
+                'data' => $Usuarios
             ]);
         } catch (\Exception $error) {
             Log::error($error->getMessage());

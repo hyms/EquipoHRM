@@ -5,16 +5,16 @@
             <div class="os-tabs-w mx-4">
                 <div class="os-tabs-controls">
                     <ul class="nav nav-tabs upper">
-                        <li class="nav-item" v-for="(link,key) in links" :key="key">
+                        <li class="nav-item" v-for="(link, key) in getmenu()" :key="key">
                             <router-link
-                                    :to="{path:key,query:$route.query}"
+                                    :to="{ path: key, query: $route.query }"
                                     exact
                                     exact-active-class="active"
                                     class="nav-link"
                                     data-toggle="tab"
                                     aria-expanded="false"
                             >
-                                {{link}}
+                                {{ link }}
                             </router-link>
                         </li>
                     </ul>
@@ -30,14 +30,21 @@
 <script>
     export default {
         data() {
-            return {
-                links: {
-                    detalle: 'Detalle',
-                    carrera: 'Funcion Laboral',
-                    cuenta: 'Creacion de Cuenta',
-                    historial: 'Cargos Anteriores',
+            return {};
+        },
+        methods: {
+            getmenu() {
+                if (this.$route.query.id) {
+                    return {
+                        detalle: "Detalle",
+                        carrera: "Funcion Laboral",
+                        cuenta: "Creacion de Cuenta"
+                    };
                 }
+                return {
+                    detalle: "Detalle"
+                };
             }
         }
-    }
+    };
 </script>

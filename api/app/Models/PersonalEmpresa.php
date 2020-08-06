@@ -25,7 +25,7 @@ class PersonalEmpresa extends Model
     {
         if (!empty($id)) {
             $data = self::select(
-                'id', 'empleado', 'cargo', 'unidad_negocio', 'area_trabajo', 'regional', 'gerencia'
+                'id', 'empleado', 'cargo', 'unidad_negocio', 'area_trabajo', 'regional', 'gerencia', 'tipo_empleado'
             )
                 ->withTrashed()
                 ->find($id)

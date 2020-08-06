@@ -7,10 +7,7 @@
                         <!--START - Recent Ticket Comments-->
                         <div class="element-wrapper">
                             <div class="element-actions">
-                                <router-link
-                                        :to="{name:'detalle'}"
-                                        class="btn btn-primary"
-                                >
+                                <router-link :to="{ name: 'detalle' }" class="btn btn-primary">
                                     Nuevo
                                 </router-link>
                             </div>
@@ -43,10 +40,14 @@
                                         </template>
                                         <template v-slot:cell(Acciones)="row">
                                             <div class="row-actions">
-                                                <router-link :to="{name:'detalle',query: {id:row.item.id}}"
+                                                <router-link
+                                                        :to="{ name: 'detalle', query: { id: row.item.id } }"
                                                 ><i class="os-icon os-icon-ui-44"></i
                                                 ></router-link>
-                                                <a href="#" class="text-danger" @click="del(row.item.id)"
+                                                <a
+                                                        href="#"
+                                                        class="text-danger"
+                                                        @click="del(row.item.id)"
                                                 ><i class="os-icon os-icon-ui-15"></i
                                                 ></a>
                                             </div>
@@ -89,7 +90,7 @@
                     "telefono_referencia",
                     "Acciones"
                 ],
-                tables: [],
+                tables: []
             };
         },
         created() {

@@ -15,9 +15,21 @@
                     ></vue-form-generator>
                     <div class="row">
                         <div class="col text-center">
-                            <b-button variant="primary" v-if="disabled" @click="changeDisabled(false)">Editar</b-button>
-                            <b-button variant="danger" @click="resetForm()" v-if="!disabled">Cancelar</b-button>
-                            <b-button variant="primary" v-if="!disabled" @click="submitFrom()">Guardar</b-button>
+                            <b-button
+                                    variant="primary"
+                                    v-if="disabled"
+                                    @click="changeDisabled(false)"
+                            >Editar
+                            </b-button
+                            >
+                            <b-button variant="danger" @click="resetForm()" v-if="!disabled"
+                            >Cancelar
+                            </b-button
+                            >
+                            <b-button variant="primary" v-if="!disabled" @click="submitFrom()"
+                            >Guardar
+                            </b-button
+                            >
                         </div>
                     </div>
                 </form>
@@ -139,7 +151,7 @@
                 },
                 message_error: false,
                 disabled: false,
-                id: null,
+                id: null
             };
         },
         methods: {
@@ -156,7 +168,7 @@
                 this.message_error = false;
                 this.validator = [];
                 if (this.$route.query.id) {
-                    this.model['id'] = this.$route.query.id;
+                    this.model["id"] = this.$route.query.id;
                     await this.loadForm(this.$route.query.id);
                     this.changeDisabled(true);
                 } else {
@@ -165,9 +177,10 @@
             },
             async loadForm(id) {
                 // Push the name to submitted names
-                await axios.get(this.path, {
-                    params: {id: id}
-                })
+                await axios
+                    .get(this.path, {
+                        params: {id: id}
+                    })
                     .then(({data}) => {
                         if (data["status"] === 0) {
                             Object.entries(data["data"]).forEach(([key, value]) => {
@@ -183,17 +196,25 @@
                     .catch();
             },
             submitFrom() {
-                this.model['fecha_nacimiento'] = moment(this.model['fecha_nacimiento']).format("YYYY-MM-DD");
-                this.model['fecha_ingreso'] = moment(this.model['fecha_ingreso']).format("YYYY-MM-DD");
+                this.model["fecha_nacimiento"] = moment(
+                    this.model["fecha_nacimiento"]
+                ).format("YYYY-MM-DD");
+                this.model["fecha_ingreso"] = moment(this.model["fecha_ingreso"]).format(
+                    "YYYY-MM-DD"
+                );
 
-                axios.post(this.path, this.model)
+                axios
+                    .post(this.path, this.model)
                     .then(({data}) => {
                         if (data["status"] === 0) {
                             // Hide the modal manually
-                            this.$route.query['id'] = data['data']['id'];
-                            this.loadForm();
+                            this.$router.push({
+                                name: "detalle",
+                                query: {id: data["data"]["id"]}
+                            });
+                            this.resetForm();
                         } else {
-                            this.m_error = data["data"];
+                            this.message_error = data["data"];
                         }
                     })
                     .catch();

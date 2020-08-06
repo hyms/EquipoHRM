@@ -25,7 +25,10 @@ class PersonalEmpresaController extends Controller
                     'status' => -1,
                     'data' => $validator->errors()]);
             }
-            $personal = PersonalEmpresa::firstWhere('empleado', $request->get('id'));
+            $personal = PersonalEmpresa::where('empleado', $request->get('id'));
+            if ($personal->count() > 0) {
+                $personal = $personal->orderBy('updated_at', 'desc')->first()->toArray();
+            }
             return response()->json([
                 'status' => (empty($personal) ? -1 : 0),
                 'data' => $personal

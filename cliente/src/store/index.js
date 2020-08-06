@@ -5,48 +5,48 @@ import axios from "axios";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: {
-    user: null,
-    message: null
-  },
-
-  mutations: {
-    setUserData(state, userData) {
-      state.user = userData;
-      localStorage.setItem("user", JSON.stringify(userData));
-      axios.defaults.headers.common.Authorization = `Bearer ${userData.token}`;
+    state: {
+        user: null,
+        message: null
     },
 
-    clearUserData() {
-      localStorage.removeItem("user");
-      location.reload();
-    }
-  },
+    mutations: {
+        setUserData(state, userData) {
+            state.user = userData;
+            localStorage.setItem("user", JSON.stringify(userData));
+            axios.defaults.headers.common.Authorization = `Bearer ${userData.token}`;
+        },
 
-  actions: {
-    async login({ commit }, credentials) {
-      await axios.get("/sanctum/csrf-cookie");
-      return axios
-        .post("api/login", credentials)
-        .then(({ data }) => {
-          if (data["status"] === 0) {
-            commit("setUserData", data["data"]);
-          } else {
-            this.state.message = data["data"]['message'];
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
+        clearUserData() {
+            localStorage.removeItem("user");
+            location.reload();
+        }
     },
 
-    async logout({ commit }) {
-      await axios.post("api/logout");
-      commit("clearUserData");
-    }
-  },
+    actions: {
+        async login({commit}, credentials) {
+            await axios.get("/sanctum/csrf-cookie");
+            return axios
+                .post("api/login", credentials)
+                .then(({data}) => {
+                    if (data["status"] === 0) {
+                        commit("setUserData", data["data"]);
+                    } else {
+                        this.state.message = data["data"]['message'];
+                    }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        },
 
-  getters: {
-    isLogged: state => !!state.user
-  }
+        async logout({commit}) {
+            await axios.post("api/logout");
+            commit("clearUserData");
+        }
+    },
+
+    getters: {
+        isLogged: state => !!state.user
+    }
 });
