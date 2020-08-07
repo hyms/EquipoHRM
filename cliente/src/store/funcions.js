@@ -12,6 +12,11 @@ Vue.filter("formatDateOnly", function (value) {
     }
 });
 
+Vue.filter("formatStateLeave", function (value) {
+    const estados = ['pendiente', 'aprovado', 'iniciado', 'concluido'];
+    return estados[value]
+});
+
 Vue.filter("formatState", function (value) {
     return value === 1 ? "Activo" : "Inactivo";
 });

@@ -15,18 +15,18 @@
         </li>
         <router-link
                 v-else
-                :to="'/'+key+'/' + ksub"
+                :to="'/' + key + '/' + ksub"
                 tag="li"
                 exact
                 exact-active-class="selected"
                 :key="key + ksub"
         >
-          <a>
-            <div class="icon-w">
-              <div :class="sublink.icon"></div>
-            </div>
-            <span>{{ sublink.name }}</span>
-          </a>
+            <a>
+                <div class="icon-w">
+                    <div :class="sublink.icon"></div>
+                </div>
+                <span>{{ sublink.name }}</span>
+            </a>
         </router-link>
       </template>
     </template>
@@ -34,47 +34,51 @@
 </template>
 
 <script>
-  export default {
-    data() {
-      return {
-        links: {
-            vacaciones: {
-                name: "Vacaciones/Permisos",
-                tipovacacion: {
-                    name: "Tipos",
-                    icon: "os-icon os-icon-package"
-                },
-                diasfestivos: {
-                    name: "Dias Festivos",
-                    icon: "os-icon os-icon-package"
-                },
-            },
-            configuracion: {
-                name: "Configuración",
-                personal: {
-                    name: "Personal",
-                    icon: "os-icon os-icon-package"
-                },
-                organizacion: {
-                    name: "Organizacion",
-                    icon: "os-icon os-icon-package"
-                },
-                usuarios: {
-                    name: "Usuarios",
-                    icon: "os-icon os-icon-package"
-                },
-            },
-          cuenta: {
-            name: "Cuenta",
-            logout: "Salir"
-          }
+    export default {
+        data() {
+            return {
+                links: {
+                    vacaciones: {
+                        name: "Vacaciones/Permisos",
+                        vacaciones: {
+                            name: "Lista",
+                            icon: "os-icon os-icon-package"
+                        },
+                        tipovacacion: {
+                            name: "Tipos",
+                            icon: "os-icon os-icon-package"
+                        },
+                        diasfestivos: {
+                            name: "Dias Festivos",
+                            icon: "os-icon os-icon-package"
+                        }
+                    },
+                    configuracion: {
+                        name: "Configuración",
+                        personal: {
+                            name: "Personal",
+                            icon: "os-icon os-icon-package"
+                        },
+                        organizacion: {
+                            name: "Organizacion",
+                            icon: "os-icon os-icon-package"
+                        },
+                        usuarios: {
+                            name: "Usuarios",
+                            icon: "os-icon os-icon-package"
+                        }
+                    },
+                    cuenta: {
+                        name: "Cuenta",
+                        logout: "Salir"
+                    }
+                }
+            };
+        },
+        methods: {
+            logout() {
+                this.$store.dispatch("logout");
+            }
         }
-      };
-    },
-    methods: {
-      logout() {
-        this.$store.dispatch("logout");
-      }
-    }
-  };
+    };
 </script>

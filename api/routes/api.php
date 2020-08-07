@@ -89,9 +89,8 @@ Route::group(['prefix' => 'vacaciones'], function () {
         Route::post('/', 'VacacionesTipoController@post');
         Route::delete('/', 'VacacionesTipoController@delete');
     });
-    Route::group(['prefix' => 'estado'], function () {
-        Route::get('/', 'PersonalVacacionesEstadoController@get');
-        Route::post('/', 'PersonalVacacionesEstadoController@post');
+    Route::group(['prefix' => 'empleado'], function () {
+        Route::get('/', 'PersonalVacacionesController@empleado');
     });
 });
 

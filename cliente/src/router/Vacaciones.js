@@ -3,6 +3,7 @@
 
 import TipoVacacion from "../views/Vacaciones/TipoVacacion";
 import DiasFestivos from "../views/Vacaciones/DiasFestivos";
+import Vacaciones from "../views/Vacaciones/Vacaciones";
 
 export default [
     {
@@ -18,5 +19,12 @@ export default [
             auth: true
         },
         component: DiasFestivos,
+    },
+    {
+        path: "/vacaciones/vacaciones/",
+        meta: {
+            auth: true
+        },
+        component: Vacaciones,
     }
 ]
