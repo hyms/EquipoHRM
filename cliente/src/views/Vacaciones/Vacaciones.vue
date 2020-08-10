@@ -17,7 +17,7 @@
                         id="modal"
                         :title="formTitle + ' Vacacion/Permiso'"
                         @hidden="resetForm"
-                        @ok="handleOk"
+                        @ok="submitForm"
                         okTitle="Guardar"
                         cancelTitle="Cancelar"
                         size="lg"
@@ -67,7 +67,9 @@
                       <span>{{ data.value | formatStateLeave }}</span>
                     </template>
                     <template v-slot:cell(empleado)="row">
-                      <span>{{row.item.nombres + " " + row.item.apellidos }}</span>
+                      <span>{{
+                        row.item.nombres + " " + row.item.apellidos
+                      }}</span>
                     </template>
                     <template v-slot:cell(Acciones)="row">
                       <div class="row-actions">
@@ -125,7 +127,8 @@
           tipo: "",
           numero_dias: "",
           observaciones: "",
-          estado: ""
+          estado: "",
+          sabado: ""
         },
         schema: {
           groups: [
@@ -145,22 +148,27 @@
                       classes: "btn btn-primary",
                       label: "Buscar",
                       onclick: async function (model) {
+                        this.message_error = "";
                         await axios
                                 .get("api/vacaciones/empleado", {
                                   params: {ci: model.ci}
                                 })
                                 .then(({data}) => {
                                   if (data["status"] === 0) {
-                                    Object.entries(data["data"]).forEach(
-                                            ([key, value]) => {
-                                              this.model["empleado"] = "";
-                                              if (key === "fecha_ingreso") {
-                                                value = moment(value).format("DD/MM/YYYY");
+                                    if (Object.keys(data["data"]).length > 0) {
+                                      Object.entries(data["data"]).forEach(
+                                              ([key, value]) => {
+                                                this.model["empleado"] = "";
+                                                if (key === "fecha_ingreso") {
+                                                  value = moment(value).format("DD/MM/YYYY");
+                                                }
+                                                if (this.model[key] !== undefined)
+                                                  this.model[key] = value;
                                               }
-                                              if (this.model[key] !== undefined)
-                                                this.model[key] = value;
-                                            }
-                                    );
+                                      );
+                                    } else {
+                                      this.message_error = "no se encontraron resultados";
+                                    }
                                   }
                                 })
                                 .catch(err => {
@@ -249,24 +257,39 @@
                 {
                   type: "input",
                   inputType: "text",
-                  label: "Tipo Salida",
-                  model: "tipo",
-                  disabled: true,
-                  attributes: {
-                    placeholder: "Tipo Salida"
-                  },
-                  styleClasses: "col-sm-6 col-lg-3"
-                },
-                {
-                  type: "input",
-                  inputType: "text",
                   label: "Numero de Dias",
                   model: "numero_dias",
                   disabled: true,
                   attributes: {
                     placeholder: "Numero de Dias"
                   },
-                  styleClasses: "col-sm-6 col-lg-3"
+                  styleClasses: "col-sm-6 col-lg-3",
+                  buttons: [
+                    {
+                      classes: "btn btn-primary",
+                      label: "Cargar",
+                      onclick: async function (model) {
+                        model['fecha_desde'] = moment(model['fecha_desde']).format("YYYY-MM-DD");
+                        model['fecha_hasta'] = moment(model['fecha_hasta']).format("YYYY-MM-DD");
+                        await axios
+                                .get("api/vacaciones/days", {
+                                  params: {
+                                    fecha_desde: model.fecha_desde,
+                                    fecha_hasta: model.fecha_hasta,
+                                    sabado: model.sabado,
+                                  }
+                                })
+                                .then(({data}) => {
+                                  if (data["status"] === 0) {
+                                    this.model.numero_dias = data['data'];
+                                  }
+                                })
+                                .catch(err => {
+                                  console.log(err);
+                                });
+                      }
+                    }
+                  ]
                 },
                 {
                   type: "textArea",
@@ -300,21 +323,6 @@
             }
           });
         }
-      },
-      loadPersonal(id) {
-        axios
-                .get("api/vacaciones/empleado", {params: {ci: id}})
-                .then(({data}) => {
-                  if (data["status"] === 0) {
-                    Object.entries(data["data"]).forEach(([key, value]) => {
-                      this.model["empleado"] = "";
-                      if (this.model[key] !== undefined) this.model[key] = value;
-                    });
-                  }
-                })
-                .catch(err => {
-                  console.log(err);
-                });
       },
       //obtener todos
       async getAllData() {
@@ -358,7 +366,6 @@
                 })
                 .catch();
       },
-
       //eliminar
       async remove(id) {
         if (await this.showMsgConfirm()) {

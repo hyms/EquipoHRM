@@ -43,7 +43,8 @@ let Helpers = {
         const estado = ["Obrero/a", "Oficinista"];
         if (id) return estado[id];
         return estado;
-    }
+    },
+
 }
 
 export default Helpers;

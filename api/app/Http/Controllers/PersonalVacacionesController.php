@@ -119,10 +119,12 @@ class PersonalVacacionesController extends Controller
                 $config = days_leave_year();
                 $diff_time = get_date_employe($empleado->fecha_ingreso);
                 $days = 0;
-                foreach ($config as $item) {
-                    if ($diff_time['y'] >= $item['min'] && $diff_time['y'] <= $item['max']) {
-                        $days = $item['days'];
-                        break;
+                for ($i = 1; $i <= $diff_time['y']; $i++) {
+                    foreach ($config as $item) {
+                        if ($i >= $item['min'] && $i <= $item['max']) {
+                            $days += $item['days'];
+                            break;
+                        }
                     }
                 }
 
@@ -133,13 +135,51 @@ class PersonalVacacionesController extends Controller
                     "unidad" => $unidad->nombre,
                     "fecha_ingreso" => $empleado->fecha_ingreso,
                     "disponible" => $days,
-                    "ano_cumplido" => $diff_time['y']
+                    "ano_cumplido" => $diff_time['y'],
+                    "sabado" => type_employe($empleado_empresa->tipo_empleado),
                 );
             }
 
             return response()->json([
                 'status' => ($empleado ? 0 : -1),
                 'data' => $result
+            ]);
+        } catch (\Exception $error) {
+            Log::error($error->getMessage());
+            return response()->json([//'message' => $error->getMessage(),
+                'error' => $error,], 500);
+        }
+    }
+
+    public function getDaysWork(Request $request)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'fecha_desde' => 'required',
+                'fecha_hasta' => 'required',
+                'sabado' => 'required',
+            ]);
+            if ($validator->fails()) {
+                return response()->json([
+                    'status' => -1,
+                    'data' => $validator->errors(),
+                    'message' => 'datos incompletos'
+                ]);
+            }
+            $holidays = DB::table('dias_festivos')
+                ->select('fecha')
+                ->whereNull('deleted_at')
+                ->get();
+            $daysh = [];
+            foreach ($holidays as $day) {
+                array_push($daysh, $day->fecha);
+            }
+            $days = getWorkdays($request['fecha_desde'], $request['fecha_hasta'], true, $daysh, $request['sabado']);
+            return response()->json([
+                'status' => 0,
+                'data' => [
+                    $days,
+                ]
             ]);
         } catch (\Exception $error) {
             Log::error($error->getMessage());

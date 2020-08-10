@@ -56,19 +56,26 @@ function days_leave_year()
     ];
 }
 
-function type_employe()
+function type_employe($type = null)
 {
     $day_6 = true;
+    $type_employe = [];
     if ($day_6) {
-        return $type_employe = [
+        $type_employe = [
             'Obrero/a' => ['day_6' => 1],
             'Oficinista' => ['day_6' => 0.5]
         ];
+    } else {
+        $type_employe = [
+            'Obrero/a' => ['day_6' => 0],
+            'Oficinista' => ['day_6' => 0]
+        ];
     }
-    return [
-        'Obrero/a' => ['day_6' => 0],
-        'Oficinista' => ['day_6' => 0]
-    ];
+    if (empty($type)) {
+        return $type_employe;
+    } else {
+        return $type_employe[$type];
+    }
 }
 
 
@@ -87,4 +94,49 @@ function get_date_employe($date1)
     return ['y' => $years, 'm' => $months, 'd' => $days];
 }
 
+function getWorkdays($date1, $date2, $workSat = FALSE, $patron = NULL, $daySat = 0)
+{
+    if (!defined('SATURDAY')) define('SATURDAY', 6);
+    if (!defined('SUNDAY')) define('SUNDAY', 0);
 
+    // Array of all public festivities
+    $publicHolidays = array('2020-08-07', '2020-05-01', '2020-12-25', '2020-12-26');
+    // The Patron day (if any) is added to public festivities
+    if ($patron) {
+        $publicHolidays = $patron;
+    }
+
+    /*
+     * Array of all Easter Mondays in the given interval
+     */
+    $yearStart = date('Y', strtotime($date1));
+    $yearEnd = date('Y', strtotime($date2));
+
+    for ($i = $yearStart; $i <= $yearEnd; $i++) {
+        $easter = date('Y-m-d', easter_date($i));
+        list($y, $m, $g) = explode("-", $easter);
+        $monday = mktime(0, 0, 0, date($m), date($g) + 1, date($y));
+        $easterMondays[] = $monday;
+    }
+
+    $start = strtotime($date1);
+    $end = strtotime($date2);
+    $workdays = 0;
+    for ($i = $start; $i <= $end; $i = strtotime("+1 day", $i)) {
+        $day = date("w", $i);  // 0=sun, 1=mon, ..., 6=sat
+        $mmgg = date('Y-m-d', $i);
+        if ($day != SUNDAY &&
+            !in_array($mmgg, $publicHolidays) &&
+            !in_array($i, $easterMondays) &&
+            !($day == SATURDAY && $workSat == FALSE)) {
+            if ($day != SATURDAY) {
+                $workdays++;
+            } else if ($day == SATURDAY && $daySat != 0) {
+                $workdays += $daySat;
+            }
+        }
+
+    }
+
+    return floatval($workdays);
+}
