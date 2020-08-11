@@ -16,7 +16,7 @@ class CreateEmpleadoVacacionesTable extends Migration
         Schema::create('empleado_vacaciones', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('empleado_id');
-            $table->unsignedInteger('tipo_vacaciones_id');
+            $table->unsignedInteger('tipo_vacaciones_id')->nullable();
             $table->unsignedFloat("numero_dias");
             $table->date("fecha_inicio");
             $table->date("fecha_fin");
@@ -28,7 +28,7 @@ class CreateEmpleadoVacacionesTable extends Migration
         });
         Schema::create('empleado_vacaciones_history', function (Blueprint $table) {
             $table->unsignedInteger('empleado_id');
-            $table->unsignedInteger('tipo_vacaciones_id');
+            $table->unsignedInteger('tipo_vacaciones_id')->nullable();
             $table->unsignedFloat("numero_dias");
             $table->date("fecha_inicio");
             $table->date("fecha_fin");

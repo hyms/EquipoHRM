@@ -63,6 +63,12 @@
                       </div>
                     </template>
 
+                    <template v-slot:cell(fecha_inicio)="data">
+                      <span>{{ data.value | formatDateOnly }}</span>
+                    </template>
+                    <template v-slot:cell(fecha_fin)="data">
+                      <span>{{ data.value | formatDateOnly }}</span>
+                    </template>
                     <template v-slot:cell(estado)="data">
                       <span>{{ data.value | formatStateLeave }}</span>
                     </template>
@@ -95,7 +101,6 @@
 <script>
   import axios from "axios";
   import "@/store/funcions";
-  import moment from "moment";
 
   export default {
     data() {
@@ -106,7 +111,6 @@
         isBusy: false,
         columns: [
           "empleado",
-          "tipo",
           "numero_dias",
           "fecha_inicio",
           "fecha_fin",
@@ -122,13 +126,14 @@
           fecha_ingreso: "",
           disponible: "",
           ano_cumplido: "",
-          fecha_desde: "",
-          fecha_hasta: "",
+          fecha_inicio: "",
+          fecha_fin: "",
           tipo: "",
           numero_dias: "",
           observaciones: "",
           estado: "",
-          sabado: ""
+          sabado: "",
+          empleado_id: ""
         },
         schema: {
           groups: [
@@ -158,16 +163,18 @@
                                     if (Object.keys(data["data"]).length > 0) {
                                       Object.entries(data["data"]).forEach(
                                               ([key, value]) => {
-                                                this.model["empleado"] = "";
                                                 if (key === "fecha_ingreso") {
-                                                  value = moment(value).format("DD/MM/YYYY");
+                                                  value = this.$options.filters.formatDateOnly(
+                                                          value
+                                                  );
                                                 }
                                                 if (this.model[key] !== undefined)
                                                   this.model[key] = value;
                                               }
                                       );
                                     } else {
-                                      this.message_error = "no se encontraron resultados";
+                                      this.message_error =
+                                              "no se encontraron resultados";
                                     }
                                   }
                                 })
@@ -238,7 +245,7 @@
                   type: "input",
                   inputType: "date",
                   label: "Fecha desde",
-                  model: "fecha_desde",
+                  model: "fecha_inicio",
                   attributes: {
                     placeholder: "Fecha desde"
                   },
@@ -248,7 +255,7 @@
                   type: "input",
                   inputType: "date",
                   label: "Fecha hasta",
-                  model: "fecha_hasta",
+                  model: "fecha_fin",
                   attributes: {
                     placeholder: "Fecha hasta"
                   },
@@ -269,19 +276,27 @@
                       classes: "btn btn-primary",
                       label: "Cargar",
                       onclick: async function (model) {
-                        model['fecha_desde'] = moment(model['fecha_desde']).format("YYYY-MM-DD");
-                        model['fecha_hasta'] = moment(model['fecha_hasta']).format("YYYY-MM-DD");
+                        model[
+                                "fecha_inicio"
+                                ] = this.$options.filters.formatPostDateOnly(
+                                model["fecha_inicio"]
+                        );
+                        model[
+                                "fecha_fin"
+                                ] = this.$options.filters.formatPostDateOnly(
+                                model["fecha_fin"]
+                        );
                         await axios
                                 .get("api/vacaciones/days", {
                                   params: {
-                                    fecha_desde: model.fecha_desde,
-                                    fecha_hasta: model.fecha_hasta,
-                                    sabado: model.sabado,
+                                    fecha_inicio: model.fecha_inicio,
+                                    fecha_fin: model.fecha_fin,
+                                    sabado: model.sabado
                                   }
                                 })
                                 .then(({data}) => {
                                   if (data["status"] === 0) {
-                                    this.model.numero_dias = data['data'];
+                                    this.model.numero_dias = data["data"];
                                   }
                                 })
                                 .catch(err => {
@@ -322,6 +337,27 @@
               this.model[key] = value;
             }
           });
+          await axios
+                  .get("api/vacaciones/empleado", {
+                    params: {id: this.model.empleado_id}
+                  })
+                  .then(({data}) => {
+                    if (data["status"] === 0) {
+                      if (Object.keys(data["data"]).length > 0) {
+                        Object.entries(data["data"]).forEach(([key, value]) => {
+                          if (key === "fecha_ingreso") {
+                            value = this.$options.filters.formatDateOnly(value);
+                          }
+                          if (this.model[key] !== undefined) this.model[key] = value;
+                        });
+                      } else {
+                        this.message_error = "no se encontraron resultados";
+                      }
+                    }
+                  })
+                  .catch(err => {
+                    console.log(err);
+                  });
         }
       },
       //obtener todos
@@ -352,8 +388,27 @@
         this.submitForm();
       },
       submitForm() {
+        let formdata = {
+          empleado_id: "",
+          numero_dias: "",
+          fecha_inicio: "",
+          fecha_fin: "",
+          observaciones: ""
+        };
+        this.model["fecha_inicio"] = this.$options.filters.formatPostDateOnly(
+                this.model["fecha_inicio"]
+        );
+        this.model["fecha_fin"] = this.$options.filters.formatPostDateOnly(
+                this.model["fecha_fin"]
+        );
+
+        Object.entries(this.model).forEach(([key, value]) => {
+          if (formdata[key] !== undefined) {
+            formdata[key] = value;
+          }
+        });
         axios
-                .post(this.path, this.model)
+                .post(this.path, formdata)
                 .then(({data}) => {
                   if (data["status"] === 0) {
                     // Hide the modal manually

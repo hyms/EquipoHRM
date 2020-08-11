@@ -44,8 +44,7 @@ class PersonalVacacionesController extends Controller
         try {
             $validator = Validator::make($request->all(), [
                 'empleado_id' => 'required',
-                'tipo_vacaciones_id' => 'required',
-                'numero_dias' => 'required|numeric',
+                'numero_dias' => 'required',
             ]);
             if ($validator->fails()) {
                 return response()->json([
@@ -95,7 +94,7 @@ class PersonalVacacionesController extends Controller
     public function empleado(Request $request)
     {
         try {
-            $validator = Validator::make($request->all(), [
+            /*$validator = Validator::make($request->all(), [
                 'ci' => 'required',
             ]);
             if ($validator->fails()) {
@@ -104,46 +103,60 @@ class PersonalVacacionesController extends Controller
                     'data' => $validator->errors(),
                     'message' => 'datos incompletos'
                 ]);
-            }
-            $empleado = DB::table('empleado')
-                ->where('ci', $request['ci'])
-                ->whereNull('deleted_at')
-                ->first();
-            $result = [];
-            if ($empleado) {
-                $empleado_empresa = DB::table('empleado_empresa')
-                    ->where('empleado', $empleado->id)
-                    ->first();
-                $unidad = DB::table('unidadesNegocio')
-                    ->find($empleado_empresa->unidad_negocio);
-                $config = days_leave_year();
-                $diff_time = get_date_employe($empleado->fecha_ingreso);
-                $days = 0;
-                for ($i = 1; $i <= $diff_time['y']; $i++) {
-                    foreach ($config as $item) {
-                        if ($i >= $item['min'] && $i <= $item['max']) {
-                            $days += $item['days'];
-                            break;
-                        }
-                    }
+            }*/
+            if ($request['ci'] || $request['id']) {
+                if ($request['ci']) {
+                    $empleado = DB::table('empleado')
+                        ->where('ci', $request['ci'])
+                        ->whereNull('deleted_at')
+                        ->first();
+                } elseif ($request['id']) {
+                    $empleado = DB::table('empleado')
+                        ->where('id', $request['id'])
+                        ->whereNull('deleted_at')
+                        ->first();
                 }
 
-                $result = array(
-                    "nombre" => $empleado->nombres . " " . $empleado->apellidos,
-                    "ci" => $empleado->ci,
-                    "empleado" => $empleado->id,
-                    "unidad" => $unidad->nombre,
-                    "fecha_ingreso" => $empleado->fecha_ingreso,
-                    "disponible" => $days,
-                    "ano_cumplido" => $diff_time['y'],
-                    "sabado" => type_employe($empleado_empresa->tipo_empleado),
-                );
-            }
+                $result = [];
+                if ($empleado) {
+                    $empleado_empresa = DB::table('empleado_empresa')
+                        ->where('empleado', $empleado->id)
+                        ->first();
+                    $unidad = DB::table('unidadesNegocio')
+                        ->find($empleado_empresa->unidad_negocio);
+                    $config = days_leave_year();
+                    $diff_time = get_date_employe($empleado->fecha_ingreso);
+                    $days = 0;
+                    for ($i = 1; $i <= $diff_time['y']; $i++) {
+                        foreach ($config as $item) {
+                            if ($i >= $item['min'] && $i <= $item['max']) {
+                                $days += $item['days'];
+                                break;
+                            }
+                        }
+                    }
 
-            return response()->json([
-                'status' => ($empleado ? 0 : -1),
-                'data' => $result
-            ]);
+                    $result = array(
+                        "nombre" => $empleado->nombres . " " . $empleado->apellidos,
+                        "ci" => $empleado->ci,
+                        "empleado_id" => $empleado->id,
+                        "unidad" => $unidad->nombre,
+                        "fecha_ingreso" => $empleado->fecha_ingreso,
+                        "disponible" => $days,
+                        "ano_cumplido" => $diff_time['y'],
+                        "sabado" => type_employe($empleado_empresa->tipo_empleado),
+                    );
+                }
+                return response()->json([
+                    'status' => ($empleado ? 0 : -1),
+                    'data' => $result
+                ]);
+            } else {
+                return response()->json([
+                    'status' => -1,
+                    'message' => 'datos incompletos'
+                ]);
+            }
         } catch (\Exception $error) {
             Log::error($error->getMessage());
             return response()->json([//'message' => $error->getMessage(),
@@ -155,8 +168,8 @@ class PersonalVacacionesController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'fecha_desde' => 'required',
-                'fecha_hasta' => 'required',
+                'fecha_inicio' => 'required',
+                'fecha_fin' => 'required',
                 'sabado' => 'required',
             ]);
             if ($validator->fails()) {
@@ -174,12 +187,10 @@ class PersonalVacacionesController extends Controller
             foreach ($holidays as $day) {
                 array_push($daysh, $day->fecha);
             }
-            $days = getWorkdays($request['fecha_desde'], $request['fecha_hasta'], true, $daysh, $request['sabado']);
+            $days = getWorkdays($request['fecha_inicio'], $request['fecha_fin'], true, $daysh, $request['sabado']);
             return response()->json([
                 'status' => 0,
-                'data' => [
-                    $days,
-                ]
+                'data' => $days,
             ]);
         } catch (\Exception $error) {
             Log::error($error->getMessage());

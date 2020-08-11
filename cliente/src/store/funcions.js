@@ -11,6 +11,11 @@ Vue.filter("formatDateOnly", function (value) {
         return moment(String(value)).format("DD/MM/YYYY");
     }
 });
+Vue.filter("formatPostDateOnly", function (value) {
+    if (value) {
+        return moment(value).format("YYYY-MM-DD");
+    }
+});
 
 Vue.filter("formatStateLeave", function (value) {
     const estados = ['pendiente', 'aprovado', 'iniciado', 'concluido'];
@@ -44,7 +49,6 @@ let Helpers = {
         if (id) return estado[id];
         return estado;
     },
-
 }
 
 export default Helpers;
