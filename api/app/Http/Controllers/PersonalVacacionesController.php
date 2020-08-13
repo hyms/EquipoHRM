@@ -19,6 +19,7 @@ class PersonalVacacionesController extends Controller
                     ->select('empleado_vacaciones.*', 'empleado.nombres', 'empleado.apellidos', 'vacaciones_tipo.tipo', 'vacaciones_tipo.tiempo_dias')
                     ->leftJoin('empleado', 'empleado_id', '=', 'empleado.id')
                     ->leftJoin('vacaciones_tipo', 'tipo_vacaciones_id', '=', 'vacaciones_tipo.id')
+                    ->whereNull('empleado_vacaciones.deleted_at')
                     ->get();
                 return response()->json([
                     'status' => 0,
@@ -79,7 +80,7 @@ class PersonalVacacionesController extends Controller
                     'status' => -1,
                     'data' => $validator->errors()]);
             }
-            $PersonalVacaciones = PersonalVacaciones::find($request['id'])->delete();
+            $PersonalVacaciones = PersonalVacaciones::where('id', $request['id'])->delete();
             return response()->json([
                 'status' => ($PersonalVacaciones ? 0 : -1),
                 'data' => []
@@ -143,7 +144,7 @@ class PersonalVacacionesController extends Controller
                         "unidad" => $unidad->nombre,
                         "fecha_ingreso" => $empleado->fecha_ingreso,
                         "disponible" => $days,
-                        "ano_cumplido" => $diff_time['y'],
+                        "ano_cumplido" => $diff_time,
                         "sabado" => type_employe($empleado_empresa->tipo_empleado),
                     );
                 }

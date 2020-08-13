@@ -101,6 +101,7 @@
 <script>
   import axios from "axios";
   import "@/store/funcions";
+  import Helpers from "../../store/funcions";
 
   export default {
     data() {
@@ -133,7 +134,8 @@
           observaciones: "",
           estado: "",
           sabado: "",
-          empleado_id: ""
+          empleado_id: "",
+          tipo_vacaciones_id: ""
         },
         schema: {
           groups: [
@@ -262,6 +264,15 @@
                   styleClasses: "col-sm-6 col-lg-3"
                 },
                 {
+                  type: "radios",
+                  label: "Tiempo a solicitar",
+                  model: "tipo_vacaciones_id",
+                  listBox: true,
+                  values: Helpers.tipoDiaVacacion(),
+                  visible: false,
+                  styleClasses: "col-sm-6 col-lg-3"
+                },
+                {
                   type: "input",
                   inputType: "text",
                   label: "Numero de Dias",
@@ -276,21 +287,15 @@
                       classes: "btn btn-primary",
                       label: "Cargar",
                       onclick: async function (model) {
-                        model[
-                                "fecha_inicio"
-                                ] = this.$options.filters.formatPostDateOnly(
-                                model["fecha_inicio"]
-                        );
-                        model[
-                                "fecha_fin"
-                                ] = this.$options.filters.formatPostDateOnly(
-                                model["fecha_fin"]
-                        );
                         await axios
                                 .get("api/vacaciones/days", {
                                   params: {
-                                    fecha_inicio: model.fecha_inicio,
-                                    fecha_fin: model.fecha_fin,
+                                    fecha_inicio: this.$options.filters.formatPostDateOnly(
+                                            model["fecha_inicio"]
+                                    ),
+                                    fecha_fin: this.$options.filters.formatPostDateOnly(
+                                            model["fecha_fin"]
+                                    ),
                                     sabado: model.sabado
                                   }
                                 })
@@ -321,6 +326,31 @@
     },
     created() {
       this.getAllData();
+    },
+    computed: {
+      numero_dias: function () {
+        return this.model.numero_dias;
+      },
+      tipo_vacaciones_id: function () {
+        return this.model.tipo_vacaciones_id;
+      }
+    },
+    watch: {
+      numero_dias: function () {
+        Object.entries(this.schema.groups[1].fields).forEach(([key, value]) => {
+          if (value.model === "tipo_vacaciones_id") {
+            this.schema.groups[1].fields[key].visible =
+                    this.model.numero_dias <= 1 && this.model.numero_dias >= 0;
+          }
+        });
+      },
+      tipo_vacaciones_id: function () {
+        if (this.model.tipo_vacaciones_id === 1) {
+          this.model.numero_dias = 1;
+        } else if (this.model.tipo_vacaciones_id === 0) {
+          this.model.numero_dias = 0.5;
+        }
+      }
     },
     methods: {
       //asignar titulo
@@ -393,7 +423,8 @@
           numero_dias: "",
           fecha_inicio: "",
           fecha_fin: "",
-          observaciones: ""
+          observaciones: "",
+          tipo_vacaciones_id: ""
         };
         this.model["fecha_inicio"] = this.$options.filters.formatPostDateOnly(
                 this.model["fecha_inicio"]
@@ -401,7 +432,11 @@
         this.model["fecha_fin"] = this.$options.filters.formatPostDateOnly(
                 this.model["fecha_fin"]
         );
-
+        if (this.model["id"] !== undefined) {
+          formdata["id"] = "";
+        }
+        if (formdata["tipo_vacaciones_id"] === "")
+          delete formdata["tipo_vacaciones_id"];
         Object.entries(this.model).forEach(([key, value]) => {
           if (formdata[key] !== undefined) {
             formdata[key] = value;

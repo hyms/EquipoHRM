@@ -18,8 +18,8 @@ Vue.filter("formatPostDateOnly", function (value) {
 });
 
 Vue.filter("formatStateLeave", function (value) {
-    const estados = ['pendiente', 'aprovado', 'iniciado', 'concluido'];
-    return estados[value]
+    const estados = ["pendiente", "aprovado", "iniciado", "concluido"];
+    return estados[value];
 });
 
 Vue.filter("formatState", function (value) {
@@ -49,8 +49,14 @@ let Helpers = {
         if (id) return estado[id];
         return estado;
     },
-}
+    tipoDiaVacacion(id = null) {
+        const estado = [
+            {value: 0, name: "Media Jornada"},
+            {value: 1, name: "Jornada Completa"}
+        ];
+        if (id) return estado[id];
+        return estado;
+    }
+};
 
 export default Helpers;
-
-

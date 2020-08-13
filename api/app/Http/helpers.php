@@ -62,13 +62,13 @@ function type_employe($type = null)
     $type_employe = [];
     if ($day_6) {
         $type_employe = [
-            'Obrero/a' => ['day_6' => 1],
-            'Oficinista' => ['day_6' => 0.5]
+            'Obrero/a' => 1,
+            'Oficinista' => 0.5
         ];
     } else {
         $type_employe = [
-            'Obrero/a' => ['day_6' => 0],
-            'Oficinista' => ['day_6' => 0]
+            'Obrero/a' => 0,
+            'Oficinista' => 0
         ];
     }
     if (empty($type)) {
@@ -82,16 +82,8 @@ function type_employe($type = null)
 function get_date_employe($date1)
 {
     $date2 = Carbon\Carbon::now()->format('Y-m-d');
-    //$date1 = "2007-03-24";
-    //$date2 = "2009-06-26";
-
-    $diff = abs(strtotime($date2) - strtotime($date1));
-
-    $years = floor($diff / (365 * 60 * 60 * 24));
-    $months = floor(($diff - $years * 365 * 60 * 60 * 24) / (30 * 60 * 60 * 24));
-    $days = floor(($diff - $years * 365 * 60 * 60 * 24 - $months * 30 * 60 * 60 * 24) / (60 * 60 * 24));
-
-    return ['y' => $years, 'm' => $months, 'd' => $days];
+    $diff = date_diff(date_create($date2), date_create($date1));
+    return ['y' => $diff->y, 'm' => $diff->m, 'd' => $diff->d];
 }
 
 function getWorkdays($date1, $date2, $workSat = FALSE, $patron = NULL, $daySat = 0)
