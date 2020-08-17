@@ -30,4 +30,15 @@ class PersonalVacacionesEstado extends Model
             History::save(self::$tableHistory, $data);
         }
     }
+
+    public static function remmaining_days(int $empleado_id)
+    {
+        if (!empty($empleado_id)) {
+            $estado = PersonalVacacionesEstado::where('empleado_id', $empleado_id)->first();
+            if ($estado->total_disponible == 0 && $estado->total_usado == 0) {
+                $estado->total_disponible = Personal::getDaysWork($empleado_id);
+            }
+            return $estado->total_disponible;
+        }
+    }
 }

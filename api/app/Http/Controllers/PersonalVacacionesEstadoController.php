@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\PersonalVacacionesEstado;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -13,12 +14,20 @@ class PersonalVacacionesEstadoController extends Controller
     {
         try {
             if (empty($request->all())) {
-                $PersonalVacacionesEstado = PersonalVacacionesEstado::all();
+
+                $PersonalVacaciones = DB::table('empleado_vacaciones')
+                    ->select('empleado_vacaciones.*', 'empleado.nombres', 'empleado.apellidos', 'empleado_vacaciones_estado.total_disponible', 'empleado_vacaciones_estado.total_usado')
+                    ->leftJoin('empleado', 'empleado_vacaciones.empleado_id', '=', 'empleado.id')
+                    ->leftJoin('empleado_vacaciones_estado', 'empleado.id', '=', 'empleado_vacaciones_estado.empleado_id')
+                    ->whereNull('empleado_vacaciones.deleted_at')
+                    ->whereNull('empleado.deleted_at')
+                    ->get();
+                //$PersonalVacacionesEstado = PersonalVacacionesEstado::all();
                 return response()->json([
                     'status' => 0,
                     'data' => [
-                        'all' => $PersonalVacacionesEstado,
-                        'count' => $PersonalVacacionesEstado->count(),
+                        'all' => $PersonalVacaciones,
+                        'count' => $PersonalVacaciones->count(),
                     ]]);
             }
             $rol = PersonalVacacionesEstado::find($request->get('id'));

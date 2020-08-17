@@ -33,4 +33,23 @@ class Personal extends Model
             History::save(self::$tableHistory, $data);
         }
     }
+
+    public static function getDaysWork(int $empleado_id)
+    {
+        if (!empty($empleado_id)) {
+            $emp = Personal::find($empleado_id);
+            $config = days_leave_year();
+            $diff_time = get_date_employe($emp->fecha_ingreso);
+            $days = 0;
+            for ($i = 1; $i <= $diff_time['y']; $i++) {
+                foreach ($config as $item) {
+                    if ($i >= $item['min'] && $i <= $item['max']) {
+                        $days += $item['days'];
+                        break;
+                    }
+                }
+            }
+            return $days;
+        }
+    }
 }

@@ -123,7 +123,7 @@
         model: {
           nombre: "",
           ci: "",
-          unidad: "",
+          cargo: "",
           fecha_ingreso: "",
           disponible: "",
           ano_cumplido: "",
@@ -199,10 +199,10 @@
                 {
                   type: "input",
                   inputType: "text",
-                  label: "Unidad de Negocio",
-                  model: "unidad",
+                  label: "Cargo",
+                  model: "cargo",
                   disabled: true,
-                  attributes: {placeholder: "Unidad de Negicio"},
+                  attributes: {placeholder: "Cargo"},
                   styleClasses: "col-md-6"
                 },
                 {

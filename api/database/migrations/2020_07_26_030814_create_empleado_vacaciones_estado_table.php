@@ -15,15 +15,15 @@ class CreateEmpleadoVacacionesEstadoTable extends Migration
     {
         Schema::create('empleado_vacaciones_estado', function (Blueprint $table) {
             $table->id();
-            $table->integer('total_disponible');
-            $table->integer('total_usado');
+            $table->float('total_disponible');
+            $table->float('total_usado');
             $table->unsignedInteger('empleado_id');
             $table->timestamps();
         });
 
         Schema::create('empleado_vacaciones_estado_history', function (Blueprint $table) {
-            $table->integer('total_disponible');
-            $table->integer('total_usado');
+            $table->float('total_disponible');
+            $table->float('total_usado');
             $table->unsignedInteger('empleado_id');
             //control de historial
             $table->unsignedInteger('id');

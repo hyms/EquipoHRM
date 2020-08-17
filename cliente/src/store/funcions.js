@@ -18,7 +18,8 @@ Vue.filter("formatPostDateOnly", function (value) {
 });
 
 Vue.filter("formatStateLeave", function (value) {
-    const estados = ["pendiente", "aprovado", "iniciado", "concluido"];
+    let estados = ["pendiente", "aprovado", "registrado", "concluido",];
+    estados[10] = "Declinado";
     return estados[value];
 });
 

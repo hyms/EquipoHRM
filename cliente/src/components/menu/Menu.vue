@@ -40,6 +40,10 @@
                 links: {
                     vacaciones: {
                         name: "Vacaciones/Permisos",
+                        estado: {
+                            name: "Estados",
+                            icon: "os-icon os-icon-package"
+                        },
                         vacaciones: {
                             name: "Lista",
                             icon: "os-icon os-icon-package"

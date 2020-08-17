@@ -86,7 +86,7 @@ function get_date_employe($date1)
     return ['y' => $diff->y, 'm' => $diff->m, 'd' => $diff->d];
 }
 
-function getWorkdays($date1, $date2, $workSat = FALSE, $patron = NULL, $daySat = 0)
+function get_work_days($date1, $date2, $workSat = FALSE, $patron = NULL, $daySat = 0)
 {
     if (!defined('SATURDAY')) define('SATURDAY', 6);
     if (!defined('SUNDAY')) define('SUNDAY', 0);
@@ -97,7 +97,6 @@ function getWorkdays($date1, $date2, $workSat = FALSE, $patron = NULL, $daySat =
     if ($patron) {
         $publicHolidays = $patron;
     }
-
     /*
      * Array of all Easter Mondays in the given interval
      */
@@ -132,3 +131,4 @@ function getWorkdays($date1, $date2, $workSat = FALSE, $patron = NULL, $daySat =
 
     return floatval($workdays);
 }
+

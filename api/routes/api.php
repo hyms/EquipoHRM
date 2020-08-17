@@ -91,6 +91,14 @@ Route::group(['prefix' => 'vacaciones'], function () {
     });
     Route::get('/empleado', 'PersonalVacacionesController@empleado');
     Route::get('/days', 'PersonalVacacionesController@getDaysWork');
+    Route::post('/aprobar', 'PersonalVacacionesController@approve');
+    Route::post('/declinar', 'PersonalVacacionesController@decline');
+    Route::post('/registro', 'PersonalVacacionesController@registro');
+    Route::group(['prefix' => 'estado'], function () {
+        Route::get('/', 'PersonalVacacionesEstadoController@get');
+        Route::post('/', 'PersonalVacacionesEstadoController@post');
+        Route::delete('/', 'PersonalVacacionesEstadoController@delete');
+    });
 });
 
 
