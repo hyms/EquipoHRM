@@ -20,13 +20,14 @@
                 exact
                 exact-active-class="selected"
                 :key="key + ksub"
+                v-show="visible(sublink.visible)"
         >
-            <a>
-                <div class="icon-w">
-                    <div :class="sublink.icon"></div>
-                </div>
-                <span>{{ sublink.name }}</span>
-            </a>
+          <a>
+            <div class="icon-w">
+              <div :class="sublink.icon"></div>
+            </div>
+            <span>{{ sublink.name }}</span>
+          </a>
         </router-link>
       </template>
     </template>
@@ -34,55 +35,73 @@
 </template>
 
 <script>
-    export default {
-        data() {
-            return {
-                links: {
-                    vacaciones: {
-                        name: "Vacaciones/Permisos",
-                        estado: {
-                            name: "Estados",
-                            icon: "os-icon os-icon-package"
-                        },
-                        vacaciones: {
-                            name: "Lista",
-                            icon: "os-icon os-icon-package"
-                        },
-                        tipovacacion: {
-                            name: "Tipos",
-                            icon: "os-icon os-icon-package"
-                        },
-                        diasfestivos: {
-                            name: "Dias Festivos",
-                            icon: "os-icon os-icon-package"
-                        }
-                    },
-                    configuracion: {
-                        name: "Configuración",
-                        personal: {
-                            name: "Personal",
-                            icon: "os-icon os-icon-package"
-                        },
-                        organizacion: {
-                            name: "Organizacion",
-                            icon: "os-icon os-icon-package"
-                        },
-                        usuarios: {
-                            name: "Usuarios",
-                            icon: "os-icon os-icon-package"
-                        }
-                    },
-                    cuenta: {
-                        name: "Cuenta",
-                        logout: "Salir"
-                    }
-                }
-            };
-        },
-        methods: {
-            logout() {
-                this.$store.dispatch("logout");
+  export default {
+    data() {
+      return {
+        links: {
+          vacaciones: {
+            name: "Vacaciones/Permisos",
+            estado: {
+              name: "Estados",
+              icon: "os-icon os-icon-package",
+              visible: [1, 2]
+            },
+            vacaciones: {
+              name: "Lista",
+              icon: "os-icon os-icon-package",
+              visible: [1, 2]
+            },
+            tipovacacion: {
+              name: "Tipos",
+              icon: "os-icon os-icon-package",
+              visible: [1, 2]
+            },
+            diasfestivos: {
+              name: "Dias Festivos",
+              icon: "os-icon os-icon-package",
+              visible: [1, 2]
             }
+          },
+          configuracion: {
+            name: "Configuración",
+            personal: {
+              name: "Personal",
+              icon: "os-icon os-icon-package",
+              visible: [1, 2]
+            },
+            organizacion: {
+              name: "Organizacion",
+              icon: "os-icon os-icon-package",
+              visible: [2]
+            },
+            usuarios: {
+              name: "Usuarios",
+              icon: "os-icon os-icon-package",
+              visible: [1, 2]
+            }
+          },
+          cuenta: {
+            name: "Cuenta",
+            logout: "Salir"
+          }
         }
-    };
+      };
+    },
+    methods: {
+      logout() {
+        this.$store.dispatch("logout");
+      },
+      visible(values) {
+        const userInfo = JSON.parse(localStorage.getItem("user"));
+        let view = false;
+        values.forEach(value => {
+          if (value === userInfo.user["rol"]) {
+            view = true;
+            return;
+          }
+        });
+        return view;
+      }
+    }
+  };
 </script>

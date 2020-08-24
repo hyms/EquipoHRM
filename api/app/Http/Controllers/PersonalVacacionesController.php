@@ -58,6 +58,19 @@ class PersonalVacacionesController extends Controller
                 $PersonalVacaciones = PersonalVacaciones::find($request['id']);
             }
             $PersonalVacaciones->fill($request->all());
+            $tmp = PersonalVacaciones::where('empleado_id', $request['empleado_id'])
+                ->where('estado', 2)
+                ->orderBy('id', 'desc');
+            if (!empty($request['id'])) {
+                $tmp = $tmp->where('id', '!=', $request['id']);
+            }
+            $PersonalVacaciones->total_disponible = PersonalVacaciones::remmaining_days($request['empleado_id']);
+            $PersonalVacaciones->total_usado = 0;
+            if ($tmp->count() > 0) {
+                $tmp = $tmp->first();
+                $PersonalVacaciones->total_disponible = $tmp->total_disponible - $request['numero_dias'];
+                $PersonalVacaciones->total_usado = $tmp->total_usado + $request['numero_dias'];
+            }
             $PersonalVacaciones->save();
             return response()->json([
                 'status' => 0,
@@ -81,7 +94,16 @@ class PersonalVacacionesController extends Controller
                     'status' => -1,
                     'data' => $validator->errors()]);
             }
-            $PersonalVacaciones = PersonalVacaciones::where('id', $request['id'])->delete();
+            $PersonalVacaciones = PersonalVacaciones::where('id', $request['id'])
+                ->where('estado', 0);
+            if ($PersonalVacaciones->count() == 0) {
+                return response()->json([
+                    'status' => -1,
+                    'data' => [],
+                    'mensaje' => 'No se puede eliminar'
+                ]);
+            }
+            $PersonalVacaciones->delete();
             return response()->json([
                 'status' => ($PersonalVacaciones ? 0 : -1),
                 'data' => []
@@ -120,7 +142,8 @@ class PersonalVacacionesController extends Controller
                     ->find($empleado_empresa->unidad_negocio);
                 $cargo = DB::table('cargos')
                     ->find($empleado_empresa->cargo);
-                $days = PersonalVacacionesEstado::remmaining_days($empleado->id);
+                //calcular dias de vacacion
+                $days = PersonalVacaciones::remmaining_days($empleado->id);
                 $diff_time = get_date_employe($empleado->fecha_ingreso);
                 $result = array(
                     "nombre" => $empleado->nombres . " " . $empleado->apellidos,
@@ -204,7 +227,7 @@ class PersonalVacacionesController extends Controller
             }
             $employe->estado = 1; //1 aprobar, 2 en curso, 3 finalizado
             $employe->save();
-            $estado = PersonalVacacionesEstado::where('empleado_id', $employe->id)->count();
+            $estado = PersonalVacaciones::where('empleado_id', $employe->id)->count();
             if ($estado == 0) {
                 $estado = new PersonalVacacionesEstado;
                 $estado->empleado_id = $employe->id;
@@ -279,14 +302,18 @@ class PersonalVacacionesController extends Controller
                 ]);
             }
             $employe->estado = 2; //
-            $employe->save();
-            $estado = PersonalVacacionesEstado::where('empleado_id', $employe->empleado_id)->first();
-            if ($estado->total_disponible == 0) {
-                $estado->total_disponible = PersonalVacacionesEstado::remmaining_days($employe->empleado_id);
+            $tmp = PersonalVacaciones::where('empleado_id', $employe->empleado_id)
+                ->where('estado', 2)
+                ->where('id', '!=', $employe->id)
+                ->orderBy('id', 'desc');
+            $employe->total_disponible = PersonalVacaciones::remmaining_days($employe->empleado_id) - $employe->numero_dias;
+            $employe->total_usado = $employe->numero_dias;
+            if ($tmp->count() > 0) {
+                $tmp = $tmp->first();
+                $employe->total_disponible = $tmp->total_disponible - $employe->numero_dias;
+                $employe->total_usado = $tmp->total_usado + $employe->numero_dias;
             }
-            $estado->total_disponible -= $employe->numero_dias;
-            $estado->total_usado += $employe->numero_dias;
-            $estado->save();
+            $employe->save();
             return response()->json([
                 'status' => 0,
                 'data' => [],

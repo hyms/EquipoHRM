@@ -25,12 +25,28 @@ class PersonalVacaciones extends Model
     {
         if (!empty($id)) {
             $data = self::select(
-                'id', 'empleado_id', 'tipo_vacaciones_id', 'numero_dias', 'fecha_inicio', 'fecha_fin', 'estado', 'observaciones', 'aprobado_por'
+                'id', 'empleado_id', 'tipo_vacaciones_id', 'numero_dias', 'fecha_inicio', 'fecha_fin', 'total_disponible', 'total_usado', 'estado', 'observaciones', 'aprobado_por'
             )
                 ->withTrashed()
                 ->find($id)
                 ->toArray();
             History::save(self::$tableHistory, $data);
         }
+    }
+
+    public static function remmaining_days(int $empleado_id)
+    {
+        $dayWorkss = 0;
+        if (!empty($empleado_id)) {
+            $dayWorkss = Personal::getDaysWork($empleado_id);
+            $estado = self::where('empleado_id', $empleado_id)->first();
+            if (!empty($estado)) {
+                //if ($estado->total_disponible == 0 && $estado->total_usado == 0) {
+                $estado->total_disponible = $dayWorkss - $estado->total_usado;
+                //}
+                return $estado->total_disponible;
+            }
+        }
+        return $dayWorkss;
     }
 }

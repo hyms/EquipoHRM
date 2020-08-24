@@ -81,10 +81,17 @@
         isBusy: false,
         columns: [
           "empleado",
-          "numero_dias",
+          {
+            key: "numero_dias",
+            label: "Dias"
+          },
           "fecha_inicio",
           "estado",
-          "total_disponible",
+          {
+            key: "total_disponible",
+            label: "Disponible"
+          },
+          //fecha registro
           "Acciones"
         ],
         tables: [],

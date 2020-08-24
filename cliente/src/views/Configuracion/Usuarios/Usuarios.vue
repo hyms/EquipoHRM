@@ -87,7 +87,7 @@
               columns: ["username", "alias", "estado", "Acciones"],
               tables: [],
               validator: [],
-              roles: [],
+              roles: this.$options.filters.roles(),
               model: {
                   username: "",
                   password: "",
@@ -189,9 +189,9 @@
               this.message_error = false;
               this.validator = [];
           },
-          async loadRoles() {
-              this.roles = [];
-              await axios
+          loadRoles() {
+              //this.roles = [];
+              /*await axios
                   .get("api/roles")
                   .then(({data}) => {
                       if (data["status"] === 0) {
@@ -200,7 +200,8 @@
                           });
                       }
                   })
-                  .catch();
+                  .catch();*/
+              //this.roles =this.$options.filters.roles();
           },
           handleOk(bvModalEvt) {
               // Prevent modal from closing

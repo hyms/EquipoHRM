@@ -20,10 +20,10 @@
                 </div>
                 <div class="logged-user-info-w">
                     <div class="logged-user-name">
-                        Maria Gomez
+                       {{name}}
                     </div>
                     <div class="logged-user-role">
-                        Administrator
+                        {{rol|roles}}
                     </div>
                 </div>
             </div>
@@ -53,7 +53,9 @@
                     logo: require("@/assets/img/logo.png"),
                     avatar: require("@/assets/img/avatar1.jpg")
                 },
-                botonMenu: false
+                botonMenu: false,
+                name: "",
+                rol: "",
             };
         },
         components: {
@@ -62,7 +64,16 @@
         methods: {
             logout() {
                 this.$store.dispatch("logout");
+            },
+            getUser() {
+                const userInfo = JSON.parse(localStorage.getItem("user"));
+                console.log(userInfo.user);
+                this.name = userInfo.user["alias"];
+                this.rol = userInfo.user["rol"];
             }
+        },
+        created() {
+            this.getUser();
         }
     };
 </script>

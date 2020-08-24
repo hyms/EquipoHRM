@@ -45,6 +45,14 @@
                 {{ pageTitle }}
               </h6>
               <div class="element-box-tp">
+                <b-alert
+                        show
+                        dismissible
+                        variant="danger"
+                        v-if="message_error"
+                >
+                  {{ message_error }}
+                </b-alert>
                 <div class="table-responsive">
                   <b-table
                           :items="tables"
@@ -458,6 +466,7 @@
       },
       //eliminar
       async remove(id) {
+        this.message_error = '';
         if (await this.showMsgConfirm()) {
           await axios
                   .delete(this.path, {
@@ -466,6 +475,8 @@
                   .then(({data}) => {
                     if (data["status"] === 0) {
                       this.getAllData();
+                    } else {
+                      this.message_error = data['mensaje'];
                     }
                   })
                   .catch(err => {

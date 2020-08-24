@@ -1,4 +1,4 @@
-import "./jquery"
+import "./jquery";
 import Vue from "vue";
 import App from "./App.vue";
 import router from "./router";
@@ -14,7 +14,6 @@ import VueFormGenerator from "vue-form-generator";
 import "vue-form-generator/dist/vfg.css";
 
 import VueSlideToggle from "vue-slide-toggle";
-
 
 Vue.config.productionTip = false;
 // Install BootstrapVue

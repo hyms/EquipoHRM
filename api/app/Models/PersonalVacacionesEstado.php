@@ -35,9 +35,9 @@ class PersonalVacacionesEstado extends Model
     {
         if (!empty($empleado_id)) {
             $estado = PersonalVacacionesEstado::where('empleado_id', $empleado_id)->first();
-            if ($estado->total_disponible == 0 && $estado->total_usado == 0) {
-                $estado->total_disponible = Personal::getDaysWork($empleado_id);
-            }
+            //if ($estado->total_disponible == 0 && $estado->total_usado == 0) {
+            $estado->total_disponible = Personal::getDaysWork($empleado_id) - $estado->total_usado;
+            //}
             return $estado->total_disponible;
         }
     }

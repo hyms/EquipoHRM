@@ -132,3 +132,19 @@ function get_work_days($date1, $date2, $workSat = FALSE, $patron = NULL, $daySat
     return floatval($workdays);
 }
 
+function roles($id = null)
+{
+    $roles = [
+        '0' => 'sadmin',
+        '1' => 'RRHH',
+        '2' => 'Gerente',
+        '3' => 'Encargado/Jefe'
+    ];
+    if (empty($id)) {
+        return $roles;
+    }
+    if (array_key_exists($id, $roles)) {
+        return $roles[$id];
+    }
+    return "";
+}
