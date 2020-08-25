@@ -35,6 +35,8 @@
 </template>
 
 <script>
+  import Helpers from "../../store/funcions";
+
   export default {
     data() {
       return {
@@ -92,15 +94,7 @@
         this.$store.dispatch("logout");
       },
       visible(values) {
-        const userInfo = JSON.parse(localStorage.getItem("user"));
-        let view = false;
-        values.forEach(value => {
-          if (value === userInfo.user["rol"]) {
-            view = true;
-            return;
-          }
-        });
-        return view;
+        return Helpers.visible(values);
       }
     }
   };

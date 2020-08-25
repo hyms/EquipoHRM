@@ -67,7 +67,6 @@
             },
             getUser() {
                 const userInfo = JSON.parse(localStorage.getItem("user"));
-                console.log(userInfo.user);
                 this.name = userInfo.user["alias"];
                 this.rol = userInfo.user["rol"];
             }

@@ -45,12 +45,7 @@
                 {{ pageTitle }}
               </h6>
               <div class="element-box-tp">
-                <b-alert
-                        show
-                        dismissible
-                        variant="danger"
-                        v-if="message_error"
-                >
+                <b-alert show dismissible variant="danger" v-if="message_error">
                   {{ message_error }}
                 </b-alert>
                 <div class="table-responsive">
@@ -78,7 +73,12 @@
                       <span>{{ data.value | formatDateOnly }}</span>
                     </template>
                     <template v-slot:cell(estado)="data">
-                      <span>{{ data.value | formatStateLeave }}</span>
+                      <b-form-select
+                              v-if="visibleSelect([1, 2],data.value )"
+                              v-model="modelSelect"
+                              :options="optionSelect"
+                      ></b-form-select>
+                      <span v-else>{{ data.value | formatStateLeave }}</span>
                     </template>
                     <template v-slot:cell(empleado)="row">
                       <span>{{
@@ -128,6 +128,8 @@
         ],
         tables: [],
         validator: [],
+        modelSelect: "",
+        optionSelect: [],
         model: {
           nombre: "",
           ci: "",
@@ -466,7 +468,7 @@
       },
       //eliminar
       async remove(id) {
-        this.message_error = '';
+        this.message_error = "";
         if (await this.showMsgConfirm()) {
           await axios
                   .delete(this.path, {
@@ -476,7 +478,7 @@
                     if (data["status"] === 0) {
                       this.getAllData();
                     } else {
-                      this.message_error = data['mensaje'];
+                      this.message_error = data["mensaje"];
                     }
                   })
                   .catch(err => {
@@ -501,6 +503,13 @@
                 })
                 .catch(() => {
                 });
+      },
+      visibleSelect(values, id = null) {
+        this.optionSelect = Helpers.stateVacaciones();
+        if (id) {
+          this.modelSelect = Helpers.stateVacaciones(id);
+        }
+        return Helpers.visible(values);
       }
     }
   };

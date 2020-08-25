@@ -70,6 +70,36 @@ let Helpers = {
     ];
     if (id) return estado[id];
     return estado;
+  },
+  visible(values) {
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    let view = false;
+    values.forEach(value => {
+      if (value === userInfo.user["rol"]) {
+        view = true;
+        return true;
+      }
+    });
+    return view;
+  },
+  stateVacaciones(id = null) {
+    let states = [
+      {value: 0, text: "Pendiente"},
+      {value: 1, text: "Aprovado"},
+      {value: 2, text: "Registrado"},
+      {value: 3, text: "Concluido"},
+      {value: 10, text: "Declinado"}
+    ];
+    if (id) {
+      let val = "";
+      states.forEach(value => {
+        if (value.value === id) {
+          val = value.value;
+        }
+      });
+      return val;
+    }
+    return states;
   }
 };
 
