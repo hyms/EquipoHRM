@@ -53,7 +53,7 @@ class UsuariosController extends Controller
             if (!empty($request['id'])) {
                 $usuarios = Usuarios::find($request['id']);
             }
-            if (!empty($request['password']) && strcmp($usuarios->password, Hash::make($request['password'])) != 0) {
+            if (!empty($request['password']) && strcmp($usuarios->password, $request['password']) !== 0) {
                 $request['password'] = Hash::make($request['password']);
             } else {
                 unset($request['password']);
