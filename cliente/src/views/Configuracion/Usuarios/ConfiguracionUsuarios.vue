@@ -30,8 +30,7 @@
             return {
                 path: "/configuracion/usuarios/",
                 links: {
-                    usuarios: "Usuarios",
-                    roles: "Roles"
+                    usuarios: "Usuarios", //roles: "Roles"
                 }
             };
         }

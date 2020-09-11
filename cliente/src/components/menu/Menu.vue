@@ -42,7 +42,7 @@
       return {
         links: {
           vacaciones: {
-            name: "Vacaciones/Permisos",
+            name: "Vacaciones",
             estado: {
               name: "Estados",
               icon: "os-icon os-icon-package",
@@ -51,15 +51,28 @@
             vacaciones: {
               name: "Lista",
               icon: "os-icon os-icon-package",
-              visible: [1, 2]
+              visible: [1, 2, 3]
             },
-            tipovacacion: {
-              name: "Tipos",
+            /*tipovacacion: {
+                name: "Tipos",
+                icon: "os-icon os-icon-package",
+                visible: [1, 2]
+              },*/
+            diasfestivos: {
+              name: "Dias Festivos",
+              icon: "os-icon os-icon-package",
+              visible: [1, 2]
+            }
+          },
+          permisos: {
+            name: "Permisos",
+            permisos: {
+              name: "Lista",
               icon: "os-icon os-icon-package",
               visible: [1, 2]
             },
-            diasfestivos: {
-              name: "Dias Festivos",
+            tipopermisos: {
+              name: "Tipo Permiso",
               icon: "os-icon os-icon-package",
               visible: [1, 2]
             }

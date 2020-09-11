@@ -95,7 +95,18 @@ Route::group(['prefix' => 'vacaciones'], function () {
     Route::post('/declinar', 'PersonalVacacionesController@decline');
     Route::post('/registro', 'PersonalVacacionesController@registro');
 });
-
+//permisos
+Route::group(['prefix' => 'permisos'], function () {
+    Route::get('/', 'PersonalPermisosController@get');
+    Route::post('/', 'PersonalPermisosController@post');
+    Route::delete('/', 'PersonalPermisosController@delete');
+    Route::get('/empleado', 'PersonalPermisosController@empleado');
+    Route::group(['prefix' => 'tipo'], function () {
+        Route::get('/', 'PermisosTipoController@get');
+        Route::post('/', 'PermisosTipoController@post');
+        Route::delete('/', 'PermisosTipoController@delete');
+    });
+});
 
 //});
 

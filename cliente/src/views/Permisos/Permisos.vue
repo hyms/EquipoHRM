@@ -15,7 +15,7 @@
                 </b-button>
                 <b-modal
                         id="modal"
-                        :title="formTitle + ' Vacacion'"
+                        :title="formTitle + ' Permiso'"
                         @hidden="resetForm"
                         @ok="submitForm"
                         okTitle="Guardar"
@@ -74,7 +74,7 @@
                     </template>
                     <template v-slot:cell(estado)="data">
                       <b-form-select
-                              v-if="visibleSelect([1, 2], data.value)"
+                              v-if="visibleSelect([1, 2],data.value )"
                               v-model="modelSelect"
                               :options="optionSelect"
                       ></b-form-select>
@@ -114,15 +114,17 @@
   export default {
     data() {
       return {
-        pageTitle: "Vacaciones",
+        pageTitle: "Permisos",
         formTitle: "",
-        path: "/api/vacaciones/",
+        path: "/api/permisos/",
         isBusy: false,
         columns: [
           "empleado",
-          "numero_dias",
-          "fecha_inicio",
-          "fecha_fin",
+          "fecha",
+          {
+            label: "tiempo (hrs)",
+            key: "tiempo"
+          },
           "estado",
           "Acciones"
         ],
@@ -134,18 +136,14 @@
           nombre: "",
           ci: "",
           cargo: "",
-          fecha_ingreso: "",
-          disponible: "",
-          ano_cumplido: "",
-          fecha_inicio: "",
-          fecha_fin: "",
+          fecha: "",
+          tiempo: "",
           tipo: "",
-          numero_dias: "",
           observaciones: "",
           estado: "",
           sabado: "",
           empleado_id: "",
-          tipo_vacaciones_id: ""
+          tipo_permisos_id: ""
         },
         schema: {
           groups: [
@@ -167,7 +165,7 @@
                       onclick: async function (model) {
                         this.message_error = "";
                         await axios
-                                .get("api/vacaciones/empleado", {
+                                .get("api/permisos/empleado", {
                                   params: {ci: model.ci}
                                 })
                                 .then(({data}) => {
@@ -215,111 +213,39 @@
                   attributes: {placeholder: "Cargo"},
                   styleClasses: "col-md-6"
                 },
-                {
-                  type: "input",
-                  inputType: "text",
-                  label: "Fecha de Ingreso",
-                  model: "fecha_ingreso",
-                  disabled: true,
-                  attributes: {
-                    placeholder: "Fecha de Ingreso"
-                  },
-                  styleClasses: "col-sm-4"
-                },
-                {
-                  type: "input",
-                  inputType: "text",
-                  label: "Disponible",
-                  model: "disponible",
-                  disabled: true,
-                  attributes: {
-                    placeholder: "Disponible"
-                  },
-                  styleClasses: "col-sm-4"
-                },
-                {
-                  type: "input",
-                  inputType: "text",
-                  label: "Año Cumplido",
-                  model: "ano_cumplido",
-                  disabled: true,
-                  attributes: {
-                    placeholder: "Año Cumplido"
-                  },
-                  styleClasses: "col-sm-4"
-                }
               ]
             },
             {
-              legend: "Periodo de disfrute de vacaciones",
+              legend: "Periodo de Permiso",
               fields: [
                 {
                   type: "input",
                   inputType: "date",
-                  label: "Fecha desde",
-                  model: "fecha_inicio",
+                  label: "Fecha",
+                  model: "fecha",
                   attributes: {
-                    placeholder: "Fecha desde"
+                    placeholder: "Fecha"
                   },
                   styleClasses: "col-sm-6 col-lg-3"
                 },
                 {
                   type: "input",
-                  inputType: "date",
-                  label: "Fecha hasta",
-                  model: "fecha_fin",
+                  inputType: "numeric",
+                  label: "Tiempo en hrs",
+                  model: "tiempo",
                   attributes: {
-                    placeholder: "Fecha hasta"
+                    placeholder: "Horas"
                   },
                   styleClasses: "col-sm-6 col-lg-3"
                 },
                 {
-                  type: "radios",
+                  type: "select",
                   label: "Tiempo a solicitar",
-                  model: "tipo_vacaciones_id",
+                  model: "tipo_permisos_id",
                   listBox: true,
                   values: Helpers.tipoDiaVacacion(),
                   visible: false,
                   styleClasses: "col-sm-6 col-lg-3"
-                },
-                {
-                  type: "input",
-                  inputType: "text",
-                  label: "Numero de Dias",
-                  model: "numero_dias",
-                  disabled: true,
-                  attributes: {
-                    placeholder: "Numero de Dias"
-                  },
-                  styleClasses: "col-sm-6 col-lg-3",
-                  buttons: [
-                    {
-                      classes: "btn btn-primary",
-                      label: "Cargar",
-                      onclick: async function (model) {
-                        await axios
-                                .get("api/vacaciones/days", {
-                                  params: {
-                                    fecha_inicio: this.$options.filters.formatPostDateOnly(
-                                            model["fecha_inicio"]
-                                    ),
-                                    fecha_fin: this.$options.filters.formatPostDateOnly(
-                                            model["fecha_fin"]
-                                    ),
-                                    sabado: model.sabado
-                                  }
-                                })
-                                .then(({data}) => {
-                                  if (data["status"] === 0) {
-                                    this.model.numero_dias = data["data"];
-                                  }
-                                })
-                                .catch(err => {
-                                  console.log(err);
-                                });
-                      }
-                    }
-                  ]
                 },
                 {
                   type: "textArea",
@@ -341,23 +267,23 @@
       numero_dias: function () {
         return this.model.numero_dias;
       },
-      tipo_vacaciones_id: function () {
-        return this.model.tipo_vacaciones_id;
+      tipo_permisos_id: function () {
+        return this.model.tipo_permisos_id;
       }
     },
     watch: {
       numero_dias: function () {
         Object.entries(this.schema.groups[1].fields).forEach(([key, value]) => {
-          if (value.model === "tipo_vacaciones_id") {
+          if (value.model === "tipo_permisos_id") {
             this.schema.groups[1].fields[key].visible =
                     this.model.numero_dias <= 1 && this.model.numero_dias >= 0;
           }
         });
       },
-      tipo_vacaciones_id: function () {
-        if (this.model.tipo_vacaciones_id === 1) {
+      tipo_permisos_id: function () {
+        if (this.model.tipo_permisos_id === 1) {
           this.model.numero_dias = 1;
-        } else if (this.model.tipo_vacaciones_id === 0) {
+        } else if (this.model.tipo_permisos_id === 0) {
           this.model.numero_dias = 0.5;
         }
       }
@@ -378,7 +304,7 @@
             }
           });
           await axios
-                  .get("api/vacaciones/empleado", {
+                  .get("api/permisos/empleado", {
                     params: {id: this.model.empleado_id}
                   })
                   .then(({data}) => {
@@ -430,23 +356,19 @@
       submitForm() {
         let formdata = {
           empleado_id: "",
-          numero_dias: "",
-          fecha_inicio: "",
-          fecha_fin: "",
+          tiempo: "",
+          fecha: "",
           observaciones: "",
-          tipo_vacaciones_id: ""
+          tipo_permisos_id: ""
         };
-        this.model["fecha_inicio"] = this.$options.filters.formatPostDateOnly(
-                this.model["fecha_inicio"]
-        );
-        this.model["fecha_fin"] = this.$options.filters.formatPostDateOnly(
-                this.model["fecha_fin"]
+        this.model["fecha"] = this.$options.filters.formatPostDateOnly(
+                this.model["fecha"]
         );
         if (this.model["id"] !== undefined) {
           formdata["id"] = "";
         }
-        if (formdata["tipo_vacaciones_id"] === "")
-          delete formdata["tipo_vacaciones_id"];
+        if (formdata["tipo_permisos_id"] === "")
+          delete formdata["tipo_permisos_id"];
         Object.entries(this.model).forEach(([key, value]) => {
           if (formdata[key] !== undefined) {
             formdata[key] = value;

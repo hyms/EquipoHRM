@@ -10,6 +10,7 @@ import ConfiguracionUsuarios from "./configuracionUsuarios";
 import ConfiguracionOrganizacion from "./configuracionOrganizacion";
 import configuracionPersonal from "./configuracionPersonal";
 import Vacaciones from "./Vacaciones";
+import Permisos from "./Permisos";
 
 Vue.use(VueRouter);
 
@@ -36,7 +37,8 @@ const routes = [
     ...ConfiguracionUsuarios,
     ...ConfiguracionOrganizacion,
     ...configuracionPersonal,
-    ...Vacaciones
+    ...Vacaciones,
+    ...Permisos
 ];
 
 const router = new VueRouter({

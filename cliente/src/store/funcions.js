@@ -74,7 +74,7 @@ let Helpers = {
   visible(values) {
     const userInfo = JSON.parse(localStorage.getItem("user"));
     let view = false;
-    values.forEach(value => {
+    values.some(value => {
       if (value === userInfo.user["rol"]) {
         view = true;
         return true;
@@ -85,16 +85,17 @@ let Helpers = {
   stateVacaciones(id = null) {
     let states = [
       {value: 0, text: "Pendiente"},
-      {value: 1, text: "Aprovado"},
+      {value: 1, text: "Aprobado"},
       {value: 2, text: "Registrado"},
       {value: 3, text: "Concluido"},
       {value: 10, text: "Declinado"}
     ];
     if (id) {
       let val = "";
-      states.forEach(value => {
+      states.some(value => {
         if (value.value === id) {
           val = value.value;
+          return true;
         }
       });
       return val;

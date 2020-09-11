@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateVacacionesTipoTable extends Migration
+class CreatePermisosTipoTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,15 @@ class CreateVacacionesTipoTable extends Migration
      */
     public function up()
     {
-        Schema::create('vacaciones_tipo', function (Blueprint $table) {
+        Schema::create('permisos_tipo', function (Blueprint $table) {
             $table->id();
             $table->string('tipo');
-            $table->decimal('tiempo_dias');
             $table->timestamps();
             $table->softDeletes();
         });
 
-        Schema::create('vacaciones_tipo_history', function (Blueprint $table) {
+        Schema::create('permisos_tipo_history', function (Blueprint $table) {
             $table->string('tipo');
-            $table->decimal('tiempo_dias');
             //control de historial
             $table->unsignedInteger('id');
             $table->timestamp('registerUtc');
@@ -39,7 +37,7 @@ class CreateVacacionesTipoTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('vacaciones_tipo_history');
-        Schema::dropIfExists('vacaciones_tipo');
+        Schema::dropIfExists('permisos_tipo_history');
+        Schema::dropIfExists('permisos_tipo');
     }
 }

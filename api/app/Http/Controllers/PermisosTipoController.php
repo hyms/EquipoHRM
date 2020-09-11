@@ -2,30 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Usuarios;
+use App\Models\PersonalPermisosTipo;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
-class UsuariosController extends Controller
+class PermisosTipoController extends Controller
 {
     public function get(Request $request)
     {
         try {
             if (empty($request->all())) {
-                $Usuarios = Usuarios::all();
+                $PersonalPermisosTipo = PersonalPermisosTipo::all();
                 return response()->json([
                     'status' => 0,
                     'data' => [
-                        'all' => $Usuarios,
-                        'count' => $Usuarios->count(),
+                        'all' => $PersonalPermisosTipo,
+                        'count' => $PersonalPermisosTipo->count(),
                     ]]);
             }
-            $usuario = Usuarios::find($request->get('id'));
+            $rol = PersonalPermisosTipo::find($request->get('id'));
             return response()->json([
-                'status' => (empty($usuario) ? -1 : 0),
-                'data' => $usuario
+                'status' => (empty($rol) ? -1 : 0),
+                'data' => $rol
             ]);
         } catch (\Exception $error) {
             Log::error($error->getMessage());
@@ -38,35 +37,26 @@ class UsuariosController extends Controller
     {
         try {
             $validator = Validator::make($request->all(), [
-                'username' => 'required|min:5',
-                'estado' => 'required',
-                'rol' => 'required'
+                'tipo' => 'required',
             ]);
             if ($validator->fails()) {
                 return response()->json([
                     'status' => -1,
-                    'data' => $validator->errors(),
-                    'message' => "Error al ingresar los datos"
-                ]);
+                    'data' => $validator->errors()]);
             }
-            $usuarios = new Usuarios;
+            $PersonalPermisosTipo = new PersonalPermisosTipo;
             if (!empty($request['id'])) {
-                $usuarios = Usuarios::find($request['id']);
+                $PersonalPermisosTipo = PersonalPermisosTipo::find($request['id']);
             }
-            if (!empty($request['password']) && strcmp($usuarios->password, Hash::make($request['password'])) != 0) {
-                $request['password'] = Hash::make($request['password']);
-            } else {
-                unset($request['password']);
-            }
-            $usuarios->fill($request->all());
-            $usuarios->save();
+            $PersonalPermisosTipo->fill($request->all());
+            $PersonalPermisosTipo->save();
             return response()->json([
                 'status' => 0,
-                'data' => $usuarios]);
+                'data' => $PersonalPermisosTipo]);
         } catch (\Exception $error) {
             Log::error($error->getMessage());
             return response()->json([//'message' => $error->getMessage(),
-                'error' => $error], 500);
+                'error' => $error,], 500);
         }
     }
 
@@ -81,12 +71,12 @@ class UsuariosController extends Controller
                     'status' => -1,
                     'data' => $validator->errors()]);
             }
-            $Usuarios = Usuarios::find($request['id'])->delete();
-            if ($Usuarios) {
-                Usuarios::history($request['id']);
+            $PersonalPermisosTipo = PersonalPermisosTipo::find($request['id'])->delete();
+            if ($PersonalPermisosTipo) {
+                PersonalPermisosTipo::history($request['id']);
             }
             return response()->json([
-                'status' => ($Usuarios ? 0 : -1),
+                'status' => ($PersonalPermisosTipo ? 0 : -1),
                 'data' => []
             ]);
         } catch (\Exception $error) {
