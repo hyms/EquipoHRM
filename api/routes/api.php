@@ -31,6 +31,11 @@ Route::group(['prefix' => 'roles'], function () {
     Route::post('/', 'RolesController@post');
     Route::delete('/', 'RolesController@delete');
 });
+//privilegios
+Route::group(['prefix' => 'rules'], function () {
+    Route::get('/', 'PermisosController@get');
+    Route::post('/', 'PermisosController@post');
+});
 //areasTrabajo
 Route::group(['prefix' => 'areastrabajo'], function () {
     Route::get('/', 'AreastrabajoController@get');
@@ -107,6 +112,7 @@ Route::group(['prefix' => 'permisos'], function () {
         Route::delete('/', 'PermisosTipoController@delete');
     });
 });
+
 
 //});
 

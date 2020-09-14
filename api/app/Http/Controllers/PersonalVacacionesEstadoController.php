@@ -18,11 +18,9 @@ class PersonalVacacionesEstadoController extends Controller
                 $PersonalVacaciones = DB::table('empleado_vacaciones')
                     ->select('empleado_vacaciones.*', 'empleado.nombres', 'empleado.apellidos', 'empleado_vacaciones_estado.total_disponible', 'empleado_vacaciones_estado.total_usado')
                     ->leftJoin('empleado', 'empleado_vacaciones.empleado_id', '=', 'empleado.id')
-                    ->leftJoin('empleado_vacaciones_estado', 'empleado.id', '=', 'empleado_vacaciones_estado.empleado_id')
                     ->whereNull('empleado_vacaciones.deleted_at')
                     ->whereNull('empleado.deleted_at')
                     ->get();
-                //$PersonalVacacionesEstado = PersonalVacacionesEstado::all();
                 return response()->json([
                     'status' => 0,
                     'data' => [

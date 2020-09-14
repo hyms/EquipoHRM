@@ -227,14 +227,7 @@ class PersonalVacacionesController extends Controller
             }
             $employe->estado = 1; //1 aprobar, 2 en curso, 3 finalizado
             $employe->save();
-            $estado = PersonalVacaciones::where('empleado_id', $employe->id)->count();
-            if ($estado == 0) {
-                $estado = new PersonalVacacionesEstado;
-                $estado->empleado_id = $employe->id;
-                $estado->total_disponible = 0;
-                $estado->total_usado = 0;
-                $estado->save();
-            }
+
             return response()->json([
                 'status' => 0,
                 'data' => [],

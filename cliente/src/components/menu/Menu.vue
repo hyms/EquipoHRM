@@ -43,11 +43,7 @@
         links: {
           vacaciones: {
             name: "Vacaciones",
-            estado: {
-              name: "Estados",
-              icon: "os-icon os-icon-package",
-              visible: [1, 2]
-            },
+
             vacaciones: {
               name: "Lista",
               icon: "os-icon os-icon-package",
@@ -87,7 +83,7 @@
             organizacion: {
               name: "Organizacion",
               icon: "os-icon os-icon-package",
-              visible: [2]
+                visible: [1]
             },
             usuarios: {
               name: "Usuarios",

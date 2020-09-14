@@ -73,12 +73,12 @@
                       <span>{{ data.value | formatDateOnly }}</span>
                     </template>
                     <template v-slot:cell(estado)="data">
-                      <b-form-select
-                              v-if="visibleSelect([1, 2],data.value )"
-                              v-model="modelSelect"
-                              :options="optionSelect"
-                      ></b-form-select>
-                      <span v-else>{{ data.value | formatStateLeave }}</span>
+                        <!--<b-form-select
+                                v-if="visibleSelect([1, 2],data.value )"
+                                v-model="modelSelect"
+                                :options="optionSelect"
+                        ></b-form-select>-->
+                        <span>{{ data.value | formatStateLeave }}</span>
                     </template>
                     <template v-slot:cell(empleado)="row">
                       <span>{{
@@ -130,9 +130,8 @@
         ],
         tables: [],
         validator: [],
-        modelSelect: "",
-        optionSelect: [],
-        model: {
+
+          model: {
           nombre: "",
           ci: "",
           cargo: "",
@@ -426,13 +425,7 @@
                 .catch(() => {
                 });
       },
-      visibleSelect(values, id = null) {
-        this.optionSelect = Helpers.stateVacaciones();
-        if (id) {
-          this.modelSelect = Helpers.stateVacaciones(id);
-        }
-        return Helpers.visible(values);
-      }
+
     }
   };
 </script>

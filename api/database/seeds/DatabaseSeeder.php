@@ -36,5 +36,18 @@ class DatabaseSeeder extends Seeder
                 'updated_at' => Carbon::now()
             ]
         ]);
+        /*DB::table('funciones')->insert([
+            [
+                'username' => 'usehrm',
+                'password' => Hash::make('123456'),
+                'alias' => 'EquipoHRM',
+                'api_token' => '',
+                'remember_token' => '',
+                'estado' => 1,
+                'rol' => 1,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ]
+        ]);*/
     }
 }
