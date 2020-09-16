@@ -15,6 +15,7 @@ class PermisosController extends Controller
         try {
             if (empty($request->all())) {
                 $permisos = [];
+                $columnas = [];
                 $funciones = DB::table('funciones')
                     ->get();
                 $roles = DB::table('roles')
@@ -32,19 +33,27 @@ class PermisosController extends Controller
                         ->get()
                         ->toArray();
                     foreach ($roles as $rol) {
-                        $item[$rol->name] = null;
+                        $item[$rol->name] = ['id' => $rol->id, 'value' => false];
                         foreach ($roles_tmp as $tmp) {
                             if ($tmp->rol_id === $rol->id) {
-                                $item[$rol->name] = $rol->id;
+                                $item[$rol->name]['value'] = true;
                                 break;
                             }
                         }
                     }
-                    array_push($permisos, $item);
+                    $permisos[$funcion->id] = $item;
+                }
+                array_push($columnas, 'name');
+                foreach ($roles as $rol) {
+                    array_push($columnas, $rol->name);
                 }
                 return response()->json([
                     'status' => 0,
-                    'data' => $permisos
+                    'data' =>
+                        [
+                            'tabla' => $permisos,
+                            'columnas' => $columnas
+                        ]
                 ]);
             }
             $validator = Validator::make($request->all(), [

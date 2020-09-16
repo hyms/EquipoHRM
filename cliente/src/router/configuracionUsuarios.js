@@ -3,6 +3,7 @@
 import ConfiguracionUsuarios from "../views/Configuracion/Usuarios/ConfiguracionUsuarios";
 import Usuarios from "../views/Configuracion/Usuarios/Usuarios";
 import Roles from "../views/Configuracion/Usuarios/Roles";
+import Rules from "../views/Configuracion/Usuarios/Rules";
 
 export default [
     {
@@ -26,6 +27,13 @@ export default [
                     auth: true
                 },
                 component: Roles
+            },
+            {
+                path: "rules",
+                meta: {
+                    auth: true
+                },
+                component: Rules
             },
         ]
     }

@@ -31,6 +31,7 @@
                 path: "/configuracion/usuarios/",
                 links: {
                     usuarios: "Usuarios", //roles: "Roles"
+                    rules: "Privilegios",
                 }
             };
         }
