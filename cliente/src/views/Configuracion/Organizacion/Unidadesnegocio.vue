@@ -100,7 +100,8 @@
                     encargado: "",
                     email: "",
                     web: "",
-                    fecha_nacimiento: ""
+                    fecha_nacimiento: "",
+                    central: ""
                 },
                 schema: {
                     fields: []
@@ -222,6 +223,12 @@
                         label: "Fecha de nacimiento",
                         model: "fecha_nacimiento",
                         attributes: {placeholder: "Fecha de nacimiento"}
+                    },
+                    {
+                        type: "checkbox",
+                        label: "Central",
+                        model: "central",
+                        default: false
                     }
                 ];
                 this.message_error = false;

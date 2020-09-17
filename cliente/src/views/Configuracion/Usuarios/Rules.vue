@@ -10,55 +10,42 @@
           <b-alert show dismissible variant="danger" v-if="message_error">
             {{ message_error }}
           </b-alert>
-          <div class="table-responsive">
-            <!--<b-table
-              :items="tables"
-              :fields="columns"
-              responsive="sm"
-              class="table table-padded"
-              :busy="isBusy"
-            >
-              <template v-slot:table-busy>
-                <div class="text-center my-2">
-                  <b-spinner class="align-middle"></b-spinner>
-                  <strong>Cargando...</strong>
-                </div>
-              </template>
-            </b-table>-->
-            <table class="table table-padded text-center">
-              <thead>
-              <tr>
-                <th v-for="column in columns" :key="column">
-                  {{ column }}
-                </th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr v-for="row in tables" :key="row.id">
-                <template v-for="(cel, index) in columns">
-                  <td v-if="index === 0" :key="index">
-                    {{ row[cel] }}
-                  </td>
-                  <td v-else :key="index">
-                    <div class="form-check">
-                      <input
-                              type="checkbox"
-                              :name="String(row['id']) + String(row[cel]['id'])"
-                              class="form-check-input position-static"
-                              @change="
+          <div class="table table-responsive">
+
+            <table class="table  table-striped table-bordered table-sm text-center" role="table">
+              <b-thead>
+                <b-tr>
+                  <b-th v-for="column in columns" :key="column">
+                    {{ column }}
+                  </b-th>
+                </b-tr>
+              </b-thead>
+              <b-tbody>
+                <b-tr v-for="row in tables" :key="row.id">
+                  <template v-for="(cel, index) in columns">
+                    <b-td v-if="index === 0" :key="index">
+                      {{ row[cel] }}[{{row['type']|rules}}]
+                    </b-td>
+                    <b-td v-else :key="index">
+                      <div class="form-check">
+                        <input
+                                type="checkbox"
+                                :name="String(row['id']) + String(row[cel]['id'])"
+                                class="form-check-input position-static"
+                                @change="
                             checkPrivilege(
                               row['id'],
                               row[cel]['id'],
                               !row[cel]['value']
                             )
                           "
-                              :checked="row[cel]['value']"
-                      />
-                    </div>
-                  </td>
-                </template>
-              </tr>
-              </tbody>
+                                :checked="row[cel]['value']"
+                        />
+                      </div>
+                    </b-td>
+                  </template>
+                </b-tr>
+              </b-tbody>
             </table>
           </div>
         </div>

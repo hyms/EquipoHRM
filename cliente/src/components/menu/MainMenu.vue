@@ -23,7 +23,7 @@
                        {{name}}
                     </div>
                     <div class="logged-user-role">
-                        {{rol|roles}}
+                        {{rol}}
                     </div>
                 </div>
             </div>
@@ -67,8 +67,8 @@
             },
             getUser() {
                 const userInfo = JSON.parse(localStorage.getItem("user"));
-                this.name = userInfo.user["alias"];
-                this.rol = userInfo.user["rol"];
+                this.name = userInfo.bussines["nombre"];
+                this.rol = userInfo.user["alias"];
             }
         },
         created() {

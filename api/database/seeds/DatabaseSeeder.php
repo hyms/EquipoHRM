@@ -17,7 +17,22 @@ class DatabaseSeeder extends Seeder
         // $this->call(UserSeeder::class);
         DB::table('roles')->insert([
             [
-                'name' => 'admin',
+                'name' => 'Administrador',
+                'description' => '',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ], [
+                'name' => 'RecursosHumanos',
+                'description' => '',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ], [
+                'name' => 'Gerente',
+                'description' => '',
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now(),
+            ], [
+                'name' => 'Encargado/Jefe',
                 'description' => '',
                 'created_at' => Carbon::now(),
                 'updated_at' => Carbon::now(),
@@ -25,7 +40,7 @@ class DatabaseSeeder extends Seeder
         ]);
         DB::table('usuarios')->insert([
             [
-                'username' => 'usehrm',
+                'username' => 'userhrm',
                 'password' => Hash::make('123456'),
                 'alias' => 'EquipoHRM',
                 'api_token' => '',

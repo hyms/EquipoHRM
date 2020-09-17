@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Usuarios;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
@@ -40,12 +41,22 @@ class AuthController extends Controller
             $tokenResult = $user->createToken('authToken')->plainTextToken;
             $user->api_token = $tokenResult;
             $user->save();
+            $permission = DB::table('funciones_roles')
+                ->where('rol_id', '=', $user->rol)
+                ->select('funciones.funcion as function', 'funciones.type as type')
+                ->join('funciones', 'funciones.id', '=', 'funcion_id')
+                ->get();
+            $bussines = DB::table('unidadesNegocio')
+                ->where('central', '=', '1')
+                ->first();
             Log::debug("Success login user:" . $request->username);
             return response()->json([
                 'status' => 0,
                 'data' => [
                     'user' => $user,
                     'token' => $tokenResult,
+                    'rules' => $permission,
+                    'bussines' => $bussines,
                 ]]);
         } catch (\Exception $error) {
             Log::error($error->getMessage());

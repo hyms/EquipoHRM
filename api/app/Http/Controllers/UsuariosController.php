@@ -53,16 +53,17 @@ class UsuariosController extends Controller
             if (!empty($request['id'])) {
                 $usuarios = Usuarios::find($request['id']);
             }
-            if (!empty($request['password']) && strcmp($usuarios->password, $request['password']) !== 0) {
-                $request['password'] = Hash::make($request['password']);
-            } else {
-                unset($request['password']);
+            if (!empty($request['password']) && (strcmp($usuarios->password, $request['password']) !== 0)) {
+                $usuarios->password = Hash::make($request['password']);
             }
+            unset($request['password']);
             $usuarios->fill($request->all());
             $usuarios->save();
             return response()->json([
                 'status' => 0,
-                'data' => $usuarios]);
+                'data' => $usuarios,
+                'request' => $request->all()
+            ]);
         } catch (\Exception $error) {
             Log::error($error->getMessage());
             return response()->json([//'message' => $error->getMessage(),

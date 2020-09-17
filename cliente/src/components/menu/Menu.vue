@@ -20,7 +20,7 @@
                 exact
                 exact-active-class="selected"
                 :key="key + ksub"
-                v-show="visible(sublink.visible)"
+                v-show="visible(ksub,0)"
         >
           <a>
             <div class="icon-w">
@@ -99,12 +99,12 @@
       };
     },
     methods: {
-      logout() {
-        this.$store.dispatch("logout");
-      },
-      visible(values) {
-        return Helpers.visible(values);
-      }
+        logout() {
+            this.$store.dispatch("logout");
+        },
+        visible(funcion, tipo) {
+            return Helpers.visible(funcion, tipo);
+        }
     }
   };
 </script>

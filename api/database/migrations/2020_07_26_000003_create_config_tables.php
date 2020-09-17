@@ -27,6 +27,7 @@ class CreateConfigTables extends Migration
             $table->string("email", 100)->nullable();
             $table->string("web", 100)->nullable();
             $table->dateTime("fecha_nacimiento");
+            $table->boolean("central")->default(false);
             $table->timestamps();
             $table->softDeletes();
         });
@@ -43,6 +44,7 @@ class CreateConfigTables extends Migration
             $table->string("email", 100)->nullable();
             $table->string("web", 100)->nullable();
             $table->dateTime("fecha_nacimiento");
+            $table->boolean("central");
             //control de historial
             $table->unsignedInteger('id');
             $table->dateTime('registerUtc');

@@ -13,6 +13,10 @@ Vue.filter("roles", function (value = null) {
   }
   return roles;
 });
+Vue.filter("rules", function (value) {
+  const rules = ["Listar", "Crear", "Modificar", "Eliminar"];
+  return rules[value];
+});
 
 Vue.filter("formatDate", function (value) {
   if (value) {
@@ -71,13 +75,16 @@ let Helpers = {
     if (id) return estado[id];
     return estado;
   },
-  visible(values) {
+  visible(funcion, tipo) {
     const userInfo = JSON.parse(localStorage.getItem("user"));
+    const rules = userInfo["rules"];
     let view = false;
-    values.some(value => {
-      if (value === userInfo.user["rol"]) {
-        view = true;
-        return true;
+    rules.some(value => {
+      if (value.function === funcion) {
+        if (value.type === tipo) {
+          view = true;
+          return true;
+        }
       }
     });
     return view;
