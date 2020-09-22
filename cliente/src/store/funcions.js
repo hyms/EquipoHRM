@@ -97,11 +97,12 @@ let Helpers = {
       {value: 3, text: "Concluido"},
       {value: 10, text: "Declinado"}
     ];
-    if (id) {
+
+    if (id !== null) {
       let val = "";
       states.some(value => {
-        if (value.value === id) {
-          val = value.value;
+        if (value === id) {
+          val = value;
           return true;
         }
       });

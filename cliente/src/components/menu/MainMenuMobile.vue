@@ -67,8 +67,10 @@
             },
             getUser() {
                 const userInfo = JSON.parse(localStorage.getItem("user"));
-                this.name = userInfo.bussines["nombre"];
-                this.rol = userInfo.user["alias"];
+                if (userInfo.bussines !== null)
+                    this.name = userInfo.bussines["nombre"];
+                if (userInfo.user["alias"] !== undefined)
+                    this.rol = userInfo.user["alias"];
             }
         },
         created() {

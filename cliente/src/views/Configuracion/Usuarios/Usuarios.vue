@@ -6,8 +6,7 @@
                 <div class="element-actions">
                     <b-button variant="primary" v-b-modal="'modal'" @click="loadForm()"
                     >Nuevo
-                    </b-button
-                    >
+                    </b-button>
                     <b-modal
                             id="modal"
                             :title="formTitle + ' Usuario'"
@@ -74,191 +73,191 @@
     </div>
 </template>
 <script>
-  import axios from "axios";
-  import "@/store/funcions";
+    import axios from "axios";
+    import "@/store/funcions";
 
-  export default {
-      data() {
-          return {
-              pageTitle: "Usuarios",
-              formTitle: "",
-              path: "/api/usuarios",
-              isBusy: false,
-              columns: ["username", "alias", "estado", "Acciones"],
-              tables: [],
-              validator: [],
-              roles: this.$options.filters.roles(),
-              model: {
-                  username: "",
-                  password: "",
-                  alias: "",
-                  email: "",
-                  rol: "",
-                  estado: ""
-              },
-              schema: {
-                  fields: []
-              },
-              message_error: false
-          };
-      },
-      created() {
-          this.getAllData();
-      },
-      methods: {
-          //asignar titulo
-          async loadForm(data = null) {
-              await this.loadRoles();
-              this.resetForm();
-              if (!data) {
-                  this.formTitle = "Nuevo";
-                  delete this.model["id"];
-              } else {
-                  this.formTitle = "Modificar";
-                  this.model["id"] = "";
-                  Object.entries(data).forEach(([key, value]) => {
-                      if (this.model[key] !== undefined) {
-                          this.model[key] = value;
-                      }
-                  });
-              }
-          },
-          //obtener todos
-          async getAllData() {
-              this.isBusy = true;
-              await axios
-                  .get(this.path)
-                  .then(({data}) => {
-                      if (data["status"] === 0) {
-                          this.tables = data["data"]["all"];
-                      }
-                  })
-                  .catch(err => {
-                      console.log(err);
-                  });
-              this.isBusy = false;
-          },
-          async resetForm() {
-              Object.keys(this.model).forEach(key => {
-                  this.model[key] = "";
-              });
-              this.schema["fields"] = [
-                  {
-                      type: "input",
-                      inputType: "text",
-                      label: "Usuario",
-                      model: "username",
-                      required: true,
-                      attributes: {placeholder: "Usuario"}
-                  },
-                  {
-                      type: "input",
-                      inputType: "password",
-                      label: "Contraseña",
-                      model: "password",
-                      attributes: {placeholder: "Contraseña"}
-                  },
-                  {
-                      type: "input",
-                      inputType: "text",
-                      label: "Alias",
-                      model: "alias",
-                      attributes: {placeholder: "Alias"}
-                  },
-                  {
-                      type: "input",
-                      inputType: "email",
-                      label: "Email",
-                      model: "email",
-                      attributes: {placeholder: "Email"}
-                  },
-                  {
-                      type: "checkbox",
-                      label: "Estado",
-                      model: "estado"
-                  },
-                  {
-                      type: "select",
-                      label: "Rol",
-                      model: "rol",
-                      required: true,
-                      values: this.roles,
-                      selectOptions: {noneSelectedText: "Selecciona un Rol"}
-                  }
-              ];
-              this.message_error = false;
-              this.validator = [];
-          },
-          loadRoles() {
-              //this.roles = [];
-              /*await axios
-                  .get("api/roles")
-                  .then(({data}) => {
-                      if (data["status"] === 0) {
-                          data["data"]["all"].forEach(value => {
-                              this.roles.push({id: value["id"], name: value["name"]});
-                          });
-                      }
-                  })
-                  .catch();*/
-              //this.roles =this.$options.filters.roles();
-          },
-          handleOk(bvModalEvt) {
-              // Prevent modal from closing
-              bvModalEvt.preventDefault();
-              this.submitForm();
-          },
-          submitForm() {
-              axios
-                  .post(this.path, this.model)
-                  .then(({data}) => {
-                      if (data["status"] === 0) {
-                          // Hide the modal manually
-                          this.$bvModal.hide("modal");
-                          this.getAllData();
-                      } else {
-                          this.message_error = data["message"];
-                          this.validator = data["data"];
-                      }
-                  })
-                  .catch();
-          },
+    export default {
+        data() {
+            return {
+                pageTitle: "Usuarios",
+                formTitle: "",
+                path: "/api/usuarios",
+                isBusy: false,
+                columns: ["username", "alias", "estado", "Acciones"],
+                tables: [],
+                validator: [],
+                roles: this.$options.filters.roles(),
+                model: {
+                    username: "",
+                    password: "",
+                    alias: "",
+                    email: "",
+                    rol: "",
+                    estado: ""
+                },
+                schema: {
+                    fields: []
+                },
+                message_error: false
+            };
+        },
+        created() {
+            this.getAllData();
+        },
+        methods: {
+            //asignar titulo
+            async loadForm(data = null) {
+                await this.loadRoles();
+                this.resetForm();
+                if (!data) {
+                    this.formTitle = "Nuevo";
+                    delete this.model["id"];
+                } else {
+                    this.formTitle = "Modificar";
+                    this.model["id"] = "";
+                    Object.entries(data).forEach(([key, value]) => {
+                        if (this.model[key] !== undefined) {
+                            this.model[key] = value;
+                        }
+                    });
+                }
+            },
+            //obtener todos
+            async getAllData() {
+                this.isBusy = true;
+                await axios
+                    .get(this.path)
+                    .then(({data}) => {
+                        if (data["status"] === 0) {
+                            this.tables = data["data"]["all"];
+                        }
+                    })
+                    .catch(err => {
+                        console.log(err);
+                    });
+                this.isBusy = false;
+            },
+            async resetForm() {
+                Object.keys(this.model).forEach(key => {
+                    this.model[key] = "";
+                });
+                this.schema["fields"] = [
+                    {
+                        type: "input",
+                        inputType: "text",
+                        label: "Usuario",
+                        model: "username",
+                        required: true,
+                        attributes: {placeholder: "Usuario"}
+                    },
+                    {
+                        type: "input",
+                        inputType: "password",
+                        label: "Contraseña",
+                        model: "password",
+                        attributes: {placeholder: "Contraseña"}
+                    },
+                    {
+                        type: "input",
+                        inputType: "text",
+                        label: "Alias",
+                        model: "alias",
+                        attributes: {placeholder: "Alias"}
+                    },
+                    {
+                        type: "input",
+                        inputType: "email",
+                        label: "Email",
+                        model: "email",
+                        attributes: {placeholder: "Email"}
+                    },
+                    {
+                        type: "checkbox",
+                        label: "Estado",
+                        model: "estado"
+                    },
+                    {
+                        type: "select",
+                        label: "Rol",
+                        model: "rol",
+                        required: true,
+                        values: this.roles,
+                        selectOptions: {noneSelectedText: "Selecciona un Rol"}
+                    }
+                ];
+                this.message_error = false;
+                this.validator = [];
+            },
+            async loadRoles() {
+                this.roles = [];
+                await axios
+                    .get("api/roles")
+                    .then(({data}) => {
+                        if (data["status"] === 0) {
+                            data["data"]["all"].forEach(value => {
+                                this.roles.push({id: value["id"], name: value["name"]});
+                            });
+                        }
+                    })
+                    .catch();
+                //this.roles = this.$options.filters.roles();
+            },
+            handleOk(bvModalEvt) {
+                // Prevent modal from closing
+                bvModalEvt.preventDefault();
+                this.submitForm();
+            },
+            submitForm() {
+                axios
+                    .post(this.path, this.model)
+                    .then(({data}) => {
+                        if (data["status"] === 0) {
+                            // Hide the modal manually
+                            this.$bvModal.hide("modal");
+                            this.getAllData();
+                        } else {
+                            this.message_error = data["message"];
+                            this.validator = data["data"];
+                        }
+                    })
+                    .catch();
+            },
 
-          //eliminar
-          async remove(id) {
-              if (await this.showMsgConfirm()) {
-                  await axios
-                      .delete(this.path, {
-                          params: {id: id}
-                      })
-                      .then(({data}) => {
-                          if (data["status"] === 0) {
-                              this.getAllData();
-                          }
-                      })
-                      .catch(err => {
-                          console.log(err);
-                      });
-              }
-          },
-          showMsgConfirm() {
-              return this.$bvModal
-                  .msgBoxConfirm("Esta seguro?.", {
-                      title: "Eliminar",
-                      size: "sm",
-                      //okVariant: 'success',
-                      okTitle: "SI",
-                      cancelVariant: "danger",
-                      cancelTitle: "NO",
-                      footerClass: "p-2",
-                      hideHeaderClose: false
-                  })
-                  .then(value => {
-                      return value;
-                  })
-                  .catch(() => {
-                  });
-          }
-      }
-  };
+            //eliminar
+            async remove(id) {
+                if (await this.showMsgConfirm()) {
+                    await axios
+                        .delete(this.path, {
+                            params: {id: id}
+                        })
+                        .then(({data}) => {
+                            if (data["status"] === 0) {
+                                this.getAllData();
+                            }
+                        })
+                        .catch(err => {
+                            console.log(err);
+                        });
+                }
+            },
+            showMsgConfirm() {
+                return this.$bvModal
+                    .msgBoxConfirm("Esta seguro?.", {
+                        title: "Eliminar",
+                        size: "sm",
+                        //okVariant: 'success',
+                        okTitle: "SI",
+                        cancelVariant: "danger",
+                        cancelTitle: "NO",
+                        footerClass: "p-2",
+                        hideHeaderClose: false
+                    })
+                    .then(value => {
+                        return value;
+                    })
+                    .catch(() => {
+                    });
+            }
+        }
+    };
 </script>

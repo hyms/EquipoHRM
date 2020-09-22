@@ -20,9 +20,9 @@
                 exact
                 exact-active-class="selected"
                 :key="key + ksub"
-                v-show="visible(ksub,0)"
+                v-show="visible(ksub,1)"
         >
-          <a>
+          <a href="#">
             <div class="icon-w">
               <div :class="sublink.icon"></div>
             </div>
@@ -47,17 +47,14 @@
             vacaciones: {
               name: "Lista",
               icon: "os-icon os-icon-package",
-              visible: [1, 2, 3]
             },
             /*tipovacacion: {
                 name: "Tipos",
                 icon: "os-icon os-icon-package",
-                visible: [1, 2]
               },*/
             diasfestivos: {
               name: "Dias Festivos",
               icon: "os-icon os-icon-package",
-              visible: [1, 2]
             }
           },
           permisos: {
@@ -65,12 +62,10 @@
             permisos: {
               name: "Lista",
               icon: "os-icon os-icon-package",
-              visible: [1, 2]
             },
             tipopermisos: {
               name: "Tipo Permiso",
               icon: "os-icon os-icon-package",
-              visible: [1, 2]
             }
           },
           configuracion: {
@@ -78,17 +73,14 @@
             personal: {
               name: "Personal",
               icon: "os-icon os-icon-package",
-              visible: [1, 2]
             },
             organizacion: {
               name: "Organizacion",
               icon: "os-icon os-icon-package",
-                visible: [1]
             },
             usuarios: {
               name: "Usuarios",
               icon: "os-icon os-icon-package",
-              visible: [1, 2]
             }
           },
           cuenta: {

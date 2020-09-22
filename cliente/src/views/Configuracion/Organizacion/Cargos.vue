@@ -109,6 +109,8 @@
         methods: {
             //asignar titulo
             async loadForm(data = null) {
+                this.resetForm();
+                await this.loadCargos();
                 if (!data) {
                     this.formTitle = "Nuevo";
                     delete this.model["id"];
@@ -121,8 +123,7 @@
                         }
                     });
                 }
-                await this.loadCargos();
-                this.resetForm();
+
             },
             //obtener todos
             async getAllData() {

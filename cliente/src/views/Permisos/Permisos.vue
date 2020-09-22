@@ -73,12 +73,13 @@
                       <span>{{ data.value | formatDateOnly }}</span>
                     </template>
                     <template v-slot:cell(estado)="data">
-                        <!--<b-form-select
-                                v-if="visibleSelect([1, 2],data.value )"
-                                v-model="modelSelect"
-                                :options="optionSelect"
-                        ></b-form-select>-->
-                        <span>{{ data.value | formatStateLeave }}</span>
+                      <selectState
+                              v-if="visibleSelect()"
+                              :value="row.item.estado"
+                              :id="row.item.id"
+                              ref="childComponent"
+                      ></selectState>
+                      <span v-else>{{ data.value | formatStateLeave }}</span>
                     </template>
                     <template v-slot:cell(empleado)="row">
                       <span>{{
@@ -130,8 +131,8 @@
         ],
         tables: [],
         validator: [],
-
-          model: {
+        tipo_permisos: [],
+        model: {
           nombre: "",
           ci: "",
           cargo: "",
@@ -144,7 +145,99 @@
           empleado_id: "",
           tipo_permisos_id: ""
         },
-        schema: {
+        schema: {},
+        message_error: false
+      };
+    },
+    created() {
+      this.getAllData();
+    },
+    computed: {
+      numero_dias: function () {
+        return this.model.numero_dias;
+      },
+      tipo_permisos_id: function () {
+        return this.model.tipo_permisos_id;
+      }
+    },
+    watch: {
+      numero_dias: function () {
+        Object.entries(this.schema.groups[1].fields).forEach(([key, value]) => {
+          if (value.model === "tipo_permisos_id") {
+            this.schema.groups[1].fields[key].visible =
+                    this.model.numero_dias <= 1 && this.model.numero_dias >= 0;
+          }
+        });
+      },
+      tipo_permisos_id: function () {
+        if (this.model.tipo_permisos_id === 1) {
+          this.model.numero_dias = 1;
+        } else if (this.model.tipo_permisos_id === 0) {
+          this.model.numero_dias = 0.5;
+        }
+      }
+    },
+    methods: {
+      //asignar titulo
+      async loadForm(data = null) {
+        this.loadTipoPermiso();
+        this.resetForm();
+        if (!data) {
+          this.formTitle = "Nuevo";
+          delete this.model["id"];
+        } else {
+          this.formTitle = "Modificar";
+          this.model["id"] = "";
+          Object.entries(data).forEach(([key, value]) => {
+            if (this.model[key] !== undefined) {
+              this.model[key] = value;
+            }
+          });
+          await axios
+                  .get("api/permisos/empleado", {
+                    params: {id: this.model.empleado_id}
+                  })
+                  .then(({data}) => {
+                    if (data["status"] === 0) {
+                      if (Object.keys(data["data"]).length > 0) {
+                        Object.entries(data["data"]).forEach(([key, value]) => {
+                          if (key === "fecha_ingreso") {
+                            value = this.$options.filters.formatDateOnly(value);
+                          }
+                          if (this.model[key] !== undefined) this.model[key] = value;
+                        });
+                      } else {
+                        this.message_error = "no se encontraron resultados";
+                      }
+                    }
+                  })
+                  .catch(err => {
+                    console.log(err);
+                  });
+        }
+      },
+      //obtener todos
+      async getAllData() {
+        this.isBusy = true;
+        await axios
+                .get(this.path)
+                .then(({data}) => {
+                  if (data["status"] === 0) {
+                    this.tables = data["data"]["all"];
+                  }
+                })
+                .catch(err => {
+                  console.log(err);
+                });
+        this.isBusy = false;
+      },
+      async resetForm() {
+        Object.keys(this.model).forEach(key => {
+          this.model[key] = "";
+        });
+        this.message_error = false;
+        this.validator = [];
+        this.schema = {
           groups: [
             {
               legend: "Datos del Empleado",
@@ -211,7 +304,7 @@
                   disabled: true,
                   attributes: {placeholder: "Cargo"},
                   styleClasses: "col-md-6"
-                },
+                }
               ]
             },
             {
@@ -241,10 +334,9 @@
                   type: "select",
                   label: "Tiempo a solicitar",
                   model: "tipo_permisos_id",
-                  listBox: true,
-                  values: Helpers.tipoDiaVacacion(),
-                  visible: false,
-                  styleClasses: "col-sm-6 col-lg-3"
+                  values: this.tipo_permisos,
+                  styleClasses: "col-sm-6 col-lg-3",
+                  selectOptions: {noneSelectedText: "Selecciona un Tipo"}
                 },
                 {
                   type: "textArea",
@@ -255,97 +347,7 @@
               ]
             }
           ]
-        },
-        message_error: false
-      };
-    },
-    created() {
-      this.getAllData();
-    },
-    computed: {
-      numero_dias: function () {
-        return this.model.numero_dias;
-      },
-      tipo_permisos_id: function () {
-        return this.model.tipo_permisos_id;
-      }
-    },
-    watch: {
-      numero_dias: function () {
-        Object.entries(this.schema.groups[1].fields).forEach(([key, value]) => {
-          if (value.model === "tipo_permisos_id") {
-            this.schema.groups[1].fields[key].visible =
-                    this.model.numero_dias <= 1 && this.model.numero_dias >= 0;
-          }
-        });
-      },
-      tipo_permisos_id: function () {
-        if (this.model.tipo_permisos_id === 1) {
-          this.model.numero_dias = 1;
-        } else if (this.model.tipo_permisos_id === 0) {
-          this.model.numero_dias = 0.5;
-        }
-      }
-    },
-    methods: {
-      //asignar titulo
-      async loadForm(data = null) {
-        this.resetForm();
-        if (!data) {
-          this.formTitle = "Nuevo";
-          delete this.model["id"];
-        } else {
-          this.formTitle = "Modificar";
-          this.model["id"] = "";
-          Object.entries(data).forEach(([key, value]) => {
-            if (this.model[key] !== undefined) {
-              this.model[key] = value;
-            }
-          });
-          await axios
-                  .get("api/permisos/empleado", {
-                    params: {id: this.model.empleado_id}
-                  })
-                  .then(({data}) => {
-                    if (data["status"] === 0) {
-                      if (Object.keys(data["data"]).length > 0) {
-                        Object.entries(data["data"]).forEach(([key, value]) => {
-                          if (key === "fecha_ingreso") {
-                            value = this.$options.filters.formatDateOnly(value);
-                          }
-                          if (this.model[key] !== undefined) this.model[key] = value;
-                        });
-                      } else {
-                        this.message_error = "no se encontraron resultados";
-                      }
-                    }
-                  })
-                  .catch(err => {
-                    console.log(err);
-                  });
-        }
-      },
-      //obtener todos
-      async getAllData() {
-        this.isBusy = true;
-        await axios
-                .get(this.path)
-                .then(({data}) => {
-                  if (data["status"] === 0) {
-                    this.tables = data["data"]["all"];
-                  }
-                })
-                .catch(err => {
-                  console.log(err);
-                });
-        this.isBusy = false;
-      },
-      async resetForm() {
-        Object.keys(this.model).forEach(key => {
-          this.model[key] = "";
-        });
-        this.message_error = false;
-        this.validator = [];
+        };
       },
       handleOk(bvModalEvt) {
         // Prevent modal from closing
@@ -366,13 +368,13 @@
         if (this.model["id"] !== undefined) {
           formdata["id"] = "";
         }
-        if (formdata["tipo_permisos_id"] === "")
-          delete formdata["tipo_permisos_id"];
         Object.entries(this.model).forEach(([key, value]) => {
           if (formdata[key] !== undefined) {
             formdata[key] = value;
           }
         });
+        if (formdata["tipo_permisos_id"] === "")
+          delete formdata["tipo_permisos_id"];
         axios
                 .post(this.path, formdata)
                 .then(({data}) => {
@@ -425,7 +427,24 @@
                 .catch(() => {
                 });
       },
-
+      visibleSelect() {
+        return Helpers.visible("vacaciones", 6);
+      },
+      async loadTipoPermiso() {
+        this.tipo_permisos = [];
+        await axios
+                .get("/api/permisos/tipo")
+                .then(({data}) => {
+                  if (data["status"] === 0) {
+                    data["data"]["all"].forEach(value => {
+                      this.tipo_permisos.push({id: value.id, name: value.tipo});
+                    });
+                  }
+                })
+                .catch(err => {
+                  console.log(err);
+                });
+      }
     }
   };
 </script>
