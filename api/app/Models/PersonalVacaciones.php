@@ -39,12 +39,15 @@ class PersonalVacaciones extends Model
         $dayWorkss = 0;
         if (!empty($empleado_id)) {
             $dayWorkss = Personal::getDaysWork($empleado_id);
-            $estado = self::where('empleado_id', $empleado_id)->first();
-            if (!empty($estado)) {
+            $disponible = self::where('empleado_id', $empleado_id)
+                ->where('estado', 2)
+                ->orderBy('updated_at', 'desc')
+                ->first();
+            if (!empty($disponible)) {
                 //if ($estado->total_disponible == 0 && $estado->total_usado == 0) {
-                $estado->total_disponible = $dayWorkss - $estado->total_usado;
+                $disponible->total_disponible = $dayWorkss - $disponible->total_usado;
                 //}
-                return $estado->total_disponible;
+                return $disponible->total_disponible;
             }
         }
         return $dayWorkss;

@@ -298,7 +298,7 @@ class PersonalVacacionesController extends Controller
             $tmp = PersonalVacaciones::where('empleado_id', $employe->empleado_id)
                 ->where('estado', 2)
                 ->where('id', '!=', $employe->id)
-                ->orderBy('id', 'desc');
+                ->orderBy('updated_at', 'desc');
             $employe->total_disponible = PersonalVacaciones::remmaining_days($employe->empleado_id) - $employe->numero_dias;
             $employe->total_usado = $employe->numero_dias;
             if ($tmp->count() > 0) {

@@ -44,9 +44,9 @@
                             .post(path, {id: this.id})
                             .then(({data}) => {
                                 if (data["status"] === 0) {
-                                    this.getAllData();
+                                    this.$emit('finish');
                                 } else {
-                                    this.$refs.childComponent.setValue(data["message"]);
+                                    this.$emit('message', data["message"]);
                                     this.message_error = data["message"];
                                 }
                             })
@@ -55,6 +55,7 @@
                             });
                     }
                 }
+                this.modelSelect = this.value;
             },
             showMsgConfirm() {
                 return this.$bvModal

@@ -93,7 +93,7 @@
                     description: ""
                 },
                 schema: {
-                    fields: []
+        fields: []
                 },
                 message_error: false
             };

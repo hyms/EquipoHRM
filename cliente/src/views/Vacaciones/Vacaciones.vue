@@ -77,7 +77,8 @@
                         <selectState
                                 :value="row.item.estado"
                                 :id="row.item.id"
-                                ref="childComponent"
+                                @message="set_message"
+                                @finish="getAllData"
                         ></selectState>
                       </div>
                       <span v-else>{{ row.item.estado | formatStateLeave }}</span>
@@ -416,8 +417,8 @@
                 .get(this.path)
                 .then(({data}) => {
                   if (data["status"] === 0) {
-                    this.tables = data["data"]["all"];
-                    this.optionSelect = Helpers.stateVacaciones();
+                      this.optionSelect = Helpers.stateVacaciones();
+                      this.tables = data["data"]["all"];
                   }
                 })
                 .catch(err => {
@@ -508,21 +509,18 @@
                   footerClass: "p-2",
                   hideHeaderClose: false
                 })
-                .then(value => {
-                  return value;
-                })
-                .catch(() => {
-                });
+            .then(value => {
+                return value;
+            })
+            .catch(() => {
+            });
       },
-      visibleSelect() {
-        return Helpers.visible('vacaciones', 6);
-      },
-      updateSelect(value, id) {
-        if (this.modelSelect[id] === undefined) {
-          this.modelSelect[id] = value;
+        visibleSelect() {
+            return Helpers.visible('vacaciones', 1);
+        },
+        set_message(value) {
+            this.message_error = value;
         }
-        console.log(this.modelSelect[id]);
-      }
     }
   };
 </script>
