@@ -20,7 +20,7 @@
                 exact
                 exact-active-class="selected"
                 :key="key + ksub"
-                v-show="visible(ksub,1)"
+                v-show="visible(ksub,0)"
         >
           <a href="#">
             <div class="icon-w">

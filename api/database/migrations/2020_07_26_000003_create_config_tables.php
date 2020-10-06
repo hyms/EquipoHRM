@@ -14,7 +14,7 @@ class CreateConfigTables extends Migration
     public function up()
     {
 
-        Schema::create('unidadesNegocio', function (Blueprint $table) {
+        Schema::create('Empresa', function (Blueprint $table) {
             $table->id();
             $table->string("nombre", 100);
             $table->string("direccion", 200);
@@ -32,19 +32,15 @@ class CreateConfigTables extends Migration
             $table->softDeletes();
         });
 
+        Schema::create('unidadesNegocio', function (Blueprint $table) {
+            $table->id();
+            $table->string("nombre", 100);
+            $table->timestamps();
+            $table->softDeletes();
+        });
+
         Schema::create('unidadesNegocioHistory', function (Blueprint $table) {
-            $table->string("nombre",100);
-            $table->string("direccion",200);
-            $table->string("telefono",15);
-            $table->string("celular",15);
-            $table->string("fax", 15)->nullable();
-            $table->string("ciudad", 50);
-            $table->string("departamento", 50);
-            $table->string("encargado", 100);
-            $table->string("email", 100)->nullable();
-            $table->string("web", 100)->nullable();
-            $table->dateTime("fecha_nacimiento");
-            $table->boolean("central");
+            $table->string("nombre", 100);
             //control de historial
             $table->unsignedInteger('id');
             $table->dateTime('registerUtc');
@@ -147,5 +143,7 @@ class CreateConfigTables extends Migration
 
         Schema::dropIfExists('areasTrabajoHistory');
         Schema::dropIfExists('areasTrabajo');
+
+        Schema::dropIfExists('Empresa');
     }
 }

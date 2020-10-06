@@ -89,14 +89,21 @@ let Helpers = {
     });
     return view;
   },
-  stateVacaciones(id = null) {
+  stateVacaciones(id = null, tipo = 0) {
     let states = [
       {value: 0, text: "Pendiente"},
       {value: 1, text: "Aprobado"},
       {value: 2, text: "Registrado"},
       {value: 3, text: "Concluido"},
-      {value: 10, text: "Declinado"}
+      {value: 10, text: "Rechazado"}
     ];
+    if (tipo === 1) {
+      states = [
+        {value: 0, text: "Pendiente"},
+        {value: 1, text: "Aprobado"},
+        {value: 10, text: "Rechazado"}
+      ];
+    }
 
     if (id !== null) {
       let val = "";

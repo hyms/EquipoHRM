@@ -28,7 +28,7 @@ class Unidadesnegocio extends Model
     {
         if (!empty($id)) {
             $data = self::select(
-                'id', 'nombre', 'direccion', 'telefono', 'celular', 'fax', 'ciudad', 'departamento', 'encargado', 'email', 'web', 'fecha_nacimiento'
+                'id', 'nombre'
             )
                 ->withTrashed()
                 ->find($id)
