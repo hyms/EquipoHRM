@@ -46,8 +46,7 @@ class AuthController extends Controller
                 ->select('funciones.funcion as function', 'funciones.type as type')
                 ->join('funciones', 'funciones.id', '=', 'funcion_id')
                 ->get();
-            $bussines = DB::table('unidadesNegocio')
-                ->where('central', '=', '1')
+            $bussines = DB::table('Empresa')
                 ->first();
             Log::debug("Success login user:" . $request->username);
             return response()->json([

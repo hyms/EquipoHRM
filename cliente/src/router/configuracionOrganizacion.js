@@ -6,6 +6,7 @@ import Gerencia from "../views/Configuracion/Organizacion/Gerencia";
 import Unidadesnegocio from "../views/Configuracion/Organizacion/Unidadesnegocio";
 import Areastrabajo from "../views/Configuracion/Organizacion/Areastrabajo";
 import Cargos from "../views/Configuracion/Organizacion/Cargos";
+import Empresa from "../views/Configuracion/Organizacion/Empresa";
 
 export default [
     {
@@ -50,6 +51,13 @@ export default [
                     auth: true
                 },
                 component: Cargos
+            },
+            {
+                path: "empresa",
+                meta: {
+                    auth: true
+                },
+                component: Empresa
             },
 
         ]
