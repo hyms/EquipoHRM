@@ -66,6 +66,12 @@ Route::group(['prefix' => 'cargos'], function () {
     Route::post('/', 'CargosController@post');
     Route::delete('/', 'CargosController@delete');
 });
+//empresa
+Route::group(['prefix' => 'empresa'], function () {
+    Route::get('/', 'EmpresaController@get');
+    Route::post('/', 'EmpresaController@post');
+    Route::delete('/', 'EmpresaController@delete');
+});
 //empleado
 Route::group(['prefix' => 'personal'], function () {
     Route::get('/', 'PersonalController@get');

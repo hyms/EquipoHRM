@@ -1,7 +1,8 @@
+<!--
 <template>
     <div class="col">
         <div class="padded-lg">
-            <!--START - Recent Ticket Comments-->
+            &lt;!&ndash;START - Recent Ticket Comments&ndash;&gt;
             <div class="element-wrapper">
                 <div class="element-actions">
                     <b-button variant="primary" v-b-modal="'modal'" @click="loadForm()"
@@ -72,7 +73,7 @@
                     </div>
                 </div>
             </div>
-            <!--END - Recent Ticket Comments-->
+            &lt;!&ndash;END - Recent Ticket Comments&ndash;&gt;
         </div>
     </div>
 </template>
@@ -237,4 +238,39 @@
             }
         }
     };
+</script>
+-->
+
+<template>
+    <normalTable
+            :path="path"
+            :columns="columns"
+            :model="model"
+    />
+</template>
+<script>
+    import normalTable from "../../../components/tables/nomalTable";
+
+    export default {
+        data() {
+            return {
+                path: "/api/empresa",
+                columns:
+                    [
+                        "nombre", "Acciones"
+                    ],
+                model: {
+                    nombre: "",
+                },
+                cargos: [],
+                schema: {
+                    fields: []
+                },
+            }
+        },
+        components:
+            {
+                normalTable,
+            }
+    }
 </script>

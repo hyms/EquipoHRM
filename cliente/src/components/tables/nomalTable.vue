@@ -41,17 +41,35 @@
         data() {
             return {
                 isBusy: false,
-                table: {}
+                table: [],
             };
         },
         created() {
             this.getAllData();
         },
         props: {
-            columns: {},
-            path: null
+            columns: null,
+            path: null,
+            model: null,
+            schema: [],
         },
         methods: {
+            //asignar titulo
+            async loadForm(data = null) {
+                if (!data) {
+                    this.formTitle = "Nuevo";
+                    delete this.model["id"];
+                } else {
+                    this.formTitle = "Modificar";
+                    this.model["id"] = "";
+                    Object.entries(data).forEach(([key, value]) => {
+                        if (this.model[key] !== undefined) {
+                            this.model[key] = value;
+                        }
+                    });
+                }
+
+            },
             //obtener todos
             async getAllData() {
                 if (this.path !== null) {
